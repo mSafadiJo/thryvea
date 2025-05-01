@@ -1,0 +1,481 @@
+a.navbar-brand {
+    color: #666f7b;
+    padding: 1%;
+    font-weight: 700;
+}
+.side-menu, topbar {
+    background: #ffffff !important;
+    marjen-right: 1px;
+}
+#sidebar-menu > ul > li > a {
+    color: #666f7b;
+    padding: 14px 8px;
+}
+.nav-second-level > li > a,
+.nav-third-level > li > a{
+    color: #666f7b;
+}
+
+#sidebar-menu .menu-arrow {
+    position: unset;
+    right: 0px;
+    float: right;
+}
+
+body {
+    background-color: #f1f1f1;
+    background-image: none;
+}
+.content-page .content {
+    background-color: #f1f1f1;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+h4.header-title {
+    width: fit-content;
+    padding-bottom: 1%;
+    border-radius: 9px;
+}
+#sidebar-menu > ul > li > a:hover, #sidebar-menu > ul > li > a:focus, #sidebar-menu > ul > li > a:active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #666f7b;
+}
+.card-box.page-title-box {
+    background-color: #ffffff;
+    border: none;
+}
+
+.topbar .topbar-left {
+    background: white;
+}
+.navbar-custom {
+    background-color: white;
+    color: #666f7b;
+}
+
+span.EditTableDataTable {
+    color: #6464ffbf;
+    margin: 1%;
+    cursor: pointer;
+}
+
+span.DeleteTableDataTable {
+    color: red;
+    margin: 1%;
+    cursor: pointer;
+}
+
+tr.PointerTr{
+    cursor: pointer;
+}
+form.DeleteForm {
+    display: inline-block;
+}
+.addedSectionLogo {
+    display: table;
+    float: right;
+    font-size: 50px;
+    margin: 1% 3%;
+    cursor: pointer;
+    color: #8b8bff;
+}
+span.showpopup {
+    cursor: pointer;
+    color: blue;
+}
+div#ContentData {
+    display: table;
+    width: 100%;
+}
+
+span.suberadminBuyerspan{
+    color: #0275d8;
+    padding: 1% 13%;
+    cursor: pointer;
+}
+
+span.suberadminBuyerspan:hover{
+    background-color: #f3f3f3 !important;
+    color: #313a46 !important;
+}
+
+button {
+    cursor: pointer;
+}
+input.payment_limit {
+    height: 40px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.input-group-sm>.input-group-btn>select.btn:not([size]):not([multiple]), .input-group-sm>select.form-control:not([size]):not([multiple]), .input-group-sm>select.input-group-addon:not([size]):not([multiple]), select.form-control-sm:not([size]):not([multiple]) {
+    height: 2.0rem;
+}
+
+.row.timemargin {
+    margin: 1% auto;
+}
+
+/* The container */
+.container-dayoff, .container-services {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container-dayoff input, .container-services input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark-dayoff, .checkmark-services{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    border-radius: 50%;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container-dayoff:hover input ~ .checkmark-dayoff,
+.container-services:hover input ~ .checkmark-services {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container-dayoff input:checked ~ .checkmark-dayoff,
+.container-services input:checked ~ .checkmark-services {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark-dayoff:after,
+.checkmark-services:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container-dayoff input:checked ~ .checkmark-dayoff:after,
+.container-services input:checked ~ .checkmark-services:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container-dayoff .checkmark-dayoff:after,
+.container-services .checkmark-services:after {
+    left: 8px;
+    top: 4px;
+    width: 8px;
+    height: 14px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+/*-----------*/
+.service-block {
+    width: 100%;
+    padding-bottom: 10px;
+    margin: 1px auto;
+}
+
+div#paving_service_div_section label.container-services {
+    display: inline-block;
+    width: 24%;
+    vertical-align: text-top;
+}
+
+div#painting_service_div_section label.container-services {
+    display: inline-block;
+    width: 33%;
+    vertical-align: text-top;
+}
+
+span.checkmark-services:not(.checkmark-dayoff) {
+    border-radius: 0;
+}
+
+.crm
+{
+    padding: 2%;
+
+}
+
+.crm h2
+{
+    font-size: 24px;
+    text-align: center;
+}
+
+.crmSwitch
+{
+    float: right;
+}
+
+.ListBuyersDrop
+{
+    position: static;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+.h-200
+{
+    min-height: 200px !important;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+div.dataTables_scrollBody table tbody td {
+    border-top: none;
+    font-size: 15px;
+}
+
+table.dataTable thead>tr>th.sorting
+{
+    padding-right: 13px;
+}
+
+.ListBuyersDrop > li > a {
+    padding: 7px 8px;
+    font-size: 14px;
+}
+span.suberadminBuyerspan {
+    color: #0275d8;
+    padding: 1% 0% 1% 8%;
+    cursor: pointer;
+    display: inline-block;
+}
+.ListBuyersDrop
+{
+    width: 92px;
+    min-width: 0rem;
+}
+
+.showForm
+{
+    border: 1px solid black;
+    padding: 1%;
+    background: white;
+    color: #000000;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.showForm:hover
+{
+    border: 1px solid black;
+    padding: 1%;
+    background: black;
+    color: white;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+tfoot {
+    background-color: #333;
+    color: white;
+}
+
+p.is_ping_account_campaign {
+    line-height: 2.6;
+    font-weight: bold;
+}
+
+p.is_ping_account_campaign label{
+    float: none !important;
+    margin-left: 1%;
+}
+
+p#pErrorsShown{
+    color: #dc0000 !important;
+}
+
+#exportCampaignTarget, #exportCampZipcodes, #exportCampExpectZipcodes {
+    background-color: #666fa5 !important;
+    border: 1px solid #666fa5 !important;
+}
+
+/*=========================================================================*/
+.pad-rgt {
+    padding-right: 15px;
+}
+
+.pad-all {
+    padding: 15px;
+}
+
+.panel-title {
+    font-weight: normal;
+    padding: 0 20px 0 20px;
+    font-size: 1.55em;
+    line-height: 42px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.reports_search_show_hide {
+    margin-bottom: 10px;
+}
+
+.loader {
+    position: fixed;
+    z-index: 99999;
+    top: 40%;
+    left: 50%;
+}
+
+.datetimepicker-hours th,
+.datetimepicker-minutes th{
+    width: 50px;
+}
+
+.CampaignsBuyers th
+{
+    width:20% ;
+}
+
+.ping_table_lead_management_div div.dataTables_wrapper div.dataTables_processing {
+    position: fixed;
+    top: 60%;
+}
+
+.campaign-crm-div {
+    display: none;
+}
+
+
+.Delete input:checked + .slider {
+    background-color: red;
+}
+
+/*Upload IMG*/
+#img-upload,
+#img-upload-1,
+#img-upload-2,
+#img-upload-3 {
+    width: 100%;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+/*.select2-container-multi .select2-choices .select2-search-field input {*/
+/*    border: 1px solid #dadada !important;*/
+/*    border-radius: 4px !important;*/
+/*    padding: 7px 12px !important;*/
+/*}*/

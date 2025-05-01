@@ -1,0 +1,713 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,700;1,600&display=swap');
+body{
+    padding: 0;
+    /* background-image: url(../images/backgroundNew.jpg); */
+}
+.logoLogREG
+{
+    width: 14%;
+    margin-top: 2%;
+}
+.rightSection
+{
+    background-image: linear-gradient(to bottom left, #5d4bdb, #030303);
+    padding: 12.5%;
+    height: 100vh;
+}
+.textToRight a{
+    color: #b4a8ff;
+}
+
+
+.checkbox-success
+{
+    display: inline-block;
+    margin-right: 11%;
+}
+
+.loginFieldsContRegister
+{
+    padding-top: 0.4%;
+    height: 100%;
+    text-align: center;
+    text-align: -webkit-center;
+}
+
+.inputContTTRJ , .inputContTTRJ:focus
+{
+    padding: 0 44px 0 52px;
+    border-radius: 31px;
+    margin-bottom: 2%;
+    border: 2px solid;
+    border-color: #ffffff;
+    width: 54%;
+    height: 51px;
+    background-color: #7fffd400;
+    color: white;
+}
+
+.inputContTTRJ::placeholder
+{
+    color: white;
+}
+
+.loginFieldsContRegister .stepy-navigator {
+    text-align: right;
+    margin-bottom: 0;
+    margin-top: 0px;
+    width: 54%;
+}
+
+.loginFieldsContRegister .stepy-navigator a
+{
+    color: white;
+    font-size: 21px;
+}
+.loginFieldsContRegister .stepy-navigator i
+{
+    color: #f9f9f9;
+}
+
+#submit_hidden_form {
+    background-color: #fff0 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.loginFieldsContRegister .stepy-header {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: table;
+    width: 65%;
+    table-layout: fixed;
+}
+
+.loginFieldsContRegister .stepy-header li span {
+    display: block;
+    margin-top: 10px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.noAccountReg
+{
+    color: white;
+    margin-bottom: 0;
+}
+
+.noAccountReg a
+{
+    color: #8981c1;
+}
+
+select.form-control:not([size]):not([multiple]) {
+    height: 51px;
+}
+
+.REInButton
+{
+    width: 54% !important;
+}
+
+.fontSFam{
+    font-family: 'Raleway', sans-serif;
+}
+.bodyLogINS{
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+    background-color:#fff;
+    /* overflow: hidden; */
+}
+.newLogInBG{
+    height: auto;
+    padding: 0;
+    background-size: cover;
+}
+.newRegisBG
+{
+    background-image: linear-gradient(to bottom left, #5d4bdb, #030303);
+    padding: 5.2% 0 2% 0;
+    height: 104vh;
+}
+
+.topTextLogin{
+    text-align: left;
+    color: #000!important;
+    font-weight: bold;
+}
+.topTextLogin h2{
+    color: #060606;
+    font-weight: 100;
+    font-family: sans-serif;
+    font-size: 60px;
+    margin-bottom: 4%;
+}
+.REInButton,.logInButton{
+    width: 71%;
+    margin-top: 0%;
+    border-radius: 27px;
+    height: 53px;
+    padding: 2%;
+    background: linear-gradient(to bottom left, #5d4bdb, #030303);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+}
+.REInButton:hover,.logInButton:hover{
+    cursor: pointer;
+}
+.loginFieldsCont{
+    /* padding: 1% 5%; */
+    padding: 31.5% 12.5% 12.5% 12.5%;
+    height: 100vh;
+    background-color: white;
+}
+.formCont i {
+    position: absolute;
+    font-size: 29px;
+}
+.icon {
+    padding: 10px;
+    min-width: 0;
+}
+.inputContTT{
+    padding: 0 44px 0 52px;
+    border-radius: 31px;
+    margin-top: 0%;
+    border-color: #093D3E;
+    width: 71%;
+    height: 53px;
+}
+.inputContTTS{
+    height: 47px!important;
+    border-radius: 31px;
+    margin-top: 3%;
+    box-shadow: 5px 17px 20px 20px #2b00ff08;
+}
+.loginFieldsContRegister .stepy-header li div {
+    border: 2px solid #5A2DEA!important;
+}
+.loginFieldsContRegister .stepy-header li:after, .loginFieldsContRegister .stepy-header li:before {
+    background-color: #ffffff !important;
+    width: 37%;
+}
+.loginFieldsContRegister .stepy-header li .stepy-active div {
+    border-color: #B8DFCA!important;
+    color: #b8dfca!important;
+    background-color: #ffffff00;
+}
+.loginFieldsContRegister .stepy-header li.stepy-active span {
+    color: #b8aff9 !important;
+}
+.loginFieldsContRegister .stepy-header li.stepy-active:after {
+    background-color: #ffffff !important;
+}
+.loginFieldsContRegister .stepy-header li div {
+    border: 2px solid #ffffff !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    background-color: #ffffff00 !important;
+}
+.fa-envelope-open,.fa-lock,.fa-user{
+    color: #060606;
+    left: 20px;
+}
+.fa-envelope-open{
+    top: 13px;
+}
+.fa-lock,.fa-user{
+    top: 0;
+}
+.forgotPLOg{
+    color: #000000;
+    font-size: 17px;
+    position: relative;
+    right: 30%;
+}
+.forgotPLOg:hover{
+    color: #2d2569;
+}
+.checkbox-success input[type="checkbox"]:checked + label::before {
+    background-color: #fff;
+    border: 2px solid #4837bd;
+}
+.checkbox-success input[type="checkbox"]:checked + label::after {
+    color: #4837bd;
+}
+.checkbox label::before {
+    border: 2px solid #6359a1;
+}
+.passLabel{
+    color: #000000;
+    font-size: 17px;
+}
+.noAccount{
+    display: block;
+}
+.signUpCo{
+    color: #000000;
+}
+.errorText{
+    font-weight: bold;
+    color: red;
+    font-size: 13px;
+    margin-left: 2%;
+    width: 100%;
+    margin-top: 2%;
+}
+.REInButton:hover,.logInButton:hover{background: linear-gradient(to bottom left, #5d4bdb, #030303);}
+.REInButton:focus,.REInButton:active,.logInButton:focus,.logInButton:active{
+    background-color: #093D3E;
+}
+.inputContTT::placeholder{
+    color: #093D3E;
+    font-size: 14px;
+}
+.textToRight{
+    text-align: left;
+}
+.fa-eye {
+    top: 1%;
+    right: 31%;
+    color: #060606;
+}
+.fa-eyeRes
+{
+    top: 1%;
+    right: 24%;
+    color: #b7dec9;
+}
+.linkShow:hover{
+    cursor: pointer;
+}
+.textToRight h2{
+    font-weight: 100;
+    color: #fff;
+    margin-bottom: 2%;
+    margin-left: 0;
+    margin-top: 8%;
+    font-size: 98px;
+    font-family: sans-serif;
+}
+.textToRight p{
+    font-size: 31px;
+    color: #fff;
+    font-weight: 500;
+    margin-left: 0;
+    font-family: sans-serif;
+    width: 81%;
+}
+.logoContLog {
+    width: 100%;
+}
+.logoContReg{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0%;
+}
+.logoLogIn{
+    width: 28%;
+}
+.SuccessReset{
+    color: #b3dac5 !important;
+    margin-top: 0;
+    font-size: 15px;
+}
+.FailedReset{
+    color: red!important;
+    margin-top: 0%;
+    font-size: 15px;
+}
+.button-back{
+    float: left;
+}
+.gladRegi {
+    margin-top: 54%!important;
+}
+
+.modal-dialog{
+    margin-top: 17%!important;
+    font-weight: bold;
+}
+#headerModalBuyer{
+    background-color: #724bf9!important;
+    color: #fff;
+}
+.modal .modal-dialog .close {
+    right: 7px!important;
+}
+#sidebar-menu > ul > li > a {
+    font-size: 15px!important;
+}
+optgroup {
+    color: #0b0b0b !important;
+}
+
+.newResetBG
+{
+    background-image: url(../images/backgroundNew.jpg);
+    padding: 8%;
+    text-align: center;
+    height: 100vh;
+}
+
+.topTextLoginReset h2
+{
+    font-size: 42px;
+    margin: 6% 0;
+    color: white;
+}
+.logoRest,.logoverify
+{
+    width: 20%;
+}
+.ResetFieldsCont
+{
+    text-align: center;
+    text-align: -webkit-center;
+}
+.topTextLoginReset p
+{
+    color: white;
+}
+.ResetButton
+{
+    width: 54%;
+    height: 51px;
+    margin-top: 0;
+    border-radius: 27px;
+    padding: 2%;
+    background: linear-gradient(to bottom left ,#117A7C, #093D3E);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.ResetCo ,.ResetCo:hover
+{
+    color: #b4dbc6;
+}
+.noAccountReset
+{
+    color: white;
+}
+
+.topTextVerify h2
+{
+    color: #ffffff;
+    font-weight: 100;
+    font-family: sans-serif;
+    font-size: 43px;
+    margin-bottom: 3%;
+    text-align: center;
+    margin-top: 5%;
+}
+.st1{
+    fill: #acd3bd;
+}
+.st2
+{
+    stroke: #b8dfca;
+}
+.VerifyContent
+{
+    color: white;
+    font-weight: 200;
+}
+.VerifyContent a , .VerifyContent a:hover,.signUpRE,signUpRE:hover
+{
+    color: #acd3bd !important;
+}
+.verifySec {
+    background-image: url(../images/backgroundNew.jpg);
+    padding: 5.5%;
+    height: 100vh;
+}
+
+
+@media(max-width:1600px){
+    .rightSection {
+        padding: 7.5%;
+    }
+    .inputContTT {
+        width: 100%;
+    }
+    .REInButton, .logInButton {
+        width: 100%;
+    }
+    .fa-eye {
+        right: 4%;
+    }
+    .fa-eyeRes {
+        right: 24%;
+    }
+    .textToRight h2
+    {
+        font-size: 91px;
+    }
+    .textToRight p {
+        font-size: 29px;
+    }
+    .newRegisBG {
+        height: 104vh;
+        padding: 0.2% 0 0 0;
+    }
+
+}
+@media(max-width:1366px) and (max-height: 1024px){
+    .newRegisBG {
+        padding: 0.5% 5% 0.5%;
+        height: auto;
+    }
+    .gladRegi {
+        margin-top: 72%!important;
+    }
+    .inputContTT {
+        width: 100%;
+    }
+    .fa-eye {
+        right: 4%;
+    }
+    .fa-eyeRes {
+        right: 24%;
+    }
+    .textToRight h2 {
+        font-size: 58px;
+    }
+    .textToRight p {
+        font-size: 22px;
+        margin-top: 7%;
+        width: 100%;
+    }
+    .REInButton, .logInButton {
+        width: 100%;
+    }
+    .forgotPLOg {
+        right: 4%;
+    }
+
+}
+@media(max-width:1024px) and (max-height: 1366px){
+    .forgotPLOg {
+        right: 4%;
+    }
+
+}
+@media(max-width: 768px) and (max-height: 1024px){
+    .textToRight h2 {
+        margin-bottom: 5%;
+        margin-top: 8%;
+        font-weight: 100;
+        color: #fff;
+        margin-left: 0;
+        font-size: 61px;
+        text-align: left;
+        font-family: sans-serif;
+    }
+    .textToRight p {
+        font-size: 29px;
+        color: #fff;
+        font-weight: 500;
+        margin-left: 0;
+        font-family: sans-serif;
+        width: 100%;
+    }
+    .logoContReg{
+        top: -60px;
+    }
+    .inputContTTRJ, .inputContTTRJ:focus ,.ResetButton
+    {
+        width: 100%;
+        margin-bottom: 6%;
+    }
+    .loginFieldsContRegister .stepy-navigator
+    {
+        width: 100%;
+    }
+    .logoLogREG {
+        width: 40%;
+    }
+    .newRegisBG {
+        height: 101vh;
+    }
+    .fa-eye,.fa-eyeRes {
+        top: 1%;
+        right: 5%;
+        color: #093d3e;
+    }
+    .fa-eyeRes {
+        top: 1%;
+        right: 5%;
+        color: #b7dec8;
+    }
+    .inputContTT
+    {
+        width: 100%;
+    }
+    .loginFieldsCont {
+        padding: 60.5% 5.5%;
+        height: 100%;
+    }
+
+    .REInButton, .logInButton {
+        width: 100%;
+    }
+    .logoLogIn {
+        width: 45%;
+    }
+    .loginFieldsContRegister .stepy-header li {
+        width: 33%;
+    }
+    .loginFieldsContRegister .stepy-header li:after, .loginFieldsContRegister .stepy-header li:before {
+        width: 30%;
+    }
+    .loginFieldsContRegister .stepy-header
+    {
+        margin-bottom: 4%;
+    }
+    .forgotPLOg {
+        right: 4%;
+    }
+    .REInButton {
+        width: 100% !important;
+    }
+}
+@media (max-width: 800px) and (max-height: 600px){
+    .loginFieldsContRegister .stepy-header li:after,.loginFieldsContRegister .stepy-header li:before {
+        width: 26%;
+    }
+    .newRegisBG {
+        height: 120vh;
+    }
+    .loginFieldsCont {
+        padding: 31.5% 2.5% 12.5% 2.5%;
+        height: 100vh;
+        background-color: white;
+    }
+}
+@media (max-width: 767px) {
+    .fa-eye{
+        top: 3%;
+        right: 6%;
+    }
+    .fa-eyeRes {
+        top: 12%;
+        right: 6%;
+    }
+    .textToRight h2 {
+        margin-bottom: 5%;
+        margin-top: 8%;
+        font-size: 63px;
+        text-align: center;
+    }
+
+    .forgotPLOg {
+        font-size: 16px;
+        right: 0%;
+    }
+    .textToRight p {
+        font-size: 21px;
+        color: #fff;
+        font-weight: 500;
+        margin-left: 0;
+        font-family: sans-serif;
+        width: 100%;
+        text-align: center;
+    }
+    #default-wizard-header{
+        display:none;
+    }
+    .rightSection {
+        height: auto !important;
+        padding: 12.5% 2%;
+    }
+
+    .fa-lock {
+        top: 7px;
+    }
+    .fa-envelope-open {
+        top: 12px;
+    }
+    .textToRight{
+        display: block;
+    }
+    .logoContLog {
+        text-align: center;
+        width: 100%;
+    }
+    .logoContReg{
+        top: 20px;
+        width: 100%;
+    }
+    .logoLogREG {
+        width: 34%;
+    }
+    .inputContTTRJ, .inputContTTRJ:focus ,.ResetButton
+    {
+        width: 100% !important;
+        padding: 0 29px 0 15px !important;
+        margin-bottom: 5% !important;
+        margin-top: 3% !important;
+    }
+    .stepy-step {
+        padding: 0 0 !important;
+    }
+    .loginFieldsContRegister .stepy-navigator {
+        text-align: right !important;
+        width: 100% !important;
+    }
+    .logoLogREG {
+        width: 56%;
+    }
+    .inputContTT
+    {
+        width: 100%;
+    }
+    .REInButton, .logInButton {
+        width: 100%;
+    }
+    .topTextLogin h2
+    {
+        text-align: center;
+    }
+
+    .loginFieldsCont {
+        padding: 0.5% 12.5% 0;
+        height: 100%;
+    }
+    .logoLogIn {
+        width: 43%;
+    }
+    .logoRest,.logoverify {
+        width: 47%;
+    }
+    .ResetButton {
+        width: 100%;
+    }
+    .topTextLoginReset h2 {
+        margin: 15% 0;
+    }
+    .VerifyContent p
+    {
+        font-size: 12px;
+        margin-top: 9%;
+    }
+    svg:not(:root)
+    {
+        height: 119px;
+    }
+    .topTextVerify h2 {
+        font-size: 30px;
+        margin-bottom: 10%;
+        margin-top: 10%;
+    }
+    .verifySec {
+        padding: 9.5% 0 0 0;
+        height: 100vh;
+    }
+    .REInButton {
+        width: 100% !important;
+    }
+}
+

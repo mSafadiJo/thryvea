@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "eloquent-victor-324807",
+  "private_key_id": "eeb1c833bce27177c6ae793c1ab8b4999eef5c8c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDDVoSP+GILwimk\nTzhUtISESuSsUaAFP8RznG4s7gZsPAzMSaHz0fltcPf5F5OnB1MwR0/otADAjKnb\nu/wgY2cr1kUclQwjtaL3nrK2WA4NgousUFvU4QXvEDk0UJzK2VjprcPnAPH32wVW\nafUySYNYONA99L2l71Zch5vFYWnKYHDvxPenIoMJUG1MzEX8EBYHD0XWONF08d6J\nOSUCkgm7VSKFCFQcNdiS8DCXAq/aX8ModQTuLvBoi6FO2MYd1HSTbuUPWsqPbdSf\nJywLHDED3814nJuLKQvtzjxnCXsKXp/cz6SrGQfmw5dpit0wnKqNDtH82xwji0cY\nYB3BQpH/AgMBAAECggEALOMwyzS0sycHEq7xruVcnlnneoG3V/1zU23bE5APAcg6\n2KcDBFh4DOIs2ZzFXVidkTaR8lOK6LRqRAhKw9aT2sr+TrchdwNCU8ywHJ7Xe9tH\n5W0B7UVYa7s6qf7sSODxQaGgpvDcqaw26cing8rI1/kWQWaAPiVlnxW6gf0EpnBk\nOl/uK+A0Jl1XEE7I6hnL0YpSmMSrFnNVJx1ZcJU/pyz4y2CQGx5iBnNx6yVnblgB\n2+ptfHBiyBjcczPc2IMnupBTTNxEzChY8drZSKdLC+CRSouHLudpgHHMRGu5h13T\nDgeq3nMfQGJqmIG5wI01QgSAEMsSkfF1331NRqbVoQKBgQDizkUSSE8hnxQAHhZM\nHw8SkPHA7Rh+S/Z3djhCfuKeTg4T9uDXHdeKbRl/xOHCoiAMQ2PP1rwXeva/O7oW\nFmtdd4MdMhamtdq9NK4JgocFt13sQ1OQ8XHTZ053nbZylCT07XWgOueBQbXjWA+L\nyNt9kGh9L2a5cYxK1zskmjw2BQKBgQDce1Fg2iCwpzOy6sCyyzYVsftzlmOkXFhK\nRVhRCnkWfomfyTfzpldIST0nBQAKmQPOwyIL1ozEP9x44sU0riIq7y350fyDcXSL\nCZWSQdvAsoGFFyZVsXhANhLC2EiHWvhrbi72H5X+QXsfykkq4a/Oa2IY4JNm5Mmc\n136lLgbDMwKBgQDHkBmEga1m9vMBO3gBGJ8JhhHB4JzZm/tMl+/eyoiaJDIM7QBf\nJ3nc6iwymUjQGhk60R0E5nvv6RktoN8WyjlEL4FlcgouO/sw2iZ8ZaZqqDJzTbY8\n5cVy7wZDB7leTe3KuRnzl4DV4byqQnTDWUOP0z2tUMUBTODVhVYb2b47BQKBgFOy\nBExNwUcN0ZRDhO7aMSe/LoLMPfrwixt2g3YQEbM2Sav8SF8Xb96i3rHnNgLP3yAn\n9s6jnUAKNfk1rEK5L4M41C0XR1HmSaVV+A9TLMZTfNM23Hh/K/TEEg8g5zdqkw7E\n/tKzXs7rsH963JeIoKItJUnoRkwy4U3Gh+7QMAT9AoGAP560SdbvKSb8WCX/PcR9\nroCAXFR8SLl5JUPeF7TqTeWGNDzKpOe388tdfyd2F58/kbtfLJ6bXiVVkwTgwIJe\ny4VQV2UZde2O62qDYZy2aMoDlSe+Z4ZzrrbtSLkL2mc8CFPpJmy5XelqEvojMPga\nHkwTuxXfZZvESdu4Cd/Og0Y=\n-----END PRIVATE KEY-----\n",
+  "client_email": "allieddigitalmedia@eloquent-victor-324807.iam.gserviceaccount.com",
+  "client_id": "103955490639467739587",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/allieddigitalmedia%40eloquent-victor-324807.iam.gserviceaccount.com"
+}

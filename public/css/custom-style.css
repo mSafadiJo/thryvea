@@ -1,0 +1,391 @@
+.bg-accpunt-pages {
+    /*background: linear-gradient(#ffffff, #a57d7d);*/
+    background: linear-gradient(#005a7c61, #1f1d53);
+}
+.logo-section {
+    margin: 30vh 0 0 0;
+}
+
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+.requiredFields{
+    color:red;
+    font-size:17px;
+    vertical-align: sub;
+}
+.card-box.hover-box-shadow:hover {
+    box-shadow: 0px 0px 13px 0px #797979;
+}
+.card-box.hover-box-shadow:hover button{
+    cursor: pointer;
+}
+
+i.mdi.mdi-file-document-box.font-18.vertical-middle.m-r-10 {
+    margin: 0 !important;
+    color: #296373;
+}
+
+i.fa.fa-pencil {
+    color: #64c5b1;
+}
+
+i.fa.fa-trash-o {
+    color: #f96a74;
+}
+.addedSectionLogo.pull-right {
+    font-size: 40px;
+    margin: 1%;
+    color: #0000ff85;
+    cursor: pointer;
+}
+img.menuLogo_svg {
+    display: inline-block;
+    width: 25px;
+    margin: 1px;
+}
+
+.row.timemargin {
+    margin: 1% auto;
+}
+
+/* The container */
+.container-dayoff {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container-dayoff input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark-dayoff {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    border-radius: 50%;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container-dayoff:hover input ~ .checkmark-dayoff {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container-dayoff input:checked ~ .checkmark-dayoff {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark-dayoff:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container-dayoff input:checked ~ .checkmark-dayoff:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container-dayoff .checkmark-dayoff:after {
+    left: 8px;
+    top: 4px;
+    width: 8px;
+    height: 14px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+/* The container */
+.container-dayoff, .container-services {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container-dayoff input, .container-services input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark-dayoff, .checkmark-services{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    border-radius: 50%;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container-dayoff:hover input ~ .checkmark-dayoff,
+.container-services:hover input ~ .checkmark-services {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container-dayoff input:checked ~ .checkmark-dayoff,
+.container-services input:checked ~ .checkmark-services {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark-dayoff:after,
+.checkmark-services:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container-dayoff input:checked ~ .checkmark-dayoff:after,
+.container-services input:checked ~ .checkmark-services:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container-dayoff .checkmark-dayoff:after,
+.container-services .checkmark-services:after {
+    left: 8px;
+    top: 4px;
+    width: 8px;
+    height: 14px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/*-----------*/
+.service-block {
+    width: 100%;
+    padding-bottom: 10px;
+    margin: 1px auto;
+}
+
+div#paving_service_div_section label.container-services {
+    display: inline-block;
+    width: 24%;
+    vertical-align: text-top;
+}
+
+div#painting_service_div_section label.container-services {
+    display: inline-block;
+    width: 33%;
+    vertical-align: text-top;
+}
+
+span.checkmark-services:not(.checkmark-dayoff) {
+    border-radius: 0;
+}
+
+.services-modal {
+    position: absolute;
+    top: 10%;
+    left: 0;
+}
+
+.services-modal > button.btn.btn-primary {background-image: linear-gradient(to right top, #a11c28, #ad1d2b, #bf1e2e, #1f1e54, #2d2e8b, #0451a5, #0451a5, #417b82, #52cffe, #41dfff, #5ab3c3, #5fc7db);}
+
+.services-modal > button.btn.btn-primary:hover {
+    box-shadow: 0 0 10px 0px #3a406d;
+    cursor: pointer;
+}
+#myservicesmodal > .modal-dialog {
+    max-width: 60% !important;
+}
+#myservicesmodal > .modal-dialog > .modal-content > .modal-body >  ul.services-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: table;
+    width: 100%;
+}
+#myservicesmodal > .modal-dialog > .modal-content > .modal-body > ul.services-list > li {
+    font-weight: bold;
+    display: inline-block;
+    width: 33%;
+    margin: 2% auto;
+}
+#myservicesmodal > .modal-dialog > .modal-content > .modal-body > h2 {
+    text-decoration: underline;
+}
+
+.crm {
+    padding: 2%;
+}
+
+.crm h2 {
+    font-size: 24px;
+    text-align: center;
+}
+
+.crmSwitch {
+    float: right;
+}
+
+.ListBuyersDrop {
+    position: static;
+}
+
+.email-phone-Dynamic > div,
+.crmDynamic > div {
+    margin-bottom: 2%;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+p.is_ping_account_campaign {
+    line-height: 2.6;
+    font-weight: bold;
+}
+
+p.is_ping_account_campaign label{
+    float: none !important;
+    margin-left: 1%;
+}
+
+p#pErrorsShown{
+    color: #dc0000 !important;
+}
+
+#exportCampaignTarget, #exportCampZipcodes, #exportCampExpectZipcodes {
+    background-color: #336485 !important;
+    border: 1px solid #336485 !important;
+}
+
+
+table.dataTable>tbody>tr.child span.dtr-title {
+    display: block;
+}
+
+table.dataTable>tbody>tr.child ul li {
+    display: inline-block !important;
+    margin-right: 9% !important;
+}
+
+table.dataTable>tbody>tr.child ul {
+    display: inline-block;
+    width: 100%;
+}
+table.dataTable>tbody>tr.child span.dtr-title {
+    display: block !important;
+}
+
+.CampaignsBuyers th
+{
+    width:20% ;
+}
+
+@media only screen and (max-width: 768px) {
+    .buyerNav .nav-link {
+        padding: .5em 0;
+    }
+
+    .buyerNav .dropdown-menu-right {
+        right: 0;
+        left: -20px;
+    }
+
+}
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#left-side
+{
+    margin-top: 30%;
+}
+#img-background, #img-icon, #img-logo{
+    position: absolute;
+    margin-block: 40px;
+    width: 300px;
+}
+#img-background{
+    left: 50px;
+}
+#file-icon, #file-background, #file-logo{
+    margin-bottom: 75px;
+}
+
+.modal .modal-dialog .close {
+    top: 0px;
+    right: 0;
+    padding: 0;
+}
+
+.tooltip-inner {
+    color: #fff !important;
+}
+
+.Delete input:checked + .slider {
+    background-color: red;
+}

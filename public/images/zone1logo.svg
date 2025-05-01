@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 289.2 223.8" style="enable-background:new 0 0 289.2 223.8;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:url(#SVGID_1_);}
+</style>
+<g>
+	<g>
+		<path class="st0" d="M11.1,216.6H7.2v6.7H0v-25.2h11.5c6.9,0,11.2,3.6,11.2,9.3c0,3.7-1.8,6.4-4.9,8l5.4,7.9h-7.6L11.1,216.6z
+			 M11.1,203.7h-4v7.4h4c3,0,4.4-1.4,4.4-3.7C15.6,205.1,14.1,203.7,11.1,203.7z"/>
+		<path class="st0" d="M50.5,217.8v5.5H30.3v-25.2h19.8v5.5H37.4v4.3h11.2v5.3H37.4v4.6H50.5z"/>
+		<path class="st0" d="M80.9,223.3l-0.1-13.4l-6.5,10.9h-3.2l-6.4-10.5v13h-6.6v-25.2H64l8.9,14.6l8.6-14.6h5.9l0.1,25.2H80.9z"/>
+		<path class="st0" d="M94.8,210.7c0-7.6,5.9-13.1,14-13.1s14,5.5,14,13.1s-5.9,13.1-14,13.1S94.8,218.3,94.8,210.7z M115.6,210.7
+			c0-4.4-3-7.2-6.8-7.2c-3.8,0-6.8,2.8-6.8,7.2s3,7.2,6.8,7.2C112.6,217.9,115.6,215.1,115.6,210.7z"/>
+		<path class="st0" d="M130.2,198.1h11.9c8.4,0,14.1,4.9,14.1,12.6s-5.7,12.6-14.1,12.6h-11.9V198.1z M141.8,217.6
+			c4.3,0,7.2-2.6,7.2-6.9s-2.9-6.9-7.2-6.9h-4.5v13.8H141.8z"/>
+		<path class="st0" d="M183.8,217.8v5.5h-20.2v-25.2h19.8v5.5h-12.7v4.3h11.2v5.3h-11.2v4.6H183.8z"/>
+		<path class="st0" d="M191.4,198.1h7.1v19.6h12v5.7h-19.2V198.1z"/>
+		<path class="st0" d="M216.9,198.1h7.1v25.2h-7.1V198.1z"/>
+		<path class="st0" d="M256.8,198.1v25.2h-5.9l-11.1-13.4v13.4h-7v-25.2h5.9l11.1,13.4v-13.4H256.8z"/>
+		<path class="st0" d="M282.3,210.2h6.3v10.4c-2.9,2.1-6.9,3.2-10.6,3.2c-8,0-13.9-5.4-13.9-13.1c0-7.7,5.9-13.1,14.1-13.1
+			c4.7,0,8.5,1.6,11,4.6l-4.5,4.1c-1.7-1.9-3.7-2.8-6.1-2.8c-4.3,0-7.2,2.8-7.2,7.2c0,4.3,2.9,7.2,7.1,7.2c1.3,0,2.6-0.3,3.9-0.8
+			V210.2z"/>
+	</g>
+	<g>
+		<path class="st0" d="M137.5,119.8v27.8H40v-22l48.5-56.4H40V41.4h95.1v22l-48.5,56.4H137.5z"/>
+		<path class="st0" d="M197.1,41.4v106.2h-35.8V68.4h-18.2v-27H197.1z"/>
+		<circle class="st0" cx="226" cy="124.3" r="23.2"/>
+	</g>
+	<g>
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-0.6629" y1="95.5229" x2="289.8501" y2="93.4626">
+			<stop  offset="0" style="stop-color:#93BAA1"/>
+			<stop  offset="1" style="stop-color:#B8DFCA"/>
+		</linearGradient>
+		<path class="st1" d="M289.2,189H0V0h289.2V189z M17.6,171.4h254V17.6h-254V171.4z"/>
+	</g>
+</g>
+</svg>

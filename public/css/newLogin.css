@@ -1,0 +1,592 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@500&display=swap');*/
+body{
+    padding: 0;
+    background-color:#fff;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
+.formContainer1{
+    background-image: url(../images/NewLogin/newBG.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.marginContRight,.marginCont{
+    height: 100%;
+    width: 100%;
+}
+.formContRight{
+    background-image: url(../images/NewLogin/Group-277.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top: 6px solid #ffff;
+    border-right: 6px solid #ffff;
+    border-bottom: 6px solid #ffff;
+    height: 100%;
+}
+.formCont{
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 6px solid #ffff;
+    padding: 8%;
+    height: auto;
+}
+
+.logo-img1{
+    display: none;
+    width: 100%;
+}
+.logo-img{
+    width: 50%;
+    position: absolute;
+    top: 48% ;
+    left: 26% ;
+    transform: translate(-5%, -50%) ;
+}
+.formCont p{
+    color: #FFFFFF;
+    width: 100%;
+    margin: 2% auto;
+    font-size: 16px;
+}
+.helloP{
+    color: #FFFFFF;
+    width: 100%;
+    margin: 2% auto;
+    font-size: 18px;
+}
+.formCont h2{
+    color: #FFFFFF;
+    font-size: 31px;
+}
+
+.formCont a{
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+.formCont a:hover{
+    color: #FFFFFF;
+}
+.checkbox-success input[type="checkbox"]:checked + label::before {
+    background-color: revert;
+    border-color: #FFFFFF;
+}
+.checkbox-success input[type="checkbox"]:not(:checked) + label::before {
+    background-color: revert;
+    border-color: #FFFFFF;
+}
+.formCont .noAccount, .clickH,.regNoAcc{
+    font-weight: bold;
+}
+.forgotPLOg{
+    font-size: 16px;
+}
+.formCont i{
+    position: absolute;
+    top: 30%;
+    left: 90%;
+    font-size: 22px;
+    color: #FFFF;
+}
+.inputContTT,.registerInpt{
+    border: 1px solid #FFFFFF;
+    background-color: #fff0;
+    outline: 0;
+    border-radius: 10px;
+    color: #000;
+    height: 49px;
+    -webkit-text-fill-color: #FFFFFF;
+}
+.registerInpt{
+    margin-bottom: 3%;
+}
+.inputContTT:focus{
+    border: 1px solid #FFFFFF;
+    background-color: #fff0;
+    outline: 0;
+    border-radius: 10px;
+    color: #FFFFFF;
+    height: 49px;
+}
+.inputContTT::placeholder{
+    color: #FFFFFF;
+    font-weight: 100;
+}
+.passLabel{
+    color: #FFFFFF;
+}
+.logInButton{
+    background-color: #001039;
+    width: 100%;
+    margin: 2% auto;
+    color: #fff;
+    border-radius: 11px;
+    height: 49px;
+}
+.logInButton:hover{
+    cursor: pointer;
+}
+.formContainer input:-webkit-autofill,
+.formContainer input:-webkit-autofill:hover,
+.formContainer input:-webkit-autofill:focus,
+.formContainer textarea:-webkit-autofill,
+.formContainer textarea:-webkit-autofill:hover,
+.formContainer textarea:-webkit-autofill:focus,
+.formContainer select:-webkit-autofill,
+.formContainer select:-webkit-autofill:hover,
+.formContainer select:-webkit-autofill:focus,
+.regCont input:-webkit-autofill,
+.regCont input:-webkit-autofill:hover,
+.regCont input:-webkit-autofill:focus,
+.regCont textarea:-webkit-autofill,
+.regCont textarea:-webkit-autofill:hover,
+.regCont textarea:-webkit-autofill:focus,
+.regCont select:-webkit-autofill,
+.regCont select:-webkit-autofill:hover,
+.regCont select:-webkit-autofill:focus {
+    background-color: #fff0 !important;
+    -webkit-tap-highlight-color: #fff0 !important;
+    -webkit-box-shadow: 0 0 0 30px #fff0 inset !important;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #FFFFFF !important;
+}
+.errorText, .FailedReset {
+    color: #f50000 !important;
+    text-align: center;
+    float: right;
+    height: auto;
+    font-size: 14px !important;
+}
+.formContRegister .errorText {
+    margin-top: 0;
+    width: 100%;
+    height: 7px;
+    font-size: 18px;
+}
+.forgotPLOg {
+    font-size: 19px;
+}
+.checkbox-success{
+    padding-top: 2%;
+}
+.checkbox label {
+    font-size: 15px;
+}
+.ResetForm {
+    padding: 20% 10%;
+}
+.ResetForm2 {
+    padding: 6% 10%;
+}
+.ResetForm h2,.ResetForm p{
+    margin-bottom: 8%;
+}
+.resetEm, .resetPass, .resetPassConfirm{
+    margin-bottom: 6%;
+}
+.formContRegister{
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 2% 8%;
+    border: 6px solid #ffff !important;
+}
+.dntWor,.dntWorP,.regNoAcc,.button-next{
+    color: #FFFFFF !important;
+}
+.regNoAcc{
+    font-size: 16px;
+}
+.signUpCo{
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+.signUpCo:hover,.signUpCo:focus{
+    color: #FFFFFF;
+    text-decoration: underline !important;
+}
+.formContRegister .stepy-header  li:after, .formContRegister .stepy-header  li:before{
+    background-color: #001039;
+    width: 38%;
+}
+.formContRegister .stepy-header  li div {
+    background-color: initial!important;
+    border: 2px solid #001039 ;
+}
+.formContRegister .stepy-header  li.stepy-active:after {
+    background-color: #001039;
+    width: 38%;
+}
+.formContRegister .stepy-header  li div:after{
+    color: #FFFFFF !important;
+}
+.formContRegister .stepy-header  li.stepy-active ~ li div{
+    color: #FFFFFF !important;
+    border-color: #FFFFFF !important;
+}
+.formContRegister .stepy-header  li.stepy-active div {
+    cursor: auto;
+    border-color: #001039;
+    background-color: initial !important;
+    color: #001039;
+}
+.formContRegister .stepy-header  li.stepy-active span {
+    color: #ffffff;
+}
+.formContRegister .stepy-header  li span {
+    color: #FFFFFF;
+}
+.formContRegister .stepy-header  li.stepy-active:after, .formContRegister .stepy-header  li.stepy-active ~ li:after, .formContRegister .stepy-header  li.stepy-active ~ li:before
+{
+    color: #FFFFFF !important;
+    width: 40% ;
+}
+.formContRegister .button-back{
+    float: left;
+    color: #FFFFFF !important;
+}
+.formContRegister .button-back:hover{
+    color: #FFFFFF !important;
+}
+
+#submit_hidden_form {
+    margin-bottom: 3%;
+}
+select.form-control:not([size]):not([multiple]) {
+    height: calc(2.25rem + 11px);
+    margin-bottom: 5%;
+}
+.topTextLogin{
+    color: #FFFFFF;
+}
+.topTextLogin h2{
+    color: #FFFFFF;
+    font-size: 29px;
+    text-align: center;
+    margin-top: 7%;
+}
+.formContRE {
+    margin-top: 11%;
+}
+.formContRE svg {
+    height: 191px !important;
+}
+.VerifyP{
+    font-size: 20px;
+    color: #ffffff;
+    margin-top: 9%;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+.VerifyP a{
+    color: #FFFFFF;
+}
+.VerifyP a:hover,.VerifyP a:focus{
+    color: #FFFFFF;
+}
+.leftContentVerify{
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 4% 5%;
+    border: 6px solid #ffff;
+}
+
+@media (min-width:320px) {
+    /* smartphones, iPhone, portrait 480x320 phones */
+    .formCont {
+        padding: 0 4%;
+    }
+    .formContainer1{
+        background-image: url(../images/NewLogin/background.jpg);
+    }
+    @-moz-document url-prefix() {
+        .formContainer1 {
+            background-image: url(../images/NewLogin/newBG.jpg);
+        }
+    }
+    select.form-control:not([size]):not([multiple]) {
+        height: calc(2.25rem + 5px);
+    }
+    #streetname,.createaccountb {
+        height: 42px;
+    }
+    #streetname:hover , #streetname:focus{
+        height: 42px;
+    }
+    .formContRight {
+        display: none;
+    }
+
+    .logo-img1 {
+        display: block;
+        padding: 4% 20% 0;
+    }
+
+    .formContainer,.regCont {
+        width: 100%;
+    }
+
+    .formCont .helloP {
+        margin: 0 auto 4%;
+        font-size: 15px;
+    }
+
+    .formCont i {
+        left: 88%;
+    }
+
+    .checkbox-success {
+        padding-top: 4%;
+    }
+
+    .formContRegister .stepy-header  li {
+        width: 33%;
+    }
+
+    .formContRegister .stepy-header  li.stepy-active:after,.formContRegister .stepy-header  li.stepy-active ~ li:after,.formContRegister .stepy-header  li.stepy-active ~ li:before,.formContRegister .stepy-header  li:after,.formContRegister .stepy-header  li:before  {
+        width: 30%;
+    }
+
+
+    .formContRegister #default-wizard-head-0:before,.formContRegister #default-wizard-head-2:after {
+        display: none;
+    }
+    .formContRegister #default-wizard-head-0 span{
+        font-size: 14px;
+        width: 83%;
+        padding-left: 18%;
+    }
+    .formContRegister .stepy-header  li span {
+        font-size: 14px;
+    }
+    .formContRegister .stepy-header  {
+        padding-top: 1%;
+    }
+
+    .dntWorP {
+        margin-bottom: 0;
+    }
+
+    #submit_hidden_form {
+        display: none;
+    }
+
+    .formContRegister .errorText {
+        margin-top: 0;
+        width: 100%;
+        height: 3px;
+        font-size: 14px;
+    }
+
+    .stepy-navigator {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .regNoAcc {
+        font-size: 15px;
+        margin-bottom: 5px;
+        margin-top: -12px;
+    }
+
+    .dntWor {
+        margin-top: 0;
+        font-size: 27px;
+    }
+
+    .inputFeature, .inputFeature1 {
+        margin-bottom: 5% !important;
+    }
+
+    .leftContentVerify {
+        border-right: 6px solid #FFFF;
+    }
+
+    .formContRE {
+        margin-top: 21%;
+    }
+
+    .Verify-logo {
+        width: 95%;
+        top: 10%;
+        left: 9%;
+    }
+
+    .topTextLogin h2 {
+        margin-top: 53%;
+    }
+
+    .formContRE svg {
+        height: 166px !important;
+    }
+
+    .VerifyP {
+        font-size: 17px;
+        margin-top: 0;
+    }
+    .createaccountb{
+        margin-top: -22px;
+    }
+    .formContRegister {
+        padding: 4% 0;
+    }
+}
+@media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+    .helloP {
+        font-size: 18px !important;
+    }
+    .checkbox-success {
+        padding-top: 3%;
+    }
+    .logo-img1 {
+        padding: 4% 26% 6%;
+    }
+    .formCont i {
+        left: 91%;
+    }
+    .formContRegister .stepy-header  li.stepy-active:after,.formContRegister .stepy-header  li.stepy-active ~ li:after,.formContRegister .stepy-header  li.stepy-active ~ li:before {
+        width: 36%;
+    }
+    .formContRegister .stepy-header  li:after,.formContRegister .stepy-header  li:before {
+        width: 36%;
+    }
+    .formContRegister .stepy-header  li span {
+        font-size: 14px;
+    }
+    .Verify-logo {
+        top: 14%;
+    }
+    .topTextLogin h2 {
+        font-size: 30px;
+    }
+}
+@media (min-width:767px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+    .formContRegister .stepy-header  li.stepy-active:after, .formContRegister .stepy-header  li.stepy-active ~ li:after, .formContRegister .stepy-header  li.stepy-active ~ li:before, .formContRegister .stepy-header  li:after, .formContRegister .stepy-header  li:before {
+        width: 40%;
+    }
+    .formContRegister .stepy-header  li span {
+        font-size: 14px;
+    }
+    .formCont i {
+        left: 89%;
+    }
+    .formCont {
+        padding: 6% 4%;
+        border-right: none;
+    }
+    .leftContentVerify{
+        border-right: none;
+    }
+    .helloP,.noAccount{
+        font-size: 17px !important;
+    }
+    .formCont h2 {
+        font-size: 28px;
+    }
+    .formContRight{
+        display: block;
+    }
+    .logo-img1{
+        display: none;
+    }
+    .topTextLogin h2 {
+        margin-top: 5%;
+    }
+    .VerifyP {
+        font-size: 19px;
+    }
+    .formContainer1{
+        background-image: url(../images/NewLogin/newBG.jpg);
+    }
+    .formCont{
+        background-image: none;
+    }
+}
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */
+    .formContRegister .stepy-header  li.stepy-active:after, .formContRegister .stepy-header  li.stepy-active ~ li:after, .formContRegister .stepy-header  li.stepy-active ~ li:before, .formContRegister .stepy-header  li:after, .formContRegister .stepy-header  li:before  {
+        width: 42%;
+    }
+    .formContRegister {
+        padding: 3%;
+    }
+    .inputFeature, .inputFeature1 {
+        margin-bottom: 3% !important;
+    }
+    .registerInpt {
+        margin-bottom: 2%;
+    }
+    .formContRE {
+        margin-top: 14%;
+    }
+    .formContainer1{
+        background-image: url(../images/NewLogin/newBG.jpg);
+    }
+    .helloP, .noAccount {
+        font-size: 17px !important;
+    }
+}
+@media (min-width:1281px) {
+    /* hi-res laptops and desktops */
+    .helloP {
+        font-size: 20px !important;
+    }
+    .noAccount {
+        font-size: 18px !important;
+    }
+    .formCont i {
+        left: 92%;
+    }
+
+    .formCont {
+        padding: 5% 4%;
+    }
+
+    .formContRegister .stepy-header  li.stepy-active:after, .formContRegister .stepy-header  li.stepy-active ~ li:after, .formContRegister .stepy-header  li.stepy-active ~ li:before, .formContRegister .stepy-header  li:after, .formContRegister .stepy-header  li:before {
+        width: 44%;
+    }
+
+    .formContRegister .errorText {
+        margin-top: -9px;
+        width: 100%;
+        height: 11px;
+        font-size: 16px;
+    }
+
+    .formContRE {
+        margin-top: 11%;
+    }
+
+    .regNoAcc{
+        font-size: 18px !important;
+    }
+    
+    .formContRegister .stepy-header  li span {
+        font-weight: 600;
+    }
+}
+@media(min-width: 1400px){
+    .formContRegister {
+        padding: 4%;
+    }
+    .formContRegister .stepy-header  li.stepy-active:after, .formContRegister .stepy-header  li.stepy-active ~ li:after, .formContRegister .stepy-header  li.stepy-active ~ li:before, .formContRegister .stepy-header  li:after, .formContRegister .stepy-header  li:before {
+        width: 43%;
+    }
+
+}
+@media (min-width:1400px) and (max-height: 712px){
+    .reg1{
+        padding: 31% !important;
+    }
+    .formContRegister {
+        padding: 2%;
+    }
+}
+

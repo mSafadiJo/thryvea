@@ -1,0 +1,96 @@
+/*Admin*/
+.input-number {
+    width: 80px;
+    padding: 0 12px;
+    vertical-align: top;
+    text-align: center;
+    outline: none;
+}
+
+.input-number,
+.input-number-decrement,
+.input-number-increment {
+    border: 1px solid #ccc;
+    height: 40px;
+    user-select: none  ;
+}
+
+.input-number-decrement,
+.input-number-increment {
+    display: inline-block;
+    width: 30px;
+    line-height: 38px;
+    background: #f1f1f1;
+    color: #444;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.input-number-decrement:active,
+.input-number-increment:active {
+    background: #ddd;
+}
+
+.input-number-decrement{
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.input-number-increment {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+}
+
+/*Dashboard*/
+.main-progress {
+    width: 100%;
+    border-bottom: 3px dashed;
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+div.main-progress::before {
+    max-width: 25%;
+    background-image:url('../images/salesDashboard/start.svg');
+    background-size: 50px 40px;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    content:"";
+}
+
+div.main-progress::after {
+    max-width: 25%;
+    background-image:url('../images/salesDashboard/finish.svg');
+    background-size: 50px 40px;
+    display: inline-block;
+    width: 50px;
+    height: 40px;
+    content:"";
+    float: right;
+}
+
+.custom-name-progress {
+    font-weight: 700;
+    position: absolute;
+    top: 20px;
+}
+
+.img-sales-custom {
+    width: 75px;
+    height: 62px;
+    position: absolute;
+    top: -15px;
+    display: block;
+}
+
+.custom-table-progress .thead-dark {
+    color: #fff;
+    background-color: #333;
+}
+
+.custom-sales-number {
+    font-weight: 700;
+}

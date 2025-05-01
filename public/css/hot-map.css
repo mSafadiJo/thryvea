@@ -1,0 +1,96 @@
+
+.icon_map
+{
+    color: #c8f14c;
+}
+
+.map_1
+{
+    color : #ff0f0f;
+}
+.map_2
+{
+    color : #fe4b0f;
+}
+.map_3
+{
+    color : #ff8000;
+}
+.map_4
+{
+    color : #fec30f;
+}
+.map_5
+{
+    color : #ffff46;
+}
+.map_6
+{
+    color : #237ff1;
+}
+.map_7
+{
+    color : #03a9f4;
+}
+.map_8
+{
+    color : #333333;
+}
+
+
+
+.map_1Lead
+{
+    color : #ff0f0f;
+}
+.map_2Lead
+{
+    color : #fe4b0f;
+}
+.map_3Lead
+{
+    color : #ff8000;
+}
+.map_4Lead
+{
+    color : #fec30f;
+}
+.map_5Lead
+{
+    color : #ffff46;
+}
+.map_6Lead
+{
+    color : #237ff1;
+}
+.map_7Lead
+{
+    color : #000;
+}
+
+#clicked-state
+{
+    text-align: center;
+    font-size: 43px;
+}
+#clicked-state span
+{
+    font-weight: bold;
+}
+
+.state_map
+{
+    font-size: 22px;
+    margin-bottom: 4%;
+}
+
+.ul_map
+{
+    margin-top: 15%;
+}
+
+
+.select2-container .select2-search--inline .select2-search__field
+{
+    width: 100% !important;
+}
