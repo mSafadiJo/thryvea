@@ -8635,54 +8635,21 @@ class PingCRMAllied
                                         $monthly_bill = 600;
                                 }
 
-                                $url_api = "https://www.reallygreatrate.com/api/ping/index.php";
-
                                 $Lead_data_array_ping = array(
-                                    "publisher_id" => "1259",
-                                    "rcid" => "6450",
-                                    "api_key" => "37305ed228080acdf0b59f2a21ffe1b0",
+                                    "publisher_id" => "494",
+                                    "rcid" => "1100",
+                                    "api_key" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
+                                    "type" => "solar",
                                     "state" => $statename_code,
                                     "zip" => $zip,
-                                    "field_2" => $utility_provider, //Electricity Provider
-                                    "field_12" => "", //Credit Status
-                                    "field_4" => $monthly_bill, //Power Bill.
-                                    "field_13" => $LeadId, //Jornaya LeadiD Token
-                                    "field_3" => $homeowner, //Home Owner
-                                    "field_1" => $roof_shade_data, //Roof Shade
-                                    "field_14" => "", //Property Type
+                                    "electricityprovider" => $utility_provider, //Electricity Provider
+                                    "creditscore" => "good", //Credit Status
+                                    "powerbill" => $monthly_bill, //Power Bill.
+                                    "leadidtoken" => $LeadId, //Jornaya LeadiD Token
+                                    "homeowner" => $homeowner, //home owner
+                                    "roofshade" => $roof_shade_data, //Roof Shade
                                     "ipaddress" => $IPAddress,
                                 );
-
-                                if (config('app.env', 'local') == "local") {
-                                    //Test Mode
-                                    $Lead_data_array_ping['is_test'] = "yes";
-                                }
-
-                                $ping_crm_apis = array(
-                                    "url" => $url_api,
-                                    "header" => $httpheader,
-                                    "lead_id" => $leadCustomer_id,
-                                    "inputs" => stripslashes(json_encode($Lead_data_array_ping)),
-                                    "method" => "POST",
-                                    "campaign_id" => $campaign_id,
-                                    "service_id" => $lead_type_service_id,
-                                    "user_id" => $user_id,
-                                    "returns_data" => $returns_data,
-                                    "crm_type" => 0
-                                );
-
-                                if($is_multi_api == 0) {
-                                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
-                                    $result2 = json_decode($result, true);
-                                    if (!empty($result2['status'])) {
-                                        if ($result2['status'] == "success") {
-                                            $TransactionId = $result2['ping_id'];
-                                            $Payout = $result2['price'];
-                                            $multi_type = 0;
-                                            $Result = 1;
-                                        }
-                                    }
-                                }
                                 break;
                             case 6:
                                 //Roofing
@@ -8788,6 +8755,7 @@ class PingCRMAllied
 
                         switch ($lead_type_service_id) {
                             case 1:
+                            case 2:
                             case 6:
                             case 7:
                             case 9:
@@ -19648,7 +19616,7 @@ class PingCRMAllied
                                 $date = date('Y-m-d H:i:s');
                                 $genders = trim($Leaddatadetails['genders']);
 
-                                
+
 
                                 $url = "https://api.gateway.blueinkanalytics.com/v2/auto_insurance/ping";
                                 $httpheader = array(

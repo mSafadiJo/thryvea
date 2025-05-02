@@ -1,0 +1,7 @@
+.idea
+.env
+.ignore
+vendor/
+storage/logs/
+bootstrap/cache/
+bootstrap/cache/config.php
