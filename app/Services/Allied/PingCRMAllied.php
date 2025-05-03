@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 
 class PingCRMAllied
 {
+
+    //test upload using github
     public function pingandpost($campaign, $data_msg, $numberOfCamp, $type, $is_pingandpost, $is_multi_api = 0)
     {
         try {
