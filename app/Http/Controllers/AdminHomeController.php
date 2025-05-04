@@ -87,7 +87,7 @@ class AdminHomeController extends Controller
                     'lastname'=> Auth::user()->user_last_name,
                 ];
                 // Create an access log entry
-                $this->userUpdateService->createAccessLog($data);
+                $this->userUpdateService->createAccessLog($data,$section="Admin",$action="Update");
 
                 return redirect()->back()->with('success', 'Password updated successfully');
             }
