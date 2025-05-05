@@ -2104,9 +2104,9 @@ class ApiMain {
 
         $leadsCustomerCampaign->save();
 
-       // $leadsCustomerCampaign_id = DB::getPdo()->lastInsertId();
-        $leadsCustomerCampaign_id = $leadsCustomerCampaign->lead_id;
-
+        // $leadsCustomerCampaign_id = DB::getPdo()->lastInsertId();
+        $leadsCustomerCampaign_id = $leadsCustomerCampaign->campaigns_leads_users_id;
+        dd($leadsCustomerCampaign_id);
         //========================================================================
         $leadsCustomerCampaign_aff = new CampaignsLeadsUsersAff();
         $leadsCustomerCampaign_aff->user_id = $dataleads['user_id'];
@@ -3013,9 +3013,9 @@ class ApiMain {
 
                         if($is_ping_account != 1){
                             $array = array(
-                               "campgian_id"=> $campaign_id_curent,
-                               "buyer_mobile_number"=> $buyer_mobile_number,
-                               "buyer_business_name"=> $buyer_business_name
+                                "campgian_id"=> $campaign_id_curent,
+                                "buyer_mobile_number"=> $buyer_mobile_number,
+                                "buyer_business_name"=> $buyer_business_name
                             );
 
                             $sold_leadTo_campaign_toSendSms[$j++] =$array;
@@ -3131,25 +3131,25 @@ class ApiMain {
 //            "data_msg" => $data_msg
 //        );
 
-            if(!empty($sold_leadTo_campaign_toSendSms)){
+        if(!empty($sold_leadTo_campaign_toSendSms)){
 
-                //SMS
-                $datasmsMassage = "Dear ". $data_msg['leadName'] .",\n";
-                $datasmsMassage .= "Please note that you may be contacted by one or more of these companies ,\n";
+            //SMS
+            $datasmsMassage = "Dear ". $data_msg['leadName'] .",\n";
+            $datasmsMassage .= "Please note that you may be contacted by one or more of these companies ,\n";
 
-                foreach($sold_leadTo_campaign_toSendSms as $val){
-                    $datasmsMassage .= "Company's Name: " . $val['buyer_business_name'] . ",\n";
-                }
-
-                try {
-                    $BandWidth = new BandWidthController();
-                    if (!empty($data_msg['LeadPhone'])) {
-                        $BandWidth->SendMessage(array('+1' . $data_msg['LeadPhone']),$datasmsMassage);
-                    }
-                } catch (Exception $e) {
-
-                }
+            foreach($sold_leadTo_campaign_toSendSms as $val){
+                $datasmsMassage .= "Company's Name: " . $val['buyer_business_name'] . ",\n";
             }
+
+            try {
+                $BandWidth = new BandWidthController();
+                if (!empty($data_msg['LeadPhone'])) {
+                    $BandWidth->SendMessage(array('+1' . $data_msg['LeadPhone']),$datasmsMassage);
+                }
+            } catch (Exception $e) {
+
+            }
+        }
 
         $data_rsponse = array(
             'success' => "true",
