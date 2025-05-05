@@ -2,11 +2,6 @@
 
 namespace App;
 
-use App\Service_Campaign;
-use App\ZipCodesList;
-use App\City;
-use App\State;
-use App\Exception;
 use App\Services\APIValidations;
 
 
@@ -16,6 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class LeadsCustomer extends Model
 {
+    protected $table = 'leads_customers'; // Optional if using default naming
+    protected $primaryKey = 'lead_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     public function state(): BelongsTo {
         return $this->belongsTo(State::class, 'lead_state_id', 'state_id');
     }
@@ -70,7 +70,7 @@ class LeadsCustomer extends Model
             return $api_validations->check_questions_ids_push_array($this);
         }
     }
-    
+
 
     public function dataAsUnifiedJson() {
         $marketing_platform = DB::table('marketing_platforms')->select('id','lead_source', 'name')

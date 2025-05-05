@@ -805,7 +805,8 @@ class MainApiController extends Controller
         $postLeads = $servcesFunct->saveQuesAnswersInDb($postLeads, $questions, $service);
 
         $postLeads->save();
-        $postLeads_id = DB::getPdo()->lastInsertId();
+        // $postLeads_id = DB::getPdo()->lastInsertId();
+        $postLeads_id = $postLeads->lead_id;
 
         //Check if Valid Transaction Id =================================================================
         $lead_details_ping_check_transaction_id = PingLeads::where('transaction_id', $request->transaction_id)
@@ -1293,7 +1294,9 @@ class MainApiController extends Controller
         $postLeads = $servcesFunct->saveQuesAnswersInDb($postLeads, $questions, $service);
 
         $postLeads->save();
-        $postLeads_id = DB::getPdo()->lastInsertId();
+        // $postLeads_id = DB::getPdo()->lastInsertId();
+        $postLeads_id = $postLeads->lead_id;
+
         $transaction_id = md5($postLeads_id . "-" . time());
         LeadsCustomer::where('lead_id', $postLeads_id)->update(["token" => $transaction_id]);
         $response_code['transaction_id'] = $transaction_id;
