@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class PingLeads extends Model
 {
+
+    protected $table = 'ping_leads'; // Optional if using default naming
+    protected $primaryKey = 'lead_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
+
     protected $fillable = [
         'lead_fname', 'lead_lname', 'lead_address', 'lead_email', 'lead_phone_number',
         'lead_numberOfItem', 'lead_ownership', 'lead_type_service_id', 'lead_installing_id',

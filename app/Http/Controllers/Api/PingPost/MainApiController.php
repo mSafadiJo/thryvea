@@ -37,8 +37,6 @@ class MainApiController extends Controller
         // save ping lead to DB
         // Check if any Campaign match ping lead details
         //
-
-
         $request->headers->set('Accept', 'application/json');
 
         $this->validate($request, [
@@ -251,8 +249,7 @@ class MainApiController extends Controller
         $pingLeads = $servcesFunct->saveQuesAnswersInDb($pingLeads, $questions, $service);
 
         $pingLeads->save();
-        $pingLeads_id = DB::getPdo()->lastInsertId();
-
+        $pingLeads_id = $pingLeads->lead_id;
         //save transaction id value on ping table
         $transaction_id = md5($pingLeads_id . "-" . time());
         DB::table('ping_leads')->where('lead_id', $pingLeads_id)->update(["transaction_id" => $transaction_id]);
@@ -291,7 +288,7 @@ class MainApiController extends Controller
 
         //Check if Match Lead ==============================================================
         $if_campaign_is_set = $this->check_if_match_campaign($questions['data_arr']['LeaddataIDs'], $service, $address, $request['vendor_id'], $request['sub_id']);
-       // return $if_campaign_is_set;
+        // return $if_campaign_is_set;
         if( empty($if_campaign_is_set) ) {
             PingLeads::where('lead_id', $pingLeads_id)->update([
                 "status" => 'Not Match'
