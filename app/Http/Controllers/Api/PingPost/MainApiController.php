@@ -538,7 +538,6 @@ class MainApiController extends Controller
         }
 
         $response_code = $this->check_ping_if_sold($listOFCampainDB, $listOFCampainDB_type, $if_campaign_is_set, $pingLeads_id, $transaction_id, $ping_post_arr, $address['state_id'], $count_of_lead, $data_msg['google_ts']);
-return $response_code;
         return response()->json($response_code);
     }
 
