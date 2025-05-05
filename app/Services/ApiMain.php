@@ -2106,7 +2106,6 @@ class ApiMain {
 
         // $leadsCustomerCampaign_id = DB::getPdo()->lastInsertId();
         $leadsCustomerCampaign_id = $leadsCustomerCampaign->campaigns_leads_users_id;
-        dd($leadsCustomerCampaign_id);
         //========================================================================
         $leadsCustomerCampaign_aff = new CampaignsLeadsUsersAff();
         $leadsCustomerCampaign_aff->user_id = $dataleads['user_id'];
