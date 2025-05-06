@@ -2139,7 +2139,7 @@ class ApiMain {
             });
         }
 
-        Slack::send("User $email Budget is low!");
+        //Slack::send("User $email Budget is low!");
     }
 
     public function autopaycampaign($user_id, $amount){

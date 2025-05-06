@@ -163,7 +163,7 @@ class StripePaymentController extends Controller
             $buyer_name = $user_data->username;
             $amount = $request->value;
 
-            Slack::send("User $email paid $$amount using the Stripe, Transaction Id: $trx_id :)");
+            //Slack::send("User $email paid $$amount using the Stripe, Transaction Id: $trx_id :)");
 
             //New Payments Email For users
             $data = array(
@@ -238,7 +238,7 @@ class StripePaymentController extends Controller
 
             $user_data = User::where('id', $user_id)->first(['email', 'username']);
             $email = $user_data->email;
-            Slack::send("User $email, Auto Charge failed!");
+            //Slack::send("User $email, Auto Charge failed!");
 
             return false;
         }
@@ -274,7 +274,7 @@ class StripePaymentController extends Controller
         $email = $user_data->email;
         $buyer_name = $user_data->username;
 
-        Slack::send("User $email paid $$amount using the Stripe, Transaction Id: $trx_id :)");
+        //Slack::send("User $email paid $$amount using the Stripe, Transaction Id: $trx_id :)");
 
         //New Payments Email For users
         $data = array(
@@ -363,7 +363,7 @@ class StripePaymentController extends Controller
         $buyer_name = $user_data->username;
         $trx_id = $refund['id'];
 
-        Slack::send("User $email Refund Payments $$amount using the Stripe, Transaction Id: $trx_id :)");
+        //Slack::send("User $email Refund Payments $$amount using the Stripe, Transaction Id: $trx_id :)");
 
         //New Refund Email For users
         $data = array(

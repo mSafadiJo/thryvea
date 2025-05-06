@@ -138,7 +138,7 @@ class EcheckPaymentsController extends Controller
                     $amount = $request->amount;
                     $trx_id = $tresponse->getTransId();
 
-                    Slack::send("User $email paid $$amount using the e-Check Authorize.net, Transaction Id: $trx_id :)");
+                    //Slack::send("User $email paid $$amount using the e-Check Authorize.net, Transaction Id: $trx_id :)");
 
                     //New Payments Email For users
                     $data = array(

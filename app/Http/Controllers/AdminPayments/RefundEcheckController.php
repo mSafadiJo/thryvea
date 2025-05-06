@@ -136,7 +136,7 @@ class RefundEcheckController extends Controller
                     $buyer_name = $user_data->username;
                     $trx_id = $tresponse->getTransId();
 
-                    Slack::send("User $email Refund Payments $$amount using the Authorize.net, Transaction Id: $trx_id :)");
+                    //Slack::send("User $email Refund Payments $$amount using the Authorize.net, Transaction Id: $trx_id :)");
 
                     //New Refund Email For users
                     $data = array(

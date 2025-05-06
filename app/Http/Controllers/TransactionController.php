@@ -255,7 +255,7 @@ class TransactionController extends Controller
 
         $email = User::where('id', $request['user_id'])->first(['email']);
         $email = $email->email;
-        Slack::send("User $email added new payment credit/debit card :)");
+        //Slack::send("User $email added new payment credit/debit card :)");
 
         $request['merchant_account'] = $request['type'];
         $request['payment_id'] = $payment_id;
@@ -337,7 +337,7 @@ class TransactionController extends Controller
         Session::flash('sucessAdd', 'Payment successful!');
 
         $email = Auth::user()->email;
-        Slack::send("User $email added new payment credit/debit card :)");
+        //Slack::send("User $email added new payment credit/debit card :)");
 
         $request['merchant_account'] = $request['type'];
         $request['payment_id'] = $payment_id;

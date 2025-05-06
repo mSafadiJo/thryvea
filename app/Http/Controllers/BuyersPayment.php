@@ -101,7 +101,7 @@ class BuyersPayment extends Controller
         ]);
 
         $email = Auth::user()->email;
-        Slack::send("User $email added new payment credit/debit card :)");
+        //Slack::send("User $email added new payment credit/debit card :)");
 
         return redirect()->route('BuyersPayment');
     }

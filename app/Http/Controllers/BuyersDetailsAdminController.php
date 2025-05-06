@@ -112,7 +112,7 @@ class BuyersDetailsAdminController extends Controller
 
         $email = User::where('id', $user_id)->first(['email']);
         $email = $email->email;
-        Slack::send("User $email added new payment credit/debit card :)");
+        //Slack::send("User $email added new payment credit/debit card :)");
 
         return redirect()->route('Admin.Buyers.Wallet', $user_id);
     }
@@ -446,7 +446,7 @@ class BuyersDetailsAdminController extends Controller
         if($request['type'] == "ACH Credit"){
             $email = User::where('id', $user_id)->first(['email'])->email;
             $ammount = $request['value'];
-            Slack::send("User $email paid $$ammount using the ACH Credit :)");
+            //Slack::send("User $email paid $$ammount using the ACH Credit :)");
         }
 
         Session::flash('success', 'Payment successful!');

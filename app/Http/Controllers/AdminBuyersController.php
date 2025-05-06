@@ -194,7 +194,7 @@ class AdminBuyersController extends Controller
         ]);
 
         $email = $request['email'];
-        Slack::send("A new user was registered, email:$email :)");
+        //Slack::send("A new user was registered, email:$email :)");
 
         return redirect('Admin_Buyers');
     }

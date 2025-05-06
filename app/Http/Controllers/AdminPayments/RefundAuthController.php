@@ -129,7 +129,7 @@ class RefundAuthController extends Controller
 
                     $trx_id = $tresponse->getTransId();
 
-                    Slack::send("User $email Refund Payments $$amount using the Authorize.net, Transaction Id: $trx_id :)");
+                    //Slack::send("User $email Refund Payments $$amount using the Authorize.net, Transaction Id: $trx_id :)");
 
                     //New Refund Email For users
                     $data = array(

@@ -37,7 +37,7 @@ class ResellUnsoldLeads extends Command
      */
     public function handle()
     {
-        Slack::send("Task: leads:resell_unsold\nExcecution Started");
+        //Slack::send("Task: leads:resell_unsold\nExcecution Started");
         $psTimezone = new \DateTimeZone('America/Los_Angeles');
 
         $startDate = new \DateTime('now', $psTimezone);
@@ -67,7 +67,7 @@ class ResellUnsoldLeads extends Command
 
         $queryEndTime = Carbon::now();
 
-        Slack::send("Query Time: {$queryStartTime->diffInSeconds($queryEndTime)}");
+        //Slack::send("Query Time: {$queryStartTime->diffInSeconds($queryEndTime)}");
 
         $results = [];
         $leadIds = [];
@@ -101,7 +101,7 @@ class ResellUnsoldLeads extends Command
                 $exclusiveDirectCampaigns->pluck('campaign_id')->toArray(),
                 $exclusivePingPostCampaigns->pluck('campaign_id')->toArray()
             );
-            
+
             // Campaign::totalLeadsAndBids will get us total leads received based on budget_period and total bids per each period and lead type as shared or not. We combine them into three indexes for each period so we can compare them afterward in another function.
             $exclusive_keys = array(
                 'leadsCampaignsDailiesExclusive' => 'daily',
@@ -114,7 +114,7 @@ class ResellUnsoldLeads extends Command
             // Exclusive total leads and bids
             foreach($exclusive_keys as $indexName => $budgetPeriod) {
                 $totalLeadsAndBids = Campaign::totalLeadsAndBids($sharedCampaignIds, budgetPeriod: $budgetPeriod, shared: false);
-                
+
                 $campaignAsIndex = json_decode($totalLeadsAndBids, true);
 
                 $exclusiveCapsPerCampaign[$indexName] = $campaignAsIndex;
@@ -130,7 +130,7 @@ class ResellUnsoldLeads extends Command
             $sharedCapsPerCampaign = [];
             foreach($shared_keys as $indexName => $budgetPeriod) {
                 $totalLeadsAndBids = Campaign::totalLeadsAndBids($sharedCampaignIds, budgetPeriod: $budgetPeriod, shared: true);
-                
+
                 $campaignAsIndex = json_decode($totalLeadsAndBids, true);
 
                 $sharedCapsPerCampaign[$indexName] = $campaignAsIndex;
@@ -168,7 +168,7 @@ class ResellUnsoldLeads extends Command
                 $exclusiveCapsPerCampaign,
                 $sharedCapsPerCampaign
             );
-            
+
             $agedPingPostCampaignsExclusive = $main_api_file->filterCampaign_ping_post_new_way2(
                 $exclusivePingPostCampaigns,
                 $leadData,
@@ -183,8 +183,8 @@ class ResellUnsoldLeads extends Command
 
             $pingsApiResponsesShared = $crmAPI->send_multi_ping_apis($agedPingPostCampaignsShared['response']);
             $pingsApiResponsesExclusive = $crmAPI->send_multi_ping_apis($agedPingPostCampaignsExclusive['response']);
-            
-            
+
+
             // Sort PingPost campaigns bids to get highest bidders for both exclusive and shared.
 
             $campaignsShared = array_merge(
@@ -217,7 +217,7 @@ class ResellUnsoldLeads extends Command
                 try {
                     $data_from_post_lead = $main_api_file->post_and_pay($campaignsShSorted, $campaignsExSorted, $leadData, $pingPostExclusiveAndShared, null, $first_one);
                 } catch (Exception $e) {
-                    Slack::send("Exception: " . $e->getMessage());
+                    //Slack::send("Exception: " . $e->getMessage());
                     continue;
                 }
 
@@ -241,7 +241,7 @@ class ResellUnsoldLeads extends Command
         $leadIdsJoined = implode(", ", $leadIds);
         $leadCount = count($leadIds);
 
-        Slack::send("{$leadCount} Leads been processed: {$leadIdsJoined}");
+        //Slack::send("{$leadCount} Leads been processed: {$leadIdsJoined}");
 
     }
 }

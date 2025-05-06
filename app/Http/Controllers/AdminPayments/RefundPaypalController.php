@@ -114,7 +114,7 @@ class RefundPaypalController extends Controller
         $email = $user_data->email;
         $buyer_name = $user_data->username;
 
-        Slack::send("User $email Refund Payments $$amount using the PayPal :)");
+        //Slack::send("User $email Refund Payments $$amount using the PayPal :)");
 
         //New Refund Email For users
         $data = array(

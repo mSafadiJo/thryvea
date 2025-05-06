@@ -139,7 +139,7 @@ class PaymentAuthController extends Controller
                         $amount = $input['amount'];
                         $trx_id = $tresponse->getTransId();
 
-                        Slack::send("User $email paid $$amount using the Authorize.net, Transaction Id: $trx_id :)");
+                        //Slack::send("User $email paid $$amount using the Authorize.net, Transaction Id: $trx_id :)");
 
                         //New Payments Email For users
                         $data = array(
@@ -284,7 +284,7 @@ class PaymentAuthController extends Controller
                     $buyer_name = $user_data->username;
                     $trx_id = $tresponse->getTransId();
 
-                    Slack::send("User $email paid $$amount using the Authorize.net, Transaction Id: $trx_id :)");
+                    //Slack::send("User $email paid $$amount using the Authorize.net, Transaction Id: $trx_id :)");
 
                     //New Payments Email For users
                     $data = array(
@@ -314,7 +314,7 @@ class PaymentAuthController extends Controller
 
         $user_data = User::where('id', $user_id)->first(['email', 'username']);
         $email = $user_data->email;
-        Slack::send("User $email, Auto Charge failed!");
+        //Slack::send("User $email, Auto Charge failed!");
         return false;
     }
 }

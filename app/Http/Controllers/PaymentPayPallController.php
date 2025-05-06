@@ -220,7 +220,7 @@ class PaymentPayPallController extends Controller
                 $email = $user_data->email;
                 $buyer_name = $user_data->username;
 
-                Slack::send("User $email paid $$amount using the PayPal, Transaction Id: $sale_id :)");
+                //Slack::send("User $email paid $$amount using the PayPal, Transaction Id: $sale_id :)");
 
                 //New Payments Email For users
                 $data = array(
