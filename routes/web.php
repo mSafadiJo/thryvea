@@ -23,7 +23,7 @@ Route::get('logoutMiddleWare', 'Auth\LoginController@logout');
 Route::get('/send-test-email', function () {
     $toEmail = 'tech@thryvea.co';  // Replace with your own email address
 
-    Mail::raw('This is a test email from Laravel using Mailtrap SMTP.', function ($message) use ($toEmail) {
+    Mail::raw('This is production a test email from Laravel using Mailtrap SMTP.', function ($message) use ($toEmail) {
         $message->to($toEmail)
             ->subject('Test Email from Laravel');
     });
