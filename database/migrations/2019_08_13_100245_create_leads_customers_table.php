@@ -177,7 +177,10 @@ class CreateLeadsCustomersTable extends Migration
             $table->bigInteger('handyman_range_of_age_id')->unsigned()->nullable();
             $table->bigInteger('handyman_doors_windows_many_id')->unsigned()->nullable();
             $table->bigInteger('handyman_builtinstripping')->unsigned()->nullable();
-
+            $table->integer('paving_service_lead_id')->nullable();
+            $table->integer('paving_asphalt_type_id')->nullable();
+            $table->integer('paving_loose_fill_type_id')->nullable();
+            $table->integer('paving_best_describes_priject_id')->nullable();
             $table->bigInteger('painting_service_lead_id')->unsigned()->nullable();
             $table->bigInteger('painting1_typeof_project_id')->unsigned()->nullable();
             $table->bigInteger('painting1_stories_number_id')->unsigned()->nullable();

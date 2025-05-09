@@ -8,7 +8,7 @@
                     <label for="deliveryMethod">Delivery Method<span class="requiredFields">*</span></label>
                     <select id="deliveryMethod" name="deliveryMethod[]" class="select2 form-control select2-multiple" required="" multiple="multiple" data-placeholder="Choose ...">
                         <optgroup label="Delivery Method">
-                            <option value="1" @if(!empty(old('deliveryMethod'))) @if(in_array(1, old('deliveryMethod'))) selected @endif @endif>SMS</option>
+{{--                            <option value="1" @if(!empty(old('deliveryMethod'))) @if(in_array(1, old('deliveryMethod'))) selected @endif @endif>SMS</option>--}}
                             <option value="2" @if(!empty(old('deliveryMethod'))) @if(in_array(2, old('deliveryMethod'))) selected @endif @endif>Email</option>
                             <option value="3" @if(!empty(old('deliveryMethod'))) @if(in_array(3, old('deliveryMethod'))) selected @endif @endif>CRM</option>
                         </optgroup>

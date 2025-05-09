@@ -7,7 +7,7 @@
                         <label for="deliveryMethod">Delivery Method<span class="requiredFields">*</span></label>
                         <select id="deliveryMethod" name="deliveryMethod[]" class="select2 form-control select2-multiple" required="" multiple="multiple" data-placeholder="Choose ...">
                             <optgroup label="Delivery Method">
-                                <option value="1" @if( in_array("1", json_decode($campaign->delivery_Method_id,true)) ) selected @endif >SMS</option>
+{{--                                <option value="1" @if( in_array("1", json_decode($campaign->delivery_Method_id,true)) ) selected @endif >SMS</option>--}}
                                 <option value="2" @if( in_array("2", json_decode($campaign->delivery_Method_id,true)) ) selected @endif >Email</option>
                                 <option value="3" @if( in_array("3", json_decode($campaign->delivery_Method_id,true)) ) selected @endif >CRM</option>
                             </optgroup>

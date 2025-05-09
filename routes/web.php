@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminHomeController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,17 @@ use App\Http\Controllers\AdminController;
 //Auth
 Auth::routes(['verify' => false]);
 Route::get('logoutMiddleWare', 'Auth\LoginController@logout');
+
+Route::get('/send-test-email', function () {
+    $toEmail = 'tech@thryvea.co';  // Replace with your own email address
+
+    Mail::raw('This is a test email from Laravel using Mailtrap SMTP.', function ($message) use ($toEmail) {
+        $message->to($toEmail)
+            ->subject('Test Email from Laravel');
+    });
+
+    return 'Test email sent!';
+});
 
 //Home Page
 Route::get('/home', 'HomeController@index')->name('home');
