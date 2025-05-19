@@ -12068,9 +12068,8 @@ class PostCRMAllied {
                         return 1;
                     }
                     break;
-                case 124:
-                case 1066:
-                    //RGR Marketing	1066 / 124
+                case 15:
+                    //RGR Marketing	15
                     if (!empty($data_msg['ping_post_data']['TransactionId'])) {
                         $TransactionId = $data_msg['ping_post_data']['TransactionId'];
                     } else {
@@ -12124,20 +12123,20 @@ class PostCRMAllied {
                             $roof_shade = trim($crm_details['data']['roof_shade']);
                             $property_type = trim($crm_details['data']['property_type']);
 
-                            $homeowner = ($property_type == 'Rented' ? 'No' : 'Yes');
+                            $homeowner = ($property_type == 'Rented' ? 'no' : 'yes');
 
                             switch ($roof_shade) {
                                 case "Full Sun":
-                                    $roof_shade_data = "No Shade";
+                                    $roof_shade_data = "no shade";
                                     break;
                                 case "Mostly Shaded":
-                                    $roof_shade_data = "A lot of Shade";
+                                    $roof_shade_data = "a lot of shade";
                                     break;
                                 case "Partial Sun":
-                                    $roof_shade_data = "A little shade";
+                                    $roof_shade_data = "a little shade";
                                     break;
                                 default:
-                                    $roof_shade_data = "Uncertain";
+                                    $roof_shade_data = "uncertain";
                             }
 
                             switch ($monthly_electric_bill) {
@@ -12169,15 +12168,15 @@ class PostCRMAllied {
                             $Lead_data_array = array(
                                 "publisher_id" => "494",
                                 "rcid" => "1100",
-                                "api_key" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
+                                "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                 "ping_id" => $TransactionId,
                                 "type" => "solar",
-                                "first_name" => $first_name,
-                                "last_name" => $last_name,
+                                "firstname" => $first_name,
+                                "lastname" => $last_name,
                                 "city" => $city,
-                                "street_address" => $street,
-                                "home_phone" => $number1,
-                                "email_address" => $email,
+                                "address" => $street,
+                                "phone" => $number1,
+                                "email" => $email,
                                 "upload_type" => "RGR",
                                 "state" => $statename_code,
                                 "zip" => $zip,

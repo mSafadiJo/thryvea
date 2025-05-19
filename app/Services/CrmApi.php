@@ -400,27 +400,15 @@ class CrmApi {
                                         }
                                     }
                                     break;
-                                case 124:
-                                case 1066:
-                                    //RGR Marketing	1066 / 124
+                                case 15:
+                                    //RGR Marketing	15
                                     $result2 = json_decode($result, true);
-                                    if($service_id == 2) {
-                                        if (!empty($result2['status'])) {
-                                            if ($result2['status'] == "success") {
-                                                $TransactionId = $result2['ping_id'];
-                                                $Payout = $result2['price'];
-                                                $multi_type = 0;
-                                                $Result = 1;
-                                            }
-                                        }
-                                    } else {
-                                        if (!empty($result2['status'])) {
-                                            if ($result2['status'] == "matched") {
-                                                $TransactionId = $result2['ping_id'];
-                                                $Payout = $result2['price'];
-                                                $multi_type = 0;
-                                                $Result = 1;
-                                            }
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "matched") {
+                                            $TransactionId = $result2['ping_id'];
+                                            $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
                                         }
                                     }
                                     break;

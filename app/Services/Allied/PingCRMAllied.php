@@ -8554,9 +8554,8 @@ class PingCRMAllied
                             }
                         }
                         break;
-                    case 124:
-                    case 1066:
-                        //RGR Marketing 1066 / 124
+                    case 15:
+                        //RGR Marketing 15
                         $httpheader = array(
                             "cache-control: no-cache",
                             "Accept: application/json",
@@ -8595,20 +8594,20 @@ class PingCRMAllied
                                 $roof_shade = trim($Leaddatadetails['roof_shade']);
                                 $property_type = trim($Leaddatadetails['property_type']);
 
-                                $homeowner = ($property_type == 'Rented' ? 'No' : 'Yes');
+                                $homeowner = ($property_type == 'Rented' ? 'no' : 'yes');
 
                                 switch ($roof_shade) {
                                     case "Full Sun":
-                                        $roof_shade_data = "No Shade";
+                                        $roof_shade_data = "no shade";
                                         break;
                                     case "Mostly Shaded":
-                                        $roof_shade_data = "A lot of Shade";
+                                        $roof_shade_data = "a lot of shade";
                                         break;
                                     case "Partial Sun":
-                                        $roof_shade_data = "A little shade";
+                                        $roof_shade_data = "a little shade";
                                         break;
                                     default:
-                                        $roof_shade_data = "Uncertain";
+                                        $roof_shade_data = "uncertain";
                                 }
 
                                 switch ($monthly_electric_bill) {
@@ -8640,7 +8639,7 @@ class PingCRMAllied
                                 $Lead_data_array_ping = array(
                                     "publisher_id" => "494",
                                     "rcid" => "1100",
-                                    "api_key" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
+                                    "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                     "type" => "solar",
                                     "state" => $statename_code,
                                     "zip" => $zip,
