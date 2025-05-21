@@ -19047,24 +19047,47 @@ class PostCRMAllied {
                     }
                     break;
                 case 780:
-                case 1062:
-                    //BCI ACRYLIC 780 & BCI Acrylic MA,CT,NH,VT 1062
-                    $url_api = "https://bciacrylic.leadperfection.com/batch/leadformstandard.asp";
-                    $passWordLP = 'M33$f!2!wsqa';
-                    $UserID = "allied";
-                    $dialed_tollfree = "0000000254";
-                    $prog = "BAS";
+                case 27:
+                    //BCI ACRYLIC 27
 
-                    $httpheader = array(
-                        "content-type: application/json"
-                    );
+                $trusted_form_link = substr($data_msg['trusted_form'], strrpos($data_msg['trusted_form'], '/') + 1);
 
-                    $url_api .= "?FirstName=$first_name&LastName=$last_name&Address=$street&City=$city&State=$statename_code&Zip=$zip&Phone=$number1&Email=$email&dialed_tollfree=$dialed_tollfree&UserID=$UserID&Password=$passWordLP&program=$prog";
-                    $url_api = str_replace(" ", "%20", $url_api);
-                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
-                    if (strpos("-" . strtolower($result), 'ok') == true) {
-                        return 1;
+                $url_api_post = "https://app.leadconduit.com/flows/65e9e6bc8438994533611203/sources/65e22c36458d897f96bfa96b/submit";
+                $httpheader = array(
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                );
+
+                $Lead_data_array = array(
+                    "first_name" => $first_name,
+                    "last_name" => $last_name,
+                    "phone_1" => "2345670570",
+                    "email" => $email,
+                    "address_1" => $street,
+                    "city" => $city,
+                    "state" => $statename_code,
+                    "postal_code" => $zip,
+                    "campaign_id" => "test Campaign",
+                    "trustedform_cert_url" => $trusted_form,
+
+                    "dialed_tollfree_bci" => "0000000504",
+                    "userid_bci" => "Thryvea",
+                    "password_bci" => "GtK9)%fg",
+
+                );
+                $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, json_encode($Lead_data_array), "POST", 1, $crm_details['campaign_id']);
+                $result2 = json_decode($result, true);
+                if (!empty($result2)) {
+                    if (!empty($result2['outcome'])) {
+                        if ($result2['outcome'] == "success") {
+                            $TransactionId = $result2['lead']['id'];
+                            $Payout = $result2['price'];
+                            $multi_type = 0;
+                            $Result = 1;
+                            return 1;
+                        }
                     }
+                }
                     break;
                 case 760:
                     //HELLO PROJECT USA
