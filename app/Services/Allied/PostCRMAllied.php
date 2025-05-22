@@ -19046,7 +19046,6 @@ class PostCRMAllied {
                         }
                     }
                     break;
-                case 780:
                 case 27:
                     //BCI ACRYLIC 27
 
@@ -19061,13 +19060,13 @@ class PostCRMAllied {
                 $Lead_data_array = array(
                     "first_name" => $first_name,
                     "last_name" => $last_name,
-                    "phone_1" => "2345670570",
+                    "phone_1" => $number1,
                     "email" => $email,
                     "address_1" => $street,
                     "city" => $city,
                     "state" => $statename_code,
                     "postal_code" => $zip,
-                    "campaign_id" => "test Campaign",
+                    "campaign_id" => $campaign_name,
                     "trustedform_cert_url" => $trusted_form,
 
                     "dialed_tollfree_bci" => "0000000504",
