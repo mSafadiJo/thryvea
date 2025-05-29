@@ -8574,12 +8574,13 @@ class PingCRMAllied
 
                                 $Lead_data_array_ping = array(
                                     "type" => "homeimprovementwindow",
-                                    "publisher_id" => "58",
-                                    "rcid" => "166",
-                                    "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                    "publisher_id" => "494",
+                                    "rcid" => "1158",
+                                    "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                     "subid" => $google_ts,
                                     "leadidtoken" => $LeadId, //Jornaya LeadiD Token
                                     "tcpa" => $TCPAText,
+                                    "state" => $statename_code,
                                     "zip" => $zip,
                                     "homeowner" => $homeowner, //Home Owner
                                     "projecttype" => $ProjectType, //project nature
@@ -8679,9 +8680,9 @@ class PingCRMAllied
 
                                 $Lead_data_array_ping = array(
                                     "type" => "homeimprovementroofing",
-                                    "publisher_id" => "58",
-                                    "rcid" => "213",
-                                    "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                    "publisher_id" => "494",
+                                    "rcid" => "1159",
+                                    "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                     "subid" => $google_ts,
                                     "ipaddress" => $IPAddress,
                                     "leadidtoken" => $LeadId,//Jornaya LeadiD Token
@@ -8693,6 +8694,7 @@ class PingCRMAllied
                                 );
                                 break;
                             case 7:
+                                //siding
                                 $project_nature = trim($Leaddatadetails['project_nature']);
                                 $type_of_siding = trim($Leaddatadetails['type_of_siding']);
                                 $ownership = trim($Leaddatadetails['homeOwn']);
@@ -8716,9 +8718,9 @@ class PingCRMAllied
 
                                 $Lead_data_array_ping = array(
                                     "type" => "homeimprovementsiding",
-                                    "publisher_id" => "58",
-                                    "rcid" => "167",
-                                    "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                    "publisher_id" => "494",
+                                    "rcid" => "1160",
+                                    "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                     "subid" => $google_ts,
                                     "leadidtoken" => $LeadId, //Jornaya LeadiD Token
                                     "tcpa" => $TCPAText,
@@ -8735,13 +8737,13 @@ class PingCRMAllied
                                 $ownership = trim($Leaddatadetails['homeOwn']);
 
                                 $homeowner = ($ownership == "Yes" ? "yes" : "no");
-                                $projecttype = "bath / shower replacement";
+                                $projecttype = "new bath";
 
                                 $Lead_data_array_ping = array(
                                     "type" => "homeimprovementbath",
-                                    "publisher_id" => "58",
-                                    "rcid" => "168",
-                                    "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                    "publisher_id" => "494",
+                                    "rcid" => "1161",
+                                    "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                     "subid" => $google_ts,
                                     "leadidtoken" => $LeadId, //Jornaya LeadiD Token
                                     "tcpa" => $TCPAText,

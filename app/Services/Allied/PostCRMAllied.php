@@ -12094,9 +12094,9 @@ class PostCRMAllied {
 
                             $Lead_data_array = array(
                                 "type" => "homeimprovementwindow",
-                                "publisher_id" => "58",
-                                "rcid" => "166",
-                                "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                "publisher_id" => "494",
+                                "rcid" => "1158",
+                                "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                 "subid" => $google_ts,
                                 "trustedformtoken" => $trusted_form,
                                 "leadidtoken" => $LeadId, //Jornaya LeadiD Token
@@ -12218,9 +12218,9 @@ class PostCRMAllied {
 
                             $Lead_data_array = array(
                                 "type" => "homeimprovementroofing",
-                                "publisher_id" => "58",
-                                "rcid" => "213",
-                                "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                "publisher_id" => "494",
+                                "rcid" => "1159",
+                                "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                 "subid" => $google_ts,
                                 "ipaddress" => $IPAddress,
                                 "trustedformtoken" => $trusted_form,
@@ -12241,6 +12241,7 @@ class PostCRMAllied {
                             );
                             break;
                         case 7:
+                            //siding
                             $project_nature = trim($crm_details['data']['project_nature']);
                             $type_of_siding = trim($crm_details['data']['type_of_siding']);
                             $ownership = trim($crm_details['data']['homeOwn']);
@@ -12264,9 +12265,9 @@ class PostCRMAllied {
 
                             $Lead_data_array = array(
                                 "type" => "homeimprovementsiding",
-                                "publisher_id" => "58",
-                                "rcid" => "167",
-                                "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                "publisher_id" => "494",
+                                "rcid" => "1160",
+                                "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                 "subid" => $google_ts,
                                 "trustedformtoken" => $trusted_form,
                                 "leadidtoken" => $LeadId, //Jornaya LeadiD Token
@@ -12292,13 +12293,13 @@ class PostCRMAllied {
                             $ownership = trim($crm_details['data']['homeOwn']);
 
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
-                            $projecttype = "bath / shower replacement";
+                            $projecttype = "new bath";
 
                             $Lead_data_array = array(
                                 "type" => "homeimprovementbath",
-                                "publisher_id" => "58",
-                                "rcid" => "168",
-                                "apikey" => "3b5a49bb-ab07-438f-924a-2f59b3e0aa5b",
+                                "publisher_id" => "494",
+                                "rcid" => "1161",
+                                "apikey" => "3510f2c2-ddec-4935-9ca1-6949e7fc64cb",
                                 "subid" => $google_ts,
                                 "trustedformtoken" => $trusted_form,
                                 "leadidtoken" => $LeadId, //Jornaya LeadiD Token
