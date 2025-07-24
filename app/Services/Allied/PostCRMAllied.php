@@ -9358,15 +9358,14 @@ class PostCRMAllied {
                     $Lead_data_array = array(
                         "first_name" => $first_name,
                         "last_name" => $last_name,
-                        "phone_1" => "2345670563",
+                        "phone_1" => $number1,
                         "email" => $email,
                         "address_1" => $street,
-                        "city" => "Vancouver",//$city,
-                        "state" => "WA",// $statename_code,
-                        "postal_code" => "98661",//$zip,
+                        "city" => $city,
+                        "state" => $statename_code,
+                        "postal_code" => $zip,
                         "trustedform_cert_url" => "https://cert.trustedform.com/35a2349b187daa986e23403503571a0f7d66945d",
                         "product" => "RLCC-BS-D",
-                        // "num_of_bathtubs_to_remodel_mill" => "0000000504",
                         "keyword_source_mill" => "Thryvea",
                     );
                     $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, json_encode($Lead_data_array), "POST", 1, $crm_details['campaign_id']);
