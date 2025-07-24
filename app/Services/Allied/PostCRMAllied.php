@@ -9345,6 +9345,44 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 20:
+                    // Miller Home
+                    $trusted_form_link = substr($data_msg['trusted_form'], strrpos($data_msg['trusted_form'], '/') + 1);
+
+                    $url_api_post = "https://app.leadconduit.com/flows/62b22c3d8f4dd0a195375334/sources/682e306f575d5d3e31452043/submit";
+                    $httpheader = array(
+                        'Accept: application/json',
+                        'Content-Type: application/json',
+                    );
+
+                    $Lead_data_array = array(
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "phone_1" => "2345670563",
+                        "email" => $email,
+                        "address_1" => $street,
+                        "city" => "Vancouver",//$city,
+                        "state" => "WA",// $statename_code,
+                        "postal_code" => "98661",//$zip,
+                        "trustedform_cert_url" => "https://cert.trustedform.com/35a2349b187daa986e23403503571a0f7d66945d",
+                        "product" => "RLCC-BS-D",
+                        // "num_of_bathtubs_to_remodel_mill" => "0000000504",
+                        "keyword_source_mill" => "Thryvea",
+                    );
+                    $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, json_encode($Lead_data_array), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2)) {
+                        if (!empty($result2['outcome'])) {
+                            if ($result2['outcome'] == "success") {
+                                $TransactionId = $result2['lead']['id'];
+                                $Payout = $result2['price'];
+                                $multi_type = 0;
+                                $Result = 1;
+                                return 1;
+                            }
+                        }
+                    }
+                    break;
 
             }
             return 0;
