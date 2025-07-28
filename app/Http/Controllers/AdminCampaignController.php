@@ -33,10 +33,13 @@ use App\User;
 use App\ZipCodesList;
 use App\ZohoCrm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\SalesOrder;
 use App\CallTools ;
@@ -1992,28 +1995,63 @@ class AdminCampaignController extends Controller{
         }
 
         //** import Zipcods from excel ***/
+
         if ($request->hasFile('listOfzipcode')) {
-            $dataexcel = Excel::toArray(new SalesOrder, $request->file('listOfzipcode'));
-            $dataexcel = array_unique($dataexcel[0], SORT_REGULAR);
+            $file = $request->file('listOfzipcode');
 
-            foreach ($dataexcel as $item) {
-                // To fetch zipcode
-//                if (Cache::has("AllZipCode")) {
-//                    $zipcode_data_cache = Cache::get("AllZipCode")->where('zip_code_list', $item[0]);
-//                    foreach ($zipcode_data_cache as $data) {
-//                        $zipcode_id = $data->zip_code_list_id;
-//                    }
+            // This will collect all the matched zip_code_list_id values
+            $zipcodeIdArray = [];
 
-                //  } else {
-                $zipcode_id = DB::table('zip_codes_lists')->where('zip_code_list', $item[0])->first(['zip_code_list_id']);
-                // $zipcode_id = $zipcode_id->zip_code_list_id;
-                //  }
-                if (!empty($zipcode_id)) {
-                    //** to save all zip code from excel to array */
-                    $zipcode_id_array[] = $zipcode_id->zip_code_list_id;
+            // Anonymous import class with chunking
+            Excel::import(new class($zipcodeIdArray) implements ToCollection, WithChunkReading {
+                public $zipcodeIdArray;
+
+                public function __construct(&$zipcodeIdArray)
+                {
+                    $this->zipcodeIdArray = &$zipcodeIdArray;
                 }
-            }
+
+                public function collection(Collection $rows)
+                {
+                    foreach ($rows as $row) {
+                        $zipCode = $row[0] ?? null; // First column of Excel row
+
+                        if ($zipCode) {
+                            $zipcode = DB::table('zip_codes_lists')
+                                ->where('zip_code_list', $zipCode)
+                                ->first(['zip_code_list_id']);
+
+                            if (!empty($zipcode)) {
+                                $this->zipcodeIdArray[] = $zipcode->zip_code_list_id;
+                            }
+                        }
+                    }
+                }
+
+                public function chunkSize(): int
+                {
+                    return 1000; // Adjust chunk size as needed
+                }
+            }, $file);
         }
+
+
+
+
+//        if ($request->hasFile('listOfzipcode')) {
+//            $dataexcel = Excel::toArray(new SalesOrder, $request->file('listOfzipcode'));
+//            $dataexcel = array_unique($dataexcel[0], SORT_REGULAR);
+//
+//            foreach ($dataexcel as $item) {
+//
+//                $zipcode_id = DB::table('zip_codes_lists')->where('zip_code_list', $item[0])->first(['zip_code_list_id']);
+//
+//                if (!empty($zipcode_id)) {
+//                    //** to save all zip code from excel to array */
+//                    $zipcode_id_array[] = $zipcode_id->zip_code_list_id;
+//                }
+//            }
+//        }
         else if (!empty($request['zipcode'])) {
             if (count($request['zipcode']) == 1 && !empty($request['distance_area']) && $request['distance_area'] != 0) {
                 $zipcode_id_array [] = $request['zipcode']['0'];
