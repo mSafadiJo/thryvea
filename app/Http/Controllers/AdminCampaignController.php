@@ -2466,13 +2466,13 @@ class AdminCampaignController extends Controller{
                 });
             }
 
-            //Send Slack Notifications
-            if( config('app.name', '') == "Zone1Remodeling" ){
-                $client = new Client('https://hooks.slack.com/services/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');
-            } else {
-                $client = new Client('https://hooks.slack.com/services/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');
-            }
-            $client->send("Admin " . Auth::user()->username . " has changed " . $campaign_name->campaign_name . " #$campaign_id campaign status to $action on " . config("app.name", "") . ".");
+//            //Send Slack Notifications
+//            if( config('app.name', '') == "Zone1Remodeling" ){
+//                $client = new Client('https://hooks.slack.com/services/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');
+//            } else {
+//                $client = new Client('https://hooks.slack.com/services/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');
+//            }
+//            $client->send("Admin " . Auth::user()->username . " has changed " . $campaign_name->campaign_name . " #$campaign_id campaign status to $action on " . config("app.name", "") . ".");
         }
 
         //Access LOG
