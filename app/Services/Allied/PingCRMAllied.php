@@ -6268,7 +6268,7 @@ class PingCRMAllied
                             "content-type: application/json"
                         );
 
-                       if (empty($IPAddress)) {
+                       if (empty($IPAddress) || $IPAddress == null ) {
                             $IPAddress = "172.58.15.245";
                         }
 
