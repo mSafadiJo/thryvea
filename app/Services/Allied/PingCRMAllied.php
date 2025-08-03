@@ -6268,6 +6268,10 @@ class PingCRMAllied
                             "content-type: application/json"
                         );
 
+                       if (empty($IPAddress)) {
+                            $IPAddress = "172.58.15.245";
+                        }
+
                         switch ($lead_type_service_id) {
                             case 1:
                                 //Window
