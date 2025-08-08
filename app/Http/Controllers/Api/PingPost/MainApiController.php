@@ -43,7 +43,7 @@ class MainApiController extends Controller
             'campaign_id' => ['required', 'string', 'max:255'],
             'campaign_key' => ['required', 'string', 'max:255'],
             'vendor_id' => ['required', 'string', 'max:255'],
-            'street' => ['required', 'string', 'max:255'],
+            'street' => ['string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'zipcode' => ['required'],
@@ -203,7 +203,7 @@ class MainApiController extends Controller
         //Add PingLeads
         $pingLeads = new PingLeads();
 
-        $pingLeads->lead_address = $request['street'];
+        $pingLeads->lead_address = "0";
         $pingLeads->lead_state_id = $address['state_id'];
         $pingLeads->lead_city_id = $address['city_id'];
         $pingLeads->lead_zipcode_id = $address['zipcode_id'];
