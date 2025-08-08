@@ -2949,7 +2949,7 @@ class CampaignLeadsAdminController extends Controller
                     'Token' => $lead->token,
                     'Visitor ID' => $lead->visitor_id,
                     'Full URL' => $lead->lead_FullUrl,
-                    'Flag' => (in_array($lead->flag, [1, 2]) ? true : false),
+                    'Flag' => (isset($lead->flag) && in_array($lead->flag, [1, 2]) ? true : false),
                     'gclid' => $lead->google_gclid,
                     's1' => $lead->pushnami_s1,
                     's2' => $lead->pushnami_s2,
