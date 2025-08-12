@@ -100,8 +100,8 @@ Route::post('/rest/addressDetails', 'WebSitesAPIController@addressDetails');
 //Route::post('/rest/painting5_kindof_texturing', 'Api\Website\QuestionsController@painting5_kindof_texturing');
 //Route::post('/rest/painting5_surfaces_textured', 'Api\Website\QuestionsController@painting5_surfaces_textured');
 //
-//Route::post('/rest/addLeadCustomer', 'WebSitesAPIController@addLeadCustomer');
-//Route::post('/rest/add_multi_service_lead', 'WebSitesAPIController@add_multi_service_lead');
+Route::post('/rest/addLeadCustomer', 'WebSitesAPIController@addLeadCustomer');
+Route::post('/rest/add_multi_service_lead', 'WebSitesAPIController@add_multi_service_lead');
 //Route::post('/rest/addLeadCustomer2', 'Api\LeadCallToolsController@lead_from_call_tools');
 //Route::post('/rest/addLeadCustomer/Ping', 'Api\CallTools\CrmPingsController@lead_from_call_tools');
 ////End Services Questions ===============================================================================================

@@ -389,51 +389,51 @@ class WebSitesAPIController extends Controller
 //        }
 
             //ipregistry IP Validation
-            if(strtolower(substr($request['tc'], 0, 1)) == 'o') {
-                //ipregistry IP Validation
-                $ipregistry_validation = $api_validations->ipregistry_validation($request['ipaddress']);
+//            if(strtolower(substr($request['tc'], 0, 1)) == 'o') {
+//                //ipregistry IP Validation
+//                $ipregistry_validation = $api_validations->ipregistry_validation($request['ipaddress']);
+//
+//                if ($ipregistry_validation != "true") {
+//                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+//                        "response_data" => $ipregistry_validation,
+//                        "status" => 4,
+//                        "flag" => 1
+//                    ]);
+//
+//                    $response_code = array(
+//                        'response_code' => 'false',
+//                        'message' => 'Reject',
+//                        'error' => $ipregistry_validation,
+//                        'responce_code' => 'false'
+//                    );
+//
+//                    return json_encode($response_code);
+//                    die();
+//                }
+//            }
 
-                if ($ipregistry_validation != "true") {
-                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-                        "response_data" => $ipregistry_validation,
-                        "status" => 4,
-                        "flag" => 1
-                    ]);
 
-                    $response_code = array(
-                        'response_code' => 'false',
-                        'message' => 'Reject',
-                        'error' => $ipregistry_validation,
-                        'responce_code' => 'false'
-                    );
-
-                    return json_encode($response_code);
-                    die();
-                }
-            }
-
-
-            if(strtolower(substr($request['tc'], 0, 1)) != 's') {
-                //trestleiq Validation
-                $trestleiq_validation = $api_validations->trestleiq_validation($request['phone_number'], $request['email'], $request['fname'], $request['lname']);
-                if ($trestleiq_validation != "true") {
-                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-                        "response_data" => $trestleiq_validation,
-                        "status" => 4,
-                        "flag" => 1
-                    ]);
-
-                    $response_code = array(
-                        'response_code' => 'false',
-                        'message' => 'Reject',
-                        'error' => $trestleiq_validation,
-                        'responce_code' => 'false'
-                    );
-
-                    return json_encode($response_code);
-                    die();
-                }
-            }
+//            if(strtolower(substr($request['tc'], 0, 1)) != 's') {
+//                //trestleiq Validation
+//                $trestleiq_validation = $api_validations->trestleiq_validation($request['phone_number'], $request['email'], $request['fname'], $request['lname']);
+//                if ($trestleiq_validation != "true") {
+//                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+//                        "response_data" => $trestleiq_validation,
+//                        "status" => 4,
+//                        "flag" => 1
+//                    ]);
+//
+//                    $response_code = array(
+//                        'response_code' => 'false',
+//                        'message' => 'Reject',
+//                        'error' => $trestleiq_validation,
+//                        'responce_code' => 'false'
+//                    );
+//
+//                    return json_encode($response_code);
+//                    die();
+//                }
+//            }
 
             //Server to server Conversion =================================================================
             if(!empty($request['token'])){
@@ -849,7 +849,7 @@ class WebSitesAPIController extends Controller
 //                    $url_conv = "https://dynuinmedia.go2cloud.org/aff_lsr?transaction_id=$token_data_conv&amount=$finel_price";
                     $r = array($url_conv);
                     Log::info('Dynuin Media Leads', $r);
-                    
+
                 }elseif( strtolower(substr($request['tc'], 0, 2)) == 'sm' ) {
                     //scoremobi sm
                     $url_conv = "http://scoremobi.fuse-cloud.com/pb?tid=$token_data_conv&adv_cvalue=".$finel_price;
