@@ -1660,7 +1660,7 @@ class PostCRMAllied {
                         break;
                 }
                 $Lead_data_array['product'] = $service_name;
-                $Lead_data_array['srs_id'] = "2245";
+                $Lead_data_array['Source'] = "srs_2245";
                 break;
         }
 
