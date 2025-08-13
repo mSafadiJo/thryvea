@@ -6613,6 +6613,291 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 23:
+                        //HomeQuote 23
+
+                        $httpheader = array(
+                            "Content-Type: application/x-www-form-urlencoded",
+                            "Accept: application/json",
+                        );
+
+                        $Lead_data_ping = "ip=$IPAddress&useragent=$UserAgent&country_iso_2=US&region=$statename_code&referrer=$OriginalURL2&zipcode=$zip&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form";
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //windows
+                                $PingURLTest ="https://cdgtrck.com/api/v1/ping?a=419&c=340&cmp=5828&cmp_key=0hvb79ejmw&post_test=true";
+                                $PingURL ="https://cdgtrck.com/api/v1/ping?a=419&c=340&cmp=5828&cmp_key=0hvb79ejmw";
+
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $BuyTimeframe = "Immediately";
+                                        break;
+                                    case 'Not Sure':
+                                        $BuyTimeframe = "Don't know";
+                                        break;
+                                    default:
+                                        $BuyTimeframe = "1-6 months";
+                                }
+                                switch ($project_nature) {
+                                    case 'Install':
+                                        $project_nature_data = "3";
+                                        break;
+                                    case "Replace":
+                                        $project_nature_data = "1";
+                                        break;
+                                    default:
+                                        $project_nature_data = "2";
+                                }
+                                switch ($number_of_windows) {
+                                    case "1":
+                                        $number_of_windows_data = "1";
+                                        break;
+                                    case "2":
+                                        $number_of_windows_data = "2";
+                                        break;
+                                    case "3-5":
+                                        $number_of_windows_data = "3";
+                                        break;
+                                    case "6-9":
+                                        $number_of_windows_data = "4";
+                                        break;
+                                    default:
+                                        $number_of_windows_data = "5";
+                                }
+                                switch ($ownership) {
+                                    case 'Yes':
+                                        $homeowner = "Yes";
+                                        $authorized_to_make_changes = "Yes";
+                                        break;
+                                    case "No":
+                                        $homeowner = "No";
+                                        $authorized_to_make_changes = "No";
+                                        break;
+                                    default:
+                                        $homeowner = "No, But Authorized to Make Changes";
+                                        $authorized_to_make_changes = "Yes";
+                                }
+
+                                $Lead_data_ping .="&number=$number_of_windows_data&project=$project_nature_data&homeowner=$homeowner&authorized_to_make_changes=$authorized_to_make_changes";
+                                break;
+                            case 2:
+                                //Solar
+                                $PingURLTest ="https://cdgtrck.com/api/v1/ping?a=419&c=333&cmp=5826&cmp_key=8ks2to5r1l&post_test=true";
+                                $PingURL ="https://cdgtrck.com/api/v1/ping?a=419&c=333&cmp=5826&cmp_key=8ks2to5r1l";
+
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $OwnHome = ($property_type == "Owned" ? "Yes" : "No");
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                        $average_bill = '1';
+                                        break;
+                                    case '$51 - $100':
+                                        $average_bill = '2';
+                                        break;
+                                    case '$101 - $150':
+                                        $average_bill = '3';
+                                        break;
+                                    case '$151 - $200':
+                                        $average_bill = '4';
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = '5';
+                                        break;
+                                    case '$301 - $400':
+                                        $average_bill = '6';
+                                        break;
+                                    case '$401 - $500':
+                                        $average_bill = '7';
+                                        break;
+                                    default:
+                                        $average_bill = '11';
+
+                                }
+                                switch ($roof_shade){
+                                    case "Full Sun":
+                                        $roof_shade_data = "1";
+                                        break;
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = "3";
+                                        break;
+                                    case "Partial Shade":
+                                        $roof_shade_data = "2";
+                                        break;
+                                    default:
+                                        $roof_shade_data = "4";
+                                }
+
+                                $Lead_data_ping .= "&homeowner=$OwnHome&electric_bill=$average_bill&electric_utility_provider=$utility_provider&roof_shade=$roof_shade_data";
+                                break;
+                            case 6:
+                                //Roofing
+                                $PingURLTest ="https://cdgtrck.com/api/v1/ping?a=419&c=328&cmp=5827&cmp_key=p8uvjlkrwz&post_test=true";
+                                $PingURL ="https://cdgtrck.com/api/v1/ping?a=419&c=328&cmp=5827&cmp_key=p8uvjlkrwz";
+
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+
+                                switch ($roof_type){
+                                    case "Wood Shake/Composite Roofing":
+                                        $service = "2";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "2";
+                                                $type_material = "2-2";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "1";
+                                                $type_material = "1-2";
+                                                break;
+                                            default:
+                                                $project_nature_data = "3";
+                                                $type_material = "3-2";
+                                        }
+                                        break;
+                                    case "Metal Roofing":
+                                        $service = "3";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "2";
+                                                $type_material = "2-3";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "1";
+                                                $type_material = "1-3";
+                                                break;
+                                            default:
+                                                $project_nature_data = "3";
+                                                $type_material = "3-3";
+                                        }
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $service = "4";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "2";
+                                                $type_material = "2-4";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "1";
+                                                $type_material = "1-4";
+                                                break;
+                                            default:
+                                                $project_nature_data = "3";
+                                                $type_material = "3-4";
+                                        }
+                                        break;
+                                    case "Tile Roofing":
+                                        $service = "6";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "2";
+                                                $type_material = "2-6";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "1";
+                                                $type_material = "1-6";
+                                                break;
+                                            default:
+                                                $project_nature_data = "3";
+                                                $type_material = "3-6";
+                                        }
+                                        break;
+                                    default:
+                                        $service = "1";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "2";
+                                                $type_material = "2-1";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "1";
+                                                $type_material = "1-1";
+                                                break;
+                                            default:
+                                                $project_nature_data = "3";
+                                                $type_material = "3-1";
+                                        }
+                                }
+                                $ownership_data = "Yes";
+
+                                $Lead_data_ping .= "&roof_material=$service&project=$project_nature_data&homeowner=$ownership_data&type_material=$type_material";
+                                break;
+                            case 9:
+                                //bathroom
+                                $PingURLTest ="https://cdgtrck.com/api/v1/ping?a=419&c=339&cmp=5825&cmp_key=pdvyf0knse&post_test=true";
+                                $PingURL ="https://cdgtrck.com/api/v1/ping?a=419&c=339&cmp=5825&cmp_key=pdvyf0knse";
+
+                                $bathroom_type = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                switch ($bathroom_type){
+                                    case "Shower / Bath":
+                                        $bathroom_type_data = "1";
+                                        break;
+                                    default:
+                                        $bathroom_type_data = "3";
+                                }
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $BuyTimeframe = "1";
+                                        break;
+                                    case 'Not Sure':
+                                        $BuyTimeframe = "3";
+                                        break;
+                                    default:
+                                        $BuyTimeframe = "2";
+                                }
+
+                                $Lead_data_ping .= "&project=$bathroom_type_data&homeowner=$ownership&timeframe=$BuyTimeframe";
+                                break;
+                        }
+
+                        //$Lead_data_ping = str_replace(" ", "+", $Lead_data_ping);
+
+                        if (config('app.env', 'local') == "local") {
+                            $url_api_ping = $PingURLTest;
+                        } else {
+                            $url_api_ping = $PingURL;
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api_ping,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => $Lead_data_ping,
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, $Lead_data_ping, "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['Result'])) {
+                                if ($result2['Result'] == 'Success') {
+                                    $TransactionId = $result2['PingId'];
+                                    $Payout = $result2['Payout'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
