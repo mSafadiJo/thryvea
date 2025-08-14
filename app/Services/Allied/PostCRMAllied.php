@@ -8610,6 +8610,7 @@ class PostCRMAllied {
                     "postal_code" => $zip,
                     "campaign_id" => $campaign_name,
                     "trustedform_cert_url" => $trusted_form,
+                    "trustedform_cert_bci" => $trusted_form,
 
                     "dialed_tollfree_bci" => "0000000504",
                     "userid_bci" => "Thryvea",
