@@ -75,10 +75,7 @@ class TicketController extends Controller
         }
 
         $ticket_returnlead = $ticket_returnlead->orderBy('tickets.created_at', 'desc')
-            ->get([
-                'reason_lead_returned.reason_lead_returned_name', 'tickets.*', 'campaigns_leads_users.date', 'service__campaigns.service_campaign_name',
-                'leads_customers.lead_fname', 'leads_customers.lead_lname', 'leads_customers.lead_phone_number','users.user_business_name'
-            ]);
+            ->get();
 
 
 echo "<pre>";
