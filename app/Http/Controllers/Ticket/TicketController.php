@@ -62,12 +62,12 @@ class TicketController extends Controller
        //  $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
 
         //Return Ticket Return Lead for 2 month or not closed
-        $ticket_returnlead = Ticket::join('reason_lead_returned', 'reason_lead_returned.reason_lead_returned_id', 'tickets.reason_lead_returned_id')
-            ->join('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'tickets.campaigns_leads_users_id')
-            ->join('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
-            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
-            ->join('users', 'tickets.user_id', '=', 'users.id')
-            ->where('tickets.ticket_type', 2);
+        $ticket_returnlead = Ticket::join('reason_lead_returned', 'reason_lead_returned.reason_lead_returned_id', 'tickets.reason_lead_returned_id');
+           // ->join('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'tickets.campaigns_leads_users_id')
+            //->join('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
+            //->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
+           // ->join('users', 'tickets.user_id', '=', 'users.id');
+           // ->where('tickets.ticket_type', 2);
            // ->whereBetween('tickets.created_at', [$start_date, $end_date])
 
         if (!empty($ticket_status_id)) {
