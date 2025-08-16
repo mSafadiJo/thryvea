@@ -363,18 +363,101 @@
                 <form class="form-horizontal" action="{{ route('ReturnLeadAdmin') }}" method="POST">
                     {{ csrf_field() }}
                     <div class="modal-body">
-                        @if( !empty($reason_lead_returneds) )
-                            @foreach( $reason_lead_returneds as $key => $item )
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <label class="container-dayoff">{{ $item->reason_lead_returned_name }}
-                                            <input type="radio" class="user_privileges_service" name="reason_returned" value="{{ $item->reason_lead_returned_id }}" @if($key == 0) required @endif>
-                                            <span class="checkmark-dayoff"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Not a working number
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="1" required="">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Didn’t request
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="2">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Bogus info
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="3">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Wrong number
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="4">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Doesn’t qualify
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="5">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Not interested
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="6">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">No response
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="7">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">False Advertisement
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="8">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">DNC
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="9">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="container-dayoff">Duplicate
+                                    <input type="radio" class="user_privileges_service" name="reason_returned" value="10">
+                                    <span class="checkmark-dayoff"></span>
+                                </label>
+                            </div>
+                        </div>
+
+
+
+{{--                    @if( !empty($reason_lead_returneds) )--}}
+{{--                            @foreach( $reason_lead_returneds as $key => $item )--}}
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-lg-12">--}}
+{{--                                        <label class="container-dayoff">{{ $item->reason_lead_returned_name }}--}}
+{{--                                            <input type="radio" class="user_privileges_service" name="reason_returned" value="{{ $item->reason_lead_returned_id }}" @if($key == 0) required @endif>--}}
+{{--                                            <span class="checkmark-dayoff"></span>--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        @endif--}}
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
