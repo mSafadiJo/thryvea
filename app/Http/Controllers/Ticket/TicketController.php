@@ -58,10 +58,6 @@ class TicketController extends Controller
 
     public function ShowReturnTicket(){
 
-$start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-        $end_date = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
-        $ticket_status_id = $request->ticket_status_id;
-
         //Return Ticket Return Lead for 2 month or not closed
         $ticket_returnlead = Ticket::all();
 
