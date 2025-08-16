@@ -63,26 +63,10 @@ $start_date = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
         $ticket_status_id = $request->ticket_status_id;
 
         //Return Ticket Return Lead for 2 month or not closed
-        $ticket_returnlead = Ticket::join('reason_lead_returned', 'reason_lead_returned.reason_lead_returned_id', 'tickets.reason_lead_returned_id')
-            ->join('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'tickets.campaigns_leads_users_id')
-            ->join('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
-            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
-            ->join('users', 'tickets.user_id', '=', 'users.id')
-            ->where('tickets.ticket_type', 2)
-            ->whereBetween('tickets.created_at', [$start_date, $end_date]);
-
-        if (!empty($ticket_status_id)) {
-            $ticket_returnlead->whereIn('tickets.ticket_status', $ticket_status_id);
-        }
-
-        $ticket_returnlead = $ticket_returnlead->orderBy('tickets.created_at', 'desc')
-            ->get([
-                'reason_lead_returned.reason_lead_returned_name', 'tickets.*', 'campaigns_leads_users.date', 'service__campaigns.service_campaign_name',
-                'leads_customers.lead_fname', 'leads_customers.lead_lname', 'leads_customers.lead_phone_number','users.user_business_name'
-            ]);
+        $ticket_returnlead = Ticket::all();
 
 echo "<pre>";
-print_r( $ticket_returnlead); die();
+print_r($ticket_returnlead); die();
 
         return view('Admin.Ticket.TicketReturnLead');
     }
