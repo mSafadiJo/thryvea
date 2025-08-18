@@ -383,58 +383,58 @@
                             </ul>
                         </li>
                     @endif
-{{--                    @if( empty($permission_users) || in_array('13-0', $permission_users) )--}}
-{{--                        <li>--}}
-{{--                            <a href="javascript: void(0);">--}}
-{{--                                <img class="menuLogo_svg" src="{{ URL::asset('images/menuLogo/svg/marketing.svg') }}">--}}
-{{--                                <span> TS Marketing </span> <span class="menu-arrow"></span>--}}
-{{--                            </a>--}}
-{{--                            <ul class="nav-second-level" aria-expanded="false">--}}
-{{--                                @if( empty($permission_users) || in_array('13-5', $permission_users) )--}}
-{{--                                    <li>--}}
-{{--                                        <a href="javascript: void(0);">--}}
-{{--                                            <span> Platforms </span> <span class="menu-arrow" ></span>--}}
-{{--                                        </a>--}}
-{{--                                        <ul class="nav-third-level" aria-expanded="false">--}}
-{{--                                            <li><a href="{{ route('Platforms.index') }}">List Of Platforms</a></li>--}}
-{{--                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )--}}
-{{--                                                <li><a href="{{ route('Platforms.create') }}">Add Platforms</a></li>--}}
-{{--                                            @endif--}}
-{{--                                        </ul>--}}
-{{--                                    </li>--}}
-{{--                                @endif--}}
-{{--                                @if( empty($permission_users) || in_array('13-6', $permission_users) )--}}
-{{--                                    <li>--}}
-{{--                                        <a href="javascript: void(0);">--}}
-{{--                                            <span> Traffic Sources </span> <span class="menu-arrow"></span>--}}
-{{--                                        </a>--}}
-{{--                                        <ul class="nav-third-level" aria-expanded="false">--}}
-{{--                                            <li><a href="{{ route('TrafficSources.index') }}">List Of TS</a></li>--}}
-{{--                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )--}}
-{{--                                                <li><a href="{{ route('TrafficSources.create') }}">Add TS</a></li>--}}
-{{--                                            @endif--}}
-{{--                                            @if( empty($permission_users) || in_array('13-8', $permission_users) )--}}
-{{--                                                <li><a href="{{ route('tsLeadCost') }}">Lead Cost By TS</a></li>--}}
-{{--                                            @endif--}}
-{{--                                        </ul>--}}
-{{--                                    </li>--}}
-{{--                                @endif--}}
-{{--                                @if( empty($permission_users) || in_array('13-7', $permission_users) )--}}
-{{--                                    <li>--}}
-{{--                                        <a href="javascript: void(0);">--}}
-{{--                                            <span> Call Center Sources </span> <span class="menu-arrow"></span>--}}
-{{--                                        </a>--}}
-{{--                                        <ul class="nav-third-level" aria-expanded="false">--}}
-{{--                                            <li><a href="{{ route('CallCenterSources.index') }}">List Of Call Center Sources</a></li>--}}
-{{--                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )--}}
-{{--                                                <li><a href="{{ route('CallCenterSources.create') }}">Add Call Center Sources</a></li>--}}
-{{--                                            @endif--}}
-{{--                                        </ul>--}}
-{{--                                    </li>--}}
-{{--                                @endif--}}
-{{--                            </ul>--}}
-{{--                        </li>--}}
-{{--                    @endif--}}
+                    @if( empty($permission_users) || in_array('13-0', $permission_users) )
+                        <li>
+                            <a href="javascript: void(0);">
+                                <img class="menuLogo_svg" src="{{ URL::asset('images/menuLogo/svg/marketing.svg') }}">
+                                <span> TS Marketing </span> <span class="menu-arrow"></span>
+                            </a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                @if( empty($permission_users) || in_array('13-5', $permission_users) )
+                                    <li>
+                                        <a href="javascript: void(0);">
+                                            <span> Platforms </span> <span class="menu-arrow" ></span>
+                                        </a>
+                                        <ul class="nav-third-level" aria-expanded="false">
+                                            <li><a href="{{ route('Platforms.index') }}">List Of Platforms</a></li>
+                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )
+                                                <li><a href="{{ route('Platforms.create') }}">Add Platforms</a></li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                @endif
+                                @if( empty($permission_users) || in_array('13-6', $permission_users) )
+                                    <li>
+                                        <a href="javascript: void(0);">
+                                            <span> Traffic Sources </span> <span class="menu-arrow"></span>
+                                        </a>
+                                        <ul class="nav-third-level" aria-expanded="false">
+                                            <li><a href="{{ route('TrafficSources.index') }}">List Of TS</a></li>
+                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )
+                                                <li><a href="{{ route('TrafficSources.create') }}">Add TS</a></li>
+                                            @endif
+                                            @if( empty($permission_users) || in_array('13-8', $permission_users) )
+                                                <li><a href="{{ route('tsLeadCost') }}">Lead Cost By TS</a></li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                @endif
+                                @if( empty($permission_users) || in_array('13-7', $permission_users) )
+                                    <li>
+                                        <a href="javascript: void(0);">
+                                            <span> Call Center Sources </span> <span class="menu-arrow"></span>
+                                        </a>
+                                        <ul class="nav-third-level" aria-expanded="false">
+                                            <li><a href="{{ route('CallCenterSources.index') }}">List Of Call Center Sources</a></li>
+                                            @if( empty($permission_users) || in_array('13-1', $permission_users) )
+                                                <li><a href="{{ route('CallCenterSources.create') }}">Add Call Center Sources</a></li>
+                                            @endif
+                                        </ul>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                    @endif
 
 
 {{--                    @if( empty($permission_users) || in_array('15-0', $permission_users) )--}}
