@@ -306,7 +306,7 @@ class CampaignMainController extends Controller
         $data_msg = array(
             'name' => $buyersusername,
             'leadName' => 'Test Test',
-            'LeadEmail' => 'Test@allieddigitalmedia.com',
+            'LeadEmail' => 'tech@thryvea.co',
             'LeadPhone' => '8582840441',
             'Address' =>  'Address: Test',
             'LeadService' => $service_campaign_name,

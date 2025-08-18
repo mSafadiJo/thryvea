@@ -2448,8 +2448,8 @@ class AdminCampaignController extends Controller{
                     }
                 }
 
-                $admin_email1 = "john@allieddigitalmedia.net";
-                $admin_email2[] = "lana@allieddigitalmedia.net";
+//                $admin_email1 = "john@allieddigitalmedia.net";
+//                $admin_email2[] = "lana@allieddigitalmedia.net";
                 $admin_name = "Team";
                 $subject_email = "$action Campaign";
                 $data_msg = array(

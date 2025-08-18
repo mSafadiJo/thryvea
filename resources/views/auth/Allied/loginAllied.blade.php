@@ -29,7 +29,7 @@
                 <div class="textToRight">
                     <h2>Welcome Back!</h2>
                     <p>Hello, in order to view your account details, please login using your username and password. For
-                        assistance, please <a href="mailto:info@zone1remodeling.com">Click Here!</a></p>
+                        assistance, please <a href="mailto:tech@thryvea.co">Click Here!</a></p>
                 </div>
             </div>
         </div>

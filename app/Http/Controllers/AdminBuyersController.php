@@ -265,17 +265,17 @@ class AdminBuyersController extends Controller
                 ]);
         }
 
-        $data = array(
-            'name' => 'Mike Ismair',
-            'buyername' => $buyername->username,
-            'admin_name' => $admin_name,
-            'is_claim' => '0',
-            'typeofpayment' => $payment_types->payment_type_method_type
-        );
-        Mail::send(['text'=>'Mail.account_ownership'], $data, function($message) {
-            $message->to('mike@allieddigitalmedia.com', 'Mike Ismair')->subject('Payment Term Edit Request');
-            $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
-        });
+//        $data = array(
+//            'name' => 'Mike Ismair',
+//            'buyername' => $buyername->username,
+//            'admin_name' => $admin_name,
+//            'is_claim' => '0',
+//            'typeofpayment' => $payment_types->payment_type_method_type
+//        );
+//        Mail::send(['text'=>'Mail.account_ownership'], $data, function($message) {
+//            $message->to('mike@allieddigitalmedia.com', 'Mike Ismair')->subject('Payment Term Edit Request');
+//            $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
+//        });
 
         return redirect()->back();
     }

@@ -86,17 +86,17 @@ class ClaimController extends Controller
 
         $claim->save();
 
-        $data = array(
-            'name' => 'Mike Ismair',
-            'buyername' => $buyername->username,
-            'admin_name' => Auth::user()->username,
-            'is_claim' => '1',
-            'typeofpayment' => ''
-        );
-        Mail::send(['text'=>'Mail.account_ownership'], $data, function($message) {
-            $message->to('mike@allieddigitalmedia.com', 'Mike Ismair')->subject('Account Claim Request');
-            $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
-        });
+//        $data = array(
+//            'name' => 'Mike Ismair',
+//            'buyername' => $buyername->username,
+//            'admin_name' => Auth::user()->username,
+//            'is_claim' => '1',
+//            'typeofpayment' => ''
+//        );
+//        Mail::send(['text'=>'Mail.account_ownership'], $data, function($message) {
+//            $message->to('mike@allieddigitalmedia.com', 'Mike Ismair')->subject('Account Claim Request');
+//            $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
+//        });
 
         return redirect()->back();
     }

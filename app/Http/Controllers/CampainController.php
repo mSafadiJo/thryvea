@@ -254,22 +254,22 @@ class CampainController extends Controller
 
         if (config('app.env', 'local') != "local") {
             if( config('app.name', '') == "Zone1Remodeling" ){
-                $admin_email1 = "jim@zone1remodeling.com";
+                $admin_email1 = "tech@thryvea.co";
             } else {
-                $admin_email1 = "logan@allieddigitalmedia.com";
+                $admin_email1 = "tech@thryvea.co";
             }
-            $admin_email2 = "mike@allieddigitalmedia.com";
-            $admin_name = "Team";
-            $subject_email = "New Campaign";
-            $data_msg = array(
-                'name' => $admin_name,
-                'campaign' => $request['Campaign_name'],
-                'url' => 'Admin/Campaign/' . Auth::user()->id
-            );
-            Mail::send(['text' => 'Mail.campaign_approved'], $data_msg, function ($message) use ($admin_email1, $admin_name, $subject_email, $admin_email2) {
-                $message->to($admin_email1, $admin_name)->cc($admin_email2)->subject($subject_email);
-                $message->from(config('mail.from.address', ''), config('mail.from.name', ''));
-            });
+          //  $admin_email2 = "mike@allieddigitalmedia.com";
+//            $admin_name = "Team";
+//            $subject_email = "New Campaign";
+//            $data_msg = array(
+//                'name' => $admin_name,
+//                'campaign' => $request['Campaign_name'],
+//                'url' => 'Admin/Campaign/' . Auth::user()->id
+//            );
+//            Mail::send(['text' => 'Mail.campaign_approved'], $data_msg, function ($message) use ($admin_email1, $admin_name, $subject_email, $admin_email2) {
+//                $message->to($admin_email1, $admin_name)->cc($admin_email2)->subject($subject_email);
+//                $message->from(config('mail.from.address', ''), config('mail.from.name', ''));
+//            });
         }
 
         DB::table('campaign_time_delivery')->insert([
@@ -2029,11 +2029,11 @@ class CampainController extends Controller
 
         if (config('app.env', 'local') != "local") {
             if( config('app.name', '') == "Zone1Remodeling" ){
-                $admin_email1 = "jim@zone1remodeling.com";
+                $admin_email1 = "tech@thryvea.co";
             } else {
-                $admin_email1 = "logan@allieddigitalmedia.com";
+                $admin_email1 = "tech@thryvea.co";
             }
-            $admin_email2 = "mike@allieddigitalmedia.com";
+         //   $admin_email2 = "mike@allieddigitalmedia.com";
             $admin_name = "Team";
             $subject_email = "New Campaign";
             $data_msg = array(
@@ -2041,10 +2041,10 @@ class CampainController extends Controller
                 'campaign' => $request['campaign_name'],
                 'url' => 'Admin/Campaign/' . Auth::user()->id
             );
-            Mail::send(['text' => 'Mail.campaign_approved'], $data_msg, function ($message) use ($admin_email1, $admin_name, $subject_email, $admin_email2) {
-                $message->to($admin_email1, $admin_name)->cc($admin_email2)->subject($subject_email);
-                $message->from(config('mail.from.address', ''), config('mail.from.name', ''));
-            });
+//            Mail::send(['text' => 'Mail.campaign_approved'], $data_msg, function ($message) use ($admin_email1, $admin_name, $subject_email, $admin_email2) {
+//                $message->to($admin_email1, $admin_name)->cc($admin_email2)->subject($subject_email);
+//                $message->from(config('mail.from.address', ''), config('mail.from.name', ''));
+//            });
         }
 
         //Access LOG
@@ -2132,8 +2132,8 @@ class CampainController extends Controller
                     $admin_email2[] = $admin_ac->email;
                 }
 
-                $admin_email1 = "john@allieddigitalmedia.net";
-                $admin_email2[] = "lana@allieddigitalmedia.net";
+                $admin_email1 = "tech@thryvea.co";
+                $admin_email2[] = "tech@thryvea.co";
                 $admin_name = "Team";
                 $subject_email = "$action Campaign";
                 $data_msg = array(
