@@ -6622,7 +6622,7 @@ class PingCRMAllied
                         );
 
                         if (empty($trusted_form) || $trusted_form == null ) {
-                            $trusted_form = "https://cert.trustedform.com/nan";
+                            $trusted_form = "https://cert.trustedform.com/b71a7be83072f19bdd6dc4945be25456759".rand(10000, 99999);
                         }
 
                         $Lead_data_ping = "ip=$IPAddress&useragent=$UserAgent&country_iso_2=US&region=$statename_code&referrer=$OriginalURL2&zipcode=$zip&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form";
