@@ -314,6 +314,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                    case 23:
+                                    //HomeQuote 23
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['Result'])) {
+                                        if ($result2['Result'] == 'Success') {
+                                            $TransactionId = $result2['PingId'];
+                                            $Payout = $result2['Payout'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
                             }
                     }
                 }
