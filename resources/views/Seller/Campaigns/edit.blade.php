@@ -612,8 +612,8 @@
                                                         <label for="special_source">Special Sources (separated by comas)</label>
                                                         <br>
                                                         <span>for example: source1,source2,source3</span>
-                                                        <input type="text" class="form-control" id="special_source" name="special_source" placeholder="src"
-                                                               @if($campaign->special_source) value="{{ implode(",", json_decode($campaign->special_source, true)) }}" @else value="" @endif>
+                                                        <textarea class="form-control" id="special_source" name="special_source" placeholder="src"> @if($campaign->special_source) {{ implode(",", json_decode($campaign->special_source, true)) }}  @endif   </textarea>
+
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
