@@ -2132,12 +2132,10 @@ class ApiMain {
             'type' => $type
         );
 
-        if( $type != 2 ){
-            Mail::send(['text'=>'Mail.etopup'], $data, function($message) use($email, $buyer_name) {
-                $message->to($email, $buyer_name)->subject('eTopUp');
-                $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
-            });
-        }
+        Mail::send(['text'=>'Mail.etopup'], $data, function($message) use($email, $buyer_name) {
+            $message->to("Frank@thryvea.co", $buyer_name)->subject('buyers threshold');
+            $message->from(config('mail.from.address', ''),config('mail.from.name', ''));
+        });
 
         //Slack::send("User $email Budget is low!");
     }

@@ -1,6 +1,8 @@
-Dear {{ $name }},
+Dear Admin,
 
-Kindly note that your balance is low on funds, please recharge your account so we can continue the service.
+Kindly note that
+
+{{ $name }}  account threshold is almost fully consumed, please increase the account budget
 
 Thank you,
 
