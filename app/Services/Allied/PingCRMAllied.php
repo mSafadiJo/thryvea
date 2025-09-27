@@ -1589,19 +1589,19 @@ class PingCRMAllied
                                     $residential_commercia = "residential";
                                     switch ($roof_type){
                                         case "Wood Shake/Composite Roofing":
-                                            $type_of_work = "Roofing Wood Shingle";
+                                            $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Composition Shingle Repair" : "Roofing Composition Shingle Install");
                                             break;
-                                        case  "Metal Roofing":
-                                            $type_of_work = "Roofing Metal";
+                                        case "Metal Roofing":
+                                            $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Metal Repair" : "Roofing Metal Install");
                                             break;
                                         case "Natural Slate Roofing":
-                                            $type_of_work = "Roofing Slate";
+                                            $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Natural Slate Repair" : "Roofing Natural Slate Install");
                                             break;
                                         case "Tile Roofing":
-                                            $type_of_work = "Roofing Tile";
+                                            $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Tile Repair" : "Roofing Tile Install");
                                             break;
                                         default:
-                                            $type_of_work = 'Roofing';
+                                            $type_of_work = ($project_nature == "Repair existing roof" ? "Roof Repair" : "New Roof");
                                     }
                                 } else {
                                     $home_owner = "No";
