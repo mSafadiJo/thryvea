@@ -91,9 +91,6 @@ Appointment Date: {{ $appointment_date }}
 
 @endif
 
-For more information and to view your received leads please login using the link below:
-https://{{ $_SERVER['SERVER_NAME'] }}
-
 Thank you!
-
+https://{{ $_SERVER['SERVER_NAME'] }}
 {{ Config::get('app.name') }}

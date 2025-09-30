@@ -81,20 +81,20 @@
                         </div>
                     </form>
 
-                    <div class="checkbox checkbox-success">
-                        <input type="checkbox" type="checkbox" name="remember" id="remember" checked>
-                        <label class="passLabel" for="remember">
-                            {{ __('Remember Me') }}
-                        </label>
-                    </div>
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="pull-right forgotPLOg"><small>Forgot
-                                Password?</small></a>
-                    @endif
-                    <p class="noAccount">
-                        Don't have an account? <a href="{{ route('register') }}"
-                                                  class="signUpCo"><b>Create One!</b></a>
-                    </p>
+{{--                    <div class="checkbox checkbox-success">--}}
+{{--                        <input type="checkbox" type="checkbox" name="remember" id="remember" checked>--}}
+{{--                        <label class="passLabel" for="remember">--}}
+{{--                            {{ __('Remember Me') }}--}}
+{{--                        </label>--}}
+{{--                    </div>--}}
+{{--                    @if (Route::has('password.request'))--}}
+{{--                        <a href="{{ route('password.request') }}" class="pull-right forgotPLOg"><small>Forgot--}}
+{{--                                Password?</small></a>--}}
+{{--                    @endif--}}
+{{--                    <p class="noAccount">--}}
+{{--                        Don't have an account? <a href="{{ route('register') }}"--}}
+{{--                                                  class="signUpCo"><b>Create One!</b></a>--}}
+{{--                    </p>--}}
                 </div>
             </div>
         </div>
