@@ -4683,7 +4683,7 @@ class PostCRMAllied {
 
                                 switch ($Type_OfRoofing) {
                                     case "Asphalt Roofing":
-                                        $Type_OfRoofing_data = "Asphalt Shingle";
+                                        $Type_OfRoofing_data = "Asphalt Shingles";
                                         $roof_task = ($project_nature == "Repair existing roof" ? "Asphalt Shingle Roofing - Repair" : "Asphalt Shingle Roofing - Install or Replace");
                                         break;
                                     case "Wood Shake/Composite Roofing":
