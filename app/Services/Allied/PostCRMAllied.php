@@ -4587,6 +4587,185 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 29:
+                    //	Clean Energy Authoroty 29
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+                        list($OfferId, $lead_coust) = explode('|', $data_msg['ping_post_data']['Payout']);
+
+                        switch ($crm_details['service_id']) {
+                            case 1:
+                                //Windows
+                                $number_of_windows = trim($crm_details['data']['number_of_window']);
+                                $project_nature = trim($crm_details['data']['project_nature']);
+                                $ownership = trim($crm_details['data']['homeOwn']);
+
+                                switch ($number_of_windows) {
+                                    case "1":
+                                        $NumWindows = "New Window - Single";
+                                        break;
+                                    case "2":
+                                        $NumWindows = "New Windows - 2";
+                                        break;
+                                    case "3-5":
+                                        $NumWindows = "New Windows - 3-5";
+                                        break;
+                                    case "6-9":
+                                        $NumWindows = "New Windows - 6-9";
+                                        break;
+                                    default:
+                                        $NumWindows = "New Windows - 10+";
+                                }
+
+                                $ownership = ($ownership != "Yes" ? "Yes" : "No");
+                                if (config('app.env', 'local') == "local") {
+                                    //Test Mode
+                                    $url_api_post = "https://uat.sbbnetinc.com/rest/api/windows/submit-inquiry-json";
+                                    $source_name = "TESTTCPA";
+                                } else {
+                                    //Live Mode
+                                    $url_api_post = "https://live.sbbnetinc.com/rest/api/windows/submit-inquiry-json";
+                                    $source_name = "thrwi";
+                                }
+
+                                $Lead_data_array_post = array(
+                                    "Request" => array(
+                                        // "Key" => "d65a1e05c2f788c17954f386a18690503a260f799db79979fd2e23fb4fd8e1a9",
+                                        "API_Action" => "pingPostLead",
+                                        "Mode" => "post",
+                                        "Return_Best_Price" => "1",
+                                        "TYPE" => "18",
+                                        "IP_Address" => $IPAddress,
+                                        "SRC" => $source_name,
+                                        "Landing_Page" => $OriginalURL2,
+                                        // "source_number" => $vendor_id,
+                                        "Sub_ID" => $leadsCustomerCampaign_id,
+                                        "Pub_ID" => $google_ts,
+                                        "Universal_Lead_ID" => $LeadId,
+                                        "Active_Prospect_URL" => $trusted_form,
+                                        "Best_Time_To_Call" => "Anytime",
+                                        "Property_Zip" => $zip,
+                                        "Property_City" => $city,
+                                        "Property_State" => $statename_code,
+                                        "Property_Address" => $street,
+                                        "Window_Task" => $NumWindows,
+                                        "Property_Owner" => $ownership,
+                                        "NoSale" => "No",
+                                        "Timing" => "Immediately",
+                                        "vendor_lead_id" => $leadsCustomerCampaign_id,
+                                        "Lead_ID" => $TransactionId,
+                                        "Lead_Cost" => $lead_coust,
+                                        "First_Name" => $first_name,
+                                        "Last_Name" => $last_name,
+                                        "Email" => $email,
+                                        "Primary_Phone" => $number1,
+                                        "OfferId"=> array($OfferId),
+                                    )
+                                );
+                                $httpheader = array(
+                                    'Authorization: Basic cmVzdC11c2VyOjVTOGNCRHEmRWYha3BMKk5XNXVM',
+                                    'Content-Type: application/json',
+                                    //'Accept: application/xml',
+                                );
+
+                                $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array_post)), "POST", 1, $crm_details['campaign_id']);
+                                $result2 = json_decode($result, true);
+                                if (!empty($result2['Status']) && $result2['Status'] === 'Sold') {
+                                    return 1;
+                                }
+                                break;
+                            case 6:
+                                //Roofing
+                                $Type_OfRoofing = trim($crm_details['data']['roof_type']);
+                                $project_nature = trim($crm_details['data']['project_nature']);
+                                $property_type = trim($crm_details['data']['property_type']);
+                                $start_time = trim($crm_details['data']['start_time']);
+
+                                switch ($Type_OfRoofing) {
+                                    case "Asphalt Roofing":
+                                        $Type_OfRoofing_data = "Asphalt Shingles";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Asphalt Shingle Roofing - Repair" : "Asphalt Shingle Roofing - Install or Replace");
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        $Type_OfRoofing_data = "Wood Shake";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Wood Shake or Composite Roofing - Repair" : "Wood Shake or Composite Roofing - Install or Replace");
+                                        break;
+                                    case "Metal Roofing":
+                                        $Type_OfRoofing_data = "Metal";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Metal Roofing - Repair" : "Metal Roofing - Install or Replace");
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $Type_OfRoofing_data = "Slate";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Natural Slate Roofing - Repair" : "Natural Slate Roofing - Install or Replace");
+                                        break;
+                                    case "Tile Roofing":
+                                        $Type_OfRoofing_data = "Cement Tile";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Traditional Tile Roofing - Repair" : "Traditional Tile Roofing - Install or Replace");
+                                        break;
+                                    default:
+                                        $Type_OfRoofing_data = "Other or Unknown";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Flat, Foam or Single Ply Roofing - Repair" : "Flat, Foam, or Single Ply Roofing - Install or Replace");
+                                }
+
+                                if (config('app.env', 'local') == "local") {
+                                    //Test Mode
+                                    $url_api_post = "https://uat.sbbnetinc.com/rest/api/roofing/submit-inquiry-json";
+                                    $source_name = "TESTTCPA";
+                                } else {
+                                    //Live Mode
+                                    $url_api_post = "https://live.sbbnetinc.com/rest/api/roofing/submit-inquiry-json";
+                                    $source_name = "thrro";
+                                }
+
+                                $Lead_data_array_post = array(
+                                    "Request" => array(
+                                        "API_Action" => "pingPostLead",
+                                        "Format" => "JSON",
+                                        "Mode" => "post",
+                                        "Return_Best_Price" => "1",
+                                        "TYPE" => "16",
+                                        "IP_Address" => $IPAddress,
+                                        "SRC" => $source_name,
+                                        "Landing_Page" => $OriginalURL2,
+                                        "Sub_ID" => $leadsCustomerCampaign_id,
+                                        "Pub_ID" => $google_ts,
+                                        "Universal_Lead_ID" => $LeadId,
+                                        "Best_Time_To_Call" => "Anytime",
+                                        "Property_Zip" => $zip,
+                                        "Property_City" => $city,
+                                        "Property_State" => $statename_code,
+                                        "Roof_Material" => $Type_OfRoofing_data,
+                                        "Roof_Task" => $roof_task,
+                                        "Property_Owner" => "Yes",
+                                        "NoSale" => "No",
+                                        "Timing" => "Immediately",
+                                        "vendor_lead_id" => $leadsCustomerCampaign_id,
+                                        "Lead_ID" => $TransactionId,
+                                        "Lead_Cost" => $lead_coust,
+                                        "First_Name" => $first_name,
+                                        "Last_Name" => $last_name,
+                                        "Email" => $email,
+                                        "Primary_Phone" => $number1,
+                                        "Property_Address" => $street,
+                                        "Active_Prospect_URL" => $trusted_form,
+                                        "OfferId"=> array($OfferId),
+                                    )
+                                );
+
+                                $httpheader = array(
+                                    'Authorization: Basic cmVzdC11c2VyOjVTOGNCRHEmRWYha3BMKk5XNXVM',
+                                    'Content-Type: application/json',
+                                );
+
+                                $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array_post)), "POST", 1, $crm_details['campaign_id']);
+                                $result2 = json_decode($result, true);
+                                if (!empty($result2['Status']) && $result2['Status'] === 'Sold') {
+                                    return 1;
+                                }
+                                break;
+                        }
+                    }
+                    break;
 
             }
             return 0;
