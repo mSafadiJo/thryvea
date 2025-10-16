@@ -2718,7 +2718,7 @@ class PingCRMAllied
 
                                 switch ($Type_OfRoofing) {
                                     case "Asphalt Roofing":
-                                        $Type_OfRoofing_data = "Asphalt Shingles";
+                                        $Type_OfRoofing_data = "Asphalt Shingle";
                                         $roof_task = ($project_nature == "Repair existing roof" ? "Asphalt Shingle Roofing - Repair" : "Asphalt Shingle Roofing - Install or Replace");
                                         break;
                                     case "Wood Shake/Composite Roofing":
