@@ -2670,6 +2670,7 @@ class PingCRMAllied
                                         "Property_Owner" => $ownership,
                                         "NoSale" => "No",
                                         "Timing" => "Immediately",
+                                        "Tcpa_Language" => $TCPAText,
                                         "vendor_lead_id" => $leadCustomer_id
                                     )
                                 );
@@ -2774,6 +2775,7 @@ class PingCRMAllied
                                         "Property_Owner" => "Yes",
                                         "NoSale" => "No",
                                         "Timing" => "Immediately",
+                                        "Tcpa_Language" => $TCPAText,
                                         "vendor_lead_id" => $leadCustomer_id
                                     )
                                 );

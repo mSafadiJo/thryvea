@@ -4659,6 +4659,7 @@ class PostCRMAllied {
                                         "Last_Name" => $last_name,
                                         "Email" => $email,
                                         "Primary_Phone" => $number1,
+                                        "Tcpa_Language" => $TCPAText,
                                         "OfferId"=> array($OfferId),
                                     )
                                 );
@@ -4748,6 +4749,7 @@ class PostCRMAllied {
                                         "Primary_Phone" => $number1,
                                         "Property_Address" => $street,
                                         "Active_Prospect_URL" => $trusted_form,
+                                        "Tcpa_Language" => $TCPAText,
                                         "OfferId"=> array($OfferId),
                                     )
                                 );
