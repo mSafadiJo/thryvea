@@ -342,6 +342,18 @@ class CrmApi {
                                         $Result = 1;
                                     }
                                     break;
+                                case 32:
+                                    //Energy Pal 1291
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "accepted") {
+                                            $TransactionId = $result2['ping_id'];
+                                            $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
                             }
                     }
                 }

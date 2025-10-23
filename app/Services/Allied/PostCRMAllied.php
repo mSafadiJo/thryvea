@@ -4766,6 +4766,111 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 32:
+                    //Energy Pal 1291
+
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+                    } else {
+                        return 0;
+                    }
+
+                    $url_api = "https://api.energypal.com/api/v1/leads/post";
+                    $httpheader = array(
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    $Lead_data_array = array(
+                        "cid" => "zroimatoeai5b5br",
+                        "ping_id" => $TransactionId,
+                        "universal_leadid" => $LeadId,
+                        "ip_address" => $IPAddress,
+                        "tcpa_text" => $TCPAText,
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "phone" => $number1,
+                        "email" => $email,
+                        "address" => array(
+                            "street" => $street,
+                            "city" => $city,
+                            "state" => $statename_code,
+                            "zip" => $zip,
+                            "country" => "US",
+                        )
+                    );
+
+                    switch ($lead_type_service_id) {
+                        case 2:
+                            //Solar
+                            $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                            $utility_provider = trim($crm_details['data']['utility_provider']);
+                            $roof_shade = trim($crm_details['data']['roof_shade']);
+                            $property_type = trim($crm_details['data']['property_type']);
+
+                            $homeowner = ($property_type == "Rented" ? "Renter/Not Owner" : "Single Family");
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $average_bill = 50;
+                                    break;
+                                case '$51 - $100':
+                                    $average_bill = 100;
+                                    break;
+                                case '$101 - $150':
+                                    $average_bill = 150;
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = 200;
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = 300;
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = 400;
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = 500;
+                                    break;
+                                default:
+                                    $average_bill = 600;
+                            }
+
+                            switch ($roof_shade) {
+                                case "Full Sun":
+                                    $roof_shade_data = "No Shade";
+                                    break;
+                                case "Mostly Shaded":
+                                    $roof_shade_data = "A Lot of Shade";
+                                    break;
+                                case "Partial Sun":
+                                    $roof_shade_data = "A Little Shade";
+                                    break;
+                                default:
+                                    $roof_shade_data = "Unsure";
+                            }
+
+                            $Lead_data_array['ownership'] = $homeowner;
+                            $Lead_data_array['electric_bill'] = $average_bill;
+                            $Lead_data_array['electric_utility'] = $utility_provider;
+                            $Lead_data_array['roof_shade'] = $roof_shade_data;
+                            break;
+                    }
+
+                    if (config('app.env', 'local') == "local" || !empty($data_msg['is_test'])) {
+                        //Test Mode
+                        $Lead_data_array['test'] = true;
+                        $Lead_data_array['zip'] = "90001";
+                        $Lead_data_array['state'] = "CA";
+                    }
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2['status'])) {
+                        if ($result2['status'] == "accepted") {
+                            return 1;
+                        }
+                    }
+                    break;
 
             }
             return 0;

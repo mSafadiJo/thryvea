@@ -2815,6 +2815,95 @@ class PingCRMAllied
                                 break;
                         }
                         break;
+                    case 32:
+                        //Energy Pal 1291
+                        $url_api = "https://api.energypal.com/api/v1/leads/ping";
+                        $httpheader = array(
+                            "Accept: application/json",
+                            "Content-Type: application/json",
+                        );
+
+                        $Lead_data_array = array(
+                            "cid" => "zroimatoeai5b5br",
+                            "country" => "US",
+                            "state" => $statename_code,
+                            "zip" => $zip,
+                            "universal_leadid" => $LeadId,
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 2:
+                                //Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                        $average_bill = 50;
+                                        break;
+                                    case '$51 - $100':
+                                        $average_bill = 100;
+                                        break;
+                                    case '$101 - $150':
+                                        $average_bill = 150;
+                                        break;
+                                    case '$151 - $200':
+                                        $average_bill = 200;
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = 300;
+                                        break;
+                                    case '$301 - $400':
+                                        $average_bill = 400;
+                                        break;
+                                    case '$401 - $500':
+                                        $average_bill = 500;
+                                        break;
+                                    default:
+                                        $average_bill = 600;
+                                }
+
+
+                                $Lead_data_array['electric_bill'] = $average_bill;
+                                $Lead_data_array['electric_utility'] = $utility_provider;
+                                break;
+                        }
+
+                        if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
+                            //Test Mode
+                            $Lead_data_array['test'] = true;
+                            $Lead_data_array['zip'] = "90001";
+                            $Lead_data_array['state'] = "CA";
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "accepted") {
+                                    $TransactionId = $result2['ping_id'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
