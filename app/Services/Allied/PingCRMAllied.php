@@ -2648,6 +2648,10 @@ class PingCRMAllied
                                     $source_name = "thrwi";
                                 }
 
+                                if (empty($trusted_form) || $trusted_form == null ) {
+                                    $trusted_form = "";
+                                }
+
                                 $Lead_data_array_ping = array(
                                     "Request" => array(
                                         "API_Action" => "pingPostLead",
