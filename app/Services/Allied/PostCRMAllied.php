@@ -4591,7 +4591,7 @@ class PostCRMAllied {
                     //	Clean Energy Authoroty 29
                     if (!empty($data_msg['ping_post_data']['TransactionId'])) {
                         $TransactionId = $data_msg['ping_post_data']['TransactionId'];
-                        list($OfferId, $lead_coust) = explode('|', $data_msg['ping_post_data']['Payout']);
+                        $lead_coust = $data_msg['ping_post_data']['Payout'];
 
                         switch ($crm_details['service_id']) {
                             case 1:
@@ -4660,7 +4660,6 @@ class PostCRMAllied {
                                         "Email" => $email,
                                         "Primary_Phone" => $number1,
                                         "Tcpa_Language" => $TCPAText,
-                                        "OfferId"=> array($OfferId),
                                     )
                                 );
                                 $httpheader = array(
@@ -4750,7 +4749,6 @@ class PostCRMAllied {
                                         "Property_Address" => $street,
                                         "Active_Prospect_URL" => $trusted_form,
                                         "Tcpa_Language" => $TCPAText,
-                                        "OfferId"=> array($OfferId),
                                     )
                                 );
 
@@ -4871,6 +4869,161 @@ class PostCRMAllied {
                         if ($result2['status'] == "accepted") {
                             return 1;
                         }
+                    }
+                    break;
+                case 35:
+                    //	BlueInkDigital
+
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+
+                        // Determine Live or Test URL
+                        $url_api_post = config('app.env') == "local"
+                            ? "https://exchange.standardinformation.io/post_test?legacy=J"
+                            : "https://exchange.standardinformation.io/post?legacy=J";
+
+                        // Prepare Base Meta + Contact (common for all)
+                        $base_meta = [
+                            "landing_page_url"      => $OriginalURL2,
+                            "source_id"             => $google_ts,
+                            "lead_id_code"          => $LeadId,
+                            "trusted_form_cert_url" => $trusted_form,
+                            "tcpa_compliant"        => true,
+                            "tcpa_consent_text"     => $TCPAText,
+                            "user_agent"            => $UserAgent,
+                            "originally_created"    => gmdate("Y-m-d\TH:i:s\Z")
+                        ];
+
+                        $base_contact = [
+                            "first_name"      => $first_name,
+                            "last_name"       => $last_name,
+                            "email"           => $email,
+                            "phone"           => $number1,
+                            "phone_last_four" => substr($number1 ?? "", -4),
+                            "address"         => $street,
+                            "city"            => $city,
+                            "state"           => $statename_code,
+                            "zip_code"        => $zip,
+                            "ip_address"      => $IPAddress,
+                        ];
+
+                        // Default header token - will change per case
+                        $authToken = null;
+
+                        // Service-specific data mapping
+                        switch ($crm_details['service_id']) {
+
+                            case 1: // Windows
+                                $num = trim($crm_details['data']['number_of_window']);
+                                $num = $num == "3-5" ? "5" : ($num == "6-9" ? "9" : ($num ?: "10"));
+                                $projectType = trim($crm_details['data']['project_nature']) == "Repair"
+                                    ? "Need repair services at this time"
+                                    : "Interested in replacement windows";
+                                $own_property = trim($crm_details['data']['homeOwn']) != "Yes";
+
+                                $service_data = [
+                                    "windows" => [
+                                        "num_windows"  => $num,
+                                        "project_type" => $projectType
+                                    ]
+                                ];
+
+                                $authToken = "e373e16a-0bfb-4a2d-ad36-48794909cfe0";
+                                break;
+
+                            case 6: // Roofing
+                                $roof_types = [
+                                    "Asphalt Roofing" => "Asphalt shingle",
+                                    "Wood Shake/Composite Roofing" => "Composite",
+                                    "Metal Roofing" => "Metal",
+                                    "Natural Slate Roofing" => "Natural slate",
+                                    "Tile Roofing" => "Tile"
+                                ];
+
+                                $roof_selected = $roof_types[$crm_details['data']['roof_type']] ?? "Not Sure";
+                                $project_type = trim($crm_details['data']['project_nature']) == "Repair existing roof" ? "Repair" : "New roof for new home";
+                                $own_property = trim($crm_details['data']['property_type']) != "Rented";
+
+                                $service_data = [
+                                    "roof" => [
+                                        "project_type" => $project_type,
+                                        "roofing_type" => $roof_selected
+                                    ]
+                                ];
+
+                                $authToken = "249c60d5-8890-460f-bdef-7b2cbcf33f45";
+                                break;
+
+                            case 7: // Home Siding
+                                $map_siding = [
+                                    "Vinyl Siding" => "Vinyl",
+                                    "Brickface Siding" => "Brick or stone",
+                                    "Stoneface Siding" => "Brick or stone",
+                                    "Composite wood Siding" => "Wood"
+                                ];
+
+                                $project_type = trim($crm_details['data']['project_nature']) == "Repair section(s) of siding"
+                                    ? "Siding repair" : "Replace siding";
+
+                                $service_data = [
+                                    "siding" => [
+                                        "siding_type"  => $map_siding[$crm_details['data']['type_of_siding']] ?? "Other",
+                                        "project_type" => $project_type,
+                                    ]
+                                ];
+
+                                $own_property = trim($crm_details['data']['homeOwn']) == "Yes";
+
+                                $authToken = "556bce96-7811-4739-b2ce-8a0bd72e9a08";
+                                break;
+
+                            case 9: // Bathroom
+                                $map_bathroom = [
+                                    "Full Remodel" => "Full bathroom",
+                                    "Shower / Bath" => "Bathtub/Shower Updates",
+                                    "Sinks" => "Bath sinks"
+                                ];
+
+                                $service_data = [
+                                    "bathroom" => [
+                                        "project_type" => $map_bathroom[$crm_details['data']['services']] ?? "Not Sure",
+                                    ]
+                                ];
+
+                                $own_property = trim($crm_details['data']['homeOwn']) == "Yes";
+
+                                $authToken = "e8ad25b7-3a32-4b9d-9b13-60733f60b46d";
+                                break;
+                        }
+
+                        // Final Data
+                        $Lead_data_array_post = [
+                            "auth_code" => $TransactionId,
+                            "data" => array_merge($service_data, [
+                                "own_property"        => $own_property,
+                                "best_call_time"      => "Anytime",
+                                "purchase_time_frame" => "Immediately",
+                                "credit_rating"       => "Good",
+                            ]),
+                            "meta"    => $base_meta,
+                            "contact" => $base_contact
+                        ];
+
+                        $httpheader = [
+                            "Authorization: Token $authToken",
+                            'Content-Type: application/json',
+                            'Accept: application/json',
+                        ];
+
+                        $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array_post)), "POST", 1, $crm_details['campaign_id']);
+                        $result2 = json_decode($result, true);
+                        if (!empty($result2['status'])) {
+                            if ($result2['status'] == "success") {
+                                return 1;
+                            }
+                        }
+
                     }
                     break;
 

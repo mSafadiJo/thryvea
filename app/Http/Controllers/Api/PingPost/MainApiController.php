@@ -228,6 +228,7 @@ class MainApiController extends Controller
         $pingLeads->hash_legs_sold = $hash_legs_sold;
         $pingLeads->tcpa_compliant = ($request['tcpa_compliant'] == 1 ?  $request['tcpa_compliant'] : 0);
         $pingLeads->tcpa_consent_text = $request->tcpa_consent_text;
+        $pingLeads->traffic_source = $request->sub_id??'';
 
         //Get TS
         $lead_source = trim($is_valid_vendor_id->typeOFLead_Source);

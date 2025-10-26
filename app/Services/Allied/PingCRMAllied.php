@@ -2648,10 +2648,6 @@ class PingCRMAllied
                                     $source_name = "thrwi";
                                 }
 
-                                if (empty($trusted_form) || $trusted_form == null ) {
-                                    $trusted_form = "";
-                                }
-
                                 $Lead_data_array_ping = array(
                                     "Request" => array(
                                         "API_Action" => "pingPostLead",
@@ -2664,7 +2660,6 @@ class PingCRMAllied
                                         "Sub_ID" => $leadCustomer_id,
                                         "Pub_ID" => $google_ts,
                                         "Universal_Lead_ID" => $LeadId,
-                                        "Active_Prospect_URL" => $trusted_form,
                                         "Best_Time_To_Call" => "Anytime",
                                         "Property_Zip" => $zip,
                                         "Property_City" => $city,
@@ -2700,18 +2695,29 @@ class PingCRMAllied
                                 if($is_multi_api == 0) {
                                     $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
                                     $result2 = json_decode($result, true);
-                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
-                                        $TransactionId = $result2['PingId'];
-                                        // Find the offer with the highest price
-                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
-                                        // Extract details from best offer
-                                        $Price = $bestOffer['Price'];
-                                        $OfferId = $bestOffer['OfferId'];
-                                        $Payout = $OfferId . '|' . $Price;
-
-                                        $multi_type = 0;
-                                        $Result = 1;
+                                    if (!empty($result2['response'])) {
+                                        $result3 = $result2['response'];
+                                        if (!empty($result3['status'])) {
+                                            if ($result3['status'] == "Match") {
+                                                $TransactionId = $result3['id'];
+                                                $Payout = $result3['price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
                                     }
+//                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
+//                                        $TransactionId = $result2['PingId'];
+//                                        // Find the offer with the highest price
+//                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
+//                                        // Extract details from best offer
+//                                        $Price = $bestOffer['Price'];
+//                                        $OfferId = $bestOffer['OfferId'];
+//                                        $Payout = $OfferId . '|' . $Price;
+//
+//                                        $multi_type = 0;
+//                                        $Result = 1;
+//                                    }
                                 }
                                 break;
                             case 6:
@@ -2805,18 +2811,29 @@ class PingCRMAllied
                                 if($is_multi_api == 0) {
                                     $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
                                     $result2 = json_decode($result, true);
-                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
-                                        $TransactionId = $result2['PingId'];
-                                        // Find the offer with the highest price
-                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
-                                        // Extract details from best offer
-                                        $Price = $bestOffer['Price'];
-                                        $OfferId = $bestOffer['OfferId'];
-                                        $Payout = $OfferId . '|' . $Price;
-
-                                        $multi_type = 0;
-                                        $Result = 1;
+                                    if (!empty($result2['response'])) {
+                                        $result3 = $result2['response'];
+                                        if (!empty($result3['status'])) {
+                                            if ($result3['status'] == "Match") {
+                                                $TransactionId = $result3['id'];
+                                                $Payout = $result3['price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
                                     }
+//                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
+//                                        $TransactionId = $result2['PingId'];
+//                                        // Find the offer with the highest price
+//                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
+//                                        // Extract details from best offer
+//                                        $Price = $bestOffer['Price'];
+//                                        $OfferId = $bestOffer['OfferId'];
+//                                        $Payout = $OfferId . '|' . $Price;
+//
+//                                        $multi_type = 0;
+//                                        $Result = 1;
+//                                    }
                                 }
                                 break;
                         }
@@ -2909,6 +2926,155 @@ class PingCRMAllied
                                 }
                             }
                         }
+                        break;
+                    case 35:
+
+                        // 1) Determine Ping URL once
+                        $url_api_ping = (config('app.env') == "local")
+                            ? "https://exchange.standardinformation.io/ping_test?legacy=J"
+                            : "https://exchange.standardinformation.io/ping?legacy=J";
+
+                        // 2) Base Meta (common for all)
+                        $base_meta = [
+                            "landing_page_url"      => $OriginalURL2,
+                            "source_id"             => $google_ts,
+                            "lead_id_code"          => $LeadId,
+                            "trusted_form_cert_url" => $trusted_form,
+                            "tcpa_compliant"        => true,
+                            "tcpa_consent_text"     => $TCPAText,
+                            "user_agent"            => $UserAgent,
+                            "originally_created"    => gmdate("Y-m-d\TH:i:s\Z")
+                        ];
+
+                        // 3) Base Partial Contact (ZIP + IP only)
+                        $base_contact = [
+                            "zip_code"   => $zip,
+                            "ip_address" => $IPAddress
+                        ];
+
+                        // 4) Service-mapping
+                        switch ($lead_type_service_id) {
+
+                            case 1: // WINDOWS
+                                $num = trim($Leaddatadetails['number_of_window']);
+                                $num = ($num == "3-5" ? "5" : ($num == "6-9" ? "9" : ($num ?: "10")));
+
+                                $service_data = [
+                                    "windows" => [
+                                        "num_windows"  => $num,
+                                        "project_type" => (trim($Leaddatadetails['project_nature']) == "Repair"
+                                            ? "Need repair services at this time"
+                                            : "Interested in replacement windows"),
+                                    ]
+                                ];
+
+                                $own_property = (trim($Leaddatadetails['homeOwn']) != "Yes");
+                                $authToken = "e373e16a-0bfb-4a2d-ad36-48794909cfe0";
+                                break;
+                            case 6: // ROOFING
+                                $roof_map = [
+                                    "Asphalt Roofing"               => "Asphalt shingle",
+                                    "Wood Shake/Composite Roofing"  => "Composite",
+                                    "Metal Roofing"                 => "Metal",
+                                    "Natural Slate Roofing"         => "Natural slate",
+                                    "Tile Roofing"                  => "Tile",
+                                ];
+
+                                $service_data = [
+                                    "roof" => [
+                                        "project_type" => (trim($Leaddatadetails['project_nature']) == "Repair existing roof"
+                                            ? "Repair"
+                                            : "New roof for new home"),
+                                        "roofing_type" => $roof_map[$Leaddatadetails['roof_type']] ?? "Not Sure",
+                                    ]
+                                ];
+
+                                $own_property = (trim($Leaddatadetails['property_type']) != "Rented");
+                                $authToken = "249c60d5-8890-460f-bdef-7b2cbcf33f45";
+                                break;
+                            case 7: // SIDING
+                                $siding_map = [
+                                    "Vinyl Siding"           => "Vinyl",
+                                    "Brickface Siding"       => "Brick or stone",
+                                    "Stoneface Siding"       => "Brick or stone",
+                                    "Composite wood Siding"  => "Wood",
+                                ];
+
+                                $service_data = [
+                                    "siding" => [
+                                        "siding_type"  => $siding_map[$Leaddatadetails['type_of_siding']] ?? "Other",
+                                        "project_type" => (trim($Leaddatadetails['project_nature']) == "Repair section(s) of siding"
+                                            ? "Siding repair"
+                                            : "Replace siding"),
+                                    ]
+                                ];
+
+                                $own_property = (trim($Leaddatadetails['homeOwn']) == "Yes");
+                                $authToken = "556bce96-7811-4739-b2ce-8a0bd72e9a08";
+                                break;
+                            case 9: // BATHROOM
+                                $bath_map = [
+                                    "Full Remodel"   => "Full bathroom",
+                                    "Shower / Bath"  => "Bathtub/Shower Updates",
+                                    "Sinks"          => "Bath sinks",
+                                ];
+
+                                $service_data = [
+                                    "bathroom" => [
+                                        "project_type" => $bath_map[$Leaddatadetails['services']] ?? "Not Sure",
+                                    ]
+                                ];
+
+                                $own_property = (trim($Leaddatadetails['homeOwn']) == "Yes");
+                                $authToken = "e8ad25b7-3a32-4b9d-9b13-60733f60b46d";
+                                break;
+                        }
+
+                        // 5) Final Ping Data
+                        $Lead_data_array_ping = [
+                            "data" => array_merge($service_data, [
+                                "own_property"        => $own_property,
+                                "best_call_time"      => "Anytime",
+                                "purchase_time_frame" => "Immediately",
+                                "credit_rating"       => "Good",
+                            ]),
+                            "meta"    => $base_meta,
+                            "contact" => $base_contact
+                        ];
+
+                        // 6) Headers
+                        $httpHeader = [
+                            "Authorization: Token $authToken",
+                            "Content-Type: application/json",
+                            "Accept: application/json",
+                        ];
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api_ping,
+                            "header" => $httpHeader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array_ping)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api_ping, $httpHeader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "success") {
+                                    $TransactionId = $result2['auth_code'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+
                         break;
                 }
             }

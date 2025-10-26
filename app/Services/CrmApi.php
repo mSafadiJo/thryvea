@@ -329,17 +329,16 @@ class CrmApi {
                                 case 29:
                                     //Clean Energy Authoroty 29
                                     $result2 = json_decode($result, true);
-                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
-                                        $TransactionId = $result2['PingId'];
-                                        // Find the offer with the highest price
-                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
-                                        // Extract details from best offer
-                                        $Price = $bestOffer['Price'];
-                                        $OfferId = $bestOffer['OfferId'];
-                                        $Payout = $OfferId . '|' . $Price;
-
-                                        $multi_type = 0;
-                                        $Result = 1;
+                                    if (!empty($result2['response'])) {
+                                        $result3 = $result2['response'];
+                                        if (!empty($result3['status'])) {
+                                            if ($result3['status'] == "Match") {
+                                                $TransactionId = $result3['id'];
+                                                $Payout = $result3['price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
                                     }
                                     break;
                                 case 32:
@@ -348,6 +347,18 @@ class CrmApi {
                                     if (!empty($result2['status'])) {
                                         if ($result2['status'] == "accepted") {
                                             $TransactionId = $result2['ping_id'];
+                                            $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
+                                case 35:
+                                    //BlueInkDigital
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "success") {
+                                            $TransactionId = $result2['auth_code'];
                                             $Payout = $result2['price'];
                                             $multi_type = 0;
                                             $Result = 1;
