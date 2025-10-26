@@ -353,7 +353,7 @@ class CrmApi {
                                         }
                                     }
                                     break;
-                                case 35:
+                                case 34:
                                     //BlueInkDigital
                                     $result2 = json_decode($result, true);
                                     if (!empty($result2['status'])) {

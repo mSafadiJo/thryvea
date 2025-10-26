@@ -4871,7 +4871,7 @@ class PostCRMAllied {
                         }
                     }
                     break;
-                case 35:
+                case 34:
                     //	BlueInkDigital
 
                     if (!empty($data_msg['ping_post_data']['TransactionId'])) {

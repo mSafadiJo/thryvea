@@ -2927,7 +2927,7 @@ class PingCRMAllied
                             }
                         }
                         break;
-                    case 35:
+                    case 34:
 
                         // 1) Determine Ping URL once
                         $url_api_ping = (config('app.env') == "local")
