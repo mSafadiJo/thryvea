@@ -3073,7 +3073,7 @@ class CampaignLeadsAdminController extends Controller
                     'PC info' => $lead->lead_aboutUserBrowser,
                     'Browser' => $lead->lead_browser_name,
                     'Traffic Source From' => $lead->lead_source_text,
-                    'Traffic Source' => $lead->sub_id,
+                    'Traffic Source' => $lead->traffic_source,
                     'Details' => $lead->lead_details_text,
                     'Jornaya Id' => $lead->universal_leadid,
                     'TrustedForm URL' => ($info_permission == 1 ? $lead->trusted_form : ""),
