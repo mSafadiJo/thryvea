@@ -2612,7 +2612,7 @@ class PingCRMAllied
                         }
                         break;
                     case 29:
-                        //Clean Energy Authoroty 29
+                        //Clean Energy Authority 29
                         switch ($lead_type_service_id) {
                             case 1:
                                 $number_of_windows = trim($Leaddatadetails['number_of_window']);
@@ -2640,43 +2640,38 @@ class PingCRMAllied
 
                                 if (config('app.env', 'local') == "local") {
                                     //Test Mode
-                                    $url_api_ping = "https://uat.sbbnetinc.com/rest/api/windows/submit-inquiry-json";
-                                    $source_name = "TESTTCPA";
+                                    $url_api_ping = "https://uat.sbbnetinc.com/rest/api/windows/submit-inquiry";
+                                    $source_name = "Test";
                                 } else {
                                     //Live Mode
-                                    $url_api_ping = "https://live.sbbnetinc.com/rest/api/windows/submit-inquiry-json";
+                                    $url_api_ping = "https://live.sbbnetinc.com/rest/api/windows/submit-inquiry";
                                     $source_name = "thrwi";
                                 }
 
                                 $Lead_data_array_ping = array(
-                                    "Request" => array(
-                                        "API_Action" => "pingPostLead",
-                                        "Mode" => "ping",
-                                        "Return_Best_Price" => "1",
-                                        "TYPE" => "18",
-                                        "IP_Address" => $IPAddress,
-                                        "SRC" => $source_name,
-                                        "Landing_Page" => $OriginalURL2,
-                                        "Sub_ID" => $leadCustomer_id,
-                                        "Pub_ID" => $google_ts,
-                                        "Universal_Lead_ID" => $LeadId,
-                                        "Best_Time_To_Call" => "Anytime",
-                                        "Property_Zip" => $zip,
-                                        "Property_City" => $city,
-                                        "Property_State" => $statename_code,
-                                        "Property_Address" => $street,
-                                        "Window_Task" => $NumWindows,
-                                        "Property_Owner" => $ownership,
-                                        "NoSale" => "No",
-                                        "Timing" => "Immediately",
-                                        "Tcpa_Language" => $TCPAText,
-                                        "vendor_lead_id" => $leadCustomer_id
-                                    )
+                                    "API_Action" => "pingPostLead",
+                                    "Mode" => "ping",
+                                    "IP_Address" => $IPAddress,
+                                    "SRC" => $source_name,
+                                    "Sub_ID" => $leadCustomer_id,
+                                    "Pub_ID" => $google_ts,
+                                    "Return_Best_Price" => "1",
+                                    "TYPE" => "18",
+                                    "Property_Zip" => $zip,
+                                    "Property_State" => $statename_code,
+                                    "Property_Owner" => "Yes",
+                                    "Landing_Page" => $OriginalURL2,
+                                    "Property_City" => $city,
+                                    "Universal_Lead_ID" => $LeadId,
+                                    "Best_Time_To_Call" => "Anytime",
+                                    "Window_Task" => $NumWindows,
+                                    "Timing" => "Immediately",
+                                    "Tcpa_Language" => $TCPAText,
+                                    "vendor_lead_id" => $leadCustomer_id
                                 );
                                 $httpheader = array(
                                     'Authorization: Basic cmVzdC11c2VyOjVTOGNCRHEmRWYha3BMKk5XNXVM',
                                     'Content-Type: application/json',
-                                    //'Accept: application/xml',
                                 );
 
                                 $ping_crm_apis = array(
@@ -2694,38 +2689,29 @@ class PingCRMAllied
 
                                 if($is_multi_api == 0) {
                                     $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
-                                    $result2 = json_decode($result, true);
-                                    if (!empty($result2['response'])) {
-                                        $result3 = $result2['response'];
-                                        if (!empty($result3['status'])) {
-                                            if ($result3['status'] == "Match") {
-                                                $TransactionId = $result3['id'];
-                                                $Payout = $result3['price'];
+                                    try {
+                                        libxml_use_internal_errors(true);
+                                        $result2 = simplexml_load_string($result);
+                                        $result3 = json_encode($result2);
+                                        $result4 = json_decode($result3, TRUE);
+
+                                        if (!empty($result4)) {
+                                            if (strpos("-" . $result, 'Match') == true) {
+                                                $TransactionId = $result4['id'];
+                                                $Payout = $result4['price'];
                                                 $multi_type = 0;
                                                 $Result = 1;
                                             }
                                         }
+                                    } catch (Exception $e) {
+
                                     }
-//                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
-//                                        $TransactionId = $result2['PingId'];
-//                                        // Find the offer with the highest price
-//                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
-//                                        // Extract details from best offer
-//                                        $Price = $bestOffer['Price'];
-//                                        $OfferId = $bestOffer['OfferId'];
-//                                        $Payout = $OfferId . '|' . $Price;
-//
-//                                        $multi_type = 0;
-//                                        $Result = 1;
-//                                    }
                                 }
                                 break;
                             case 6:
                                 //Roofing
                                 $Type_OfRoofing = trim($Leaddatadetails['roof_type']);
                                 $project_nature = trim($Leaddatadetails['project_nature']);
-                                $property_type = trim($Leaddatadetails['property_type']);
-                                $start_time = trim($Leaddatadetails['start_time']);
 
                                 switch ($Type_OfRoofing) {
                                     case "Asphalt Roofing":
@@ -2755,38 +2741,36 @@ class PingCRMAllied
 
                                 if (config('app.env', 'local') == "local") {
                                     //Test Mode
-                                    $url_api_ping = "https://uat.sbbnetinc.com/rest/api/roofing/submit-inquiry-json";
-                                    $source_name = "TESTTCPA";
+                                    $url_api_ping = "https://uat.sbbnetinc.com/rest/api/roofing/submit-inquiry";
+                                    $source_name = "Test";
                                 } else {
                                     //Live Mode
-                                    $url_api_ping = "https://live.sbbnetinc.com/rest/api/roofing/submit-inquiry-json";
+                                    $url_api_ping = "https://live.sbbnetinc.com/rest/api/roofing/submit-inquiry";
                                     $source_name = "thrro";
                                 }
 
                                 $Lead_data_array_ping = array(
                                     "Request" => array(
                                         "API_Action" => "pingPostLead",
-                                        "Format" => "JSON",
                                         "Mode" => "ping",
-                                        "Return_Best_Price" => "1",
-                                        "TYPE" => "16",
                                         "IP_Address" => $IPAddress,
                                         "SRC" => $source_name,
-                                        "Landing_Page" => $OriginalURL2,
                                         "Sub_ID" => $leadCustomer_id,
                                         "Pub_ID" => $google_ts,
+                                        "Return_Best_Price" => "1",
+                                        "TYPE" => "16",
+                                        "Property_Zip" => $zip,
+                                        "Property_State" => $statename_code,
+                                        "Property_Owner" => "Yes",
+                                        "Landing_Page" => $OriginalURL2,
+                                        "Property_City" => $city,
                                         "Universal_Lead_ID" => $LeadId,
                                         "Best_Time_To_Call" => "Anytime",
-                                        "Property_Zip" => $zip,
-                                        "Property_City" => $city,
-                                        "Property_State" => $statename_code,
-                                        "Roof_Material" => $Type_OfRoofing_data,
-                                        "Roof_Task" => $roof_task,
-                                        "Property_Owner" => "Yes",
-                                        "NoSale" => "No",
                                         "Timing" => "Immediately",
                                         "Tcpa_Language" => $TCPAText,
-                                        "vendor_lead_id" => $leadCustomer_id
+                                        "vendor_lead_id" => $leadCustomer_id,
+                                        "Roof_Material" => $Type_OfRoofing_data,
+                                        "Roof_Task" => $roof_task,
                                     )
                                 );
 
@@ -2810,30 +2794,23 @@ class PingCRMAllied
 
                                 if($is_multi_api == 0) {
                                     $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
-                                    $result2 = json_decode($result, true);
-                                    if (!empty($result2['response'])) {
-                                        $result3 = $result2['response'];
-                                        if (!empty($result3['status'])) {
-                                            if ($result3['status'] == "Match") {
-                                                $TransactionId = $result3['id'];
-                                                $Payout = $result3['price'];
+                                    try {
+                                        libxml_use_internal_errors(true);
+                                        $result2 = simplexml_load_string($result);
+                                        $result3 = json_encode($result2);
+                                        $result4 = json_decode($result3, TRUE);
+
+                                        if (!empty($result4)) {
+                                            if (strpos("-" . $result, 'Match') == true) {
+                                                $TransactionId = $result4['id'];
+                                                $Payout = $result4['price'];
                                                 $multi_type = 0;
                                                 $Result = 1;
                                             }
                                         }
+                                    } catch (Exception $e) {
+
                                     }
-//                                    if (!empty($result2['Status']) && $result2['Status'] === 'Match') {
-//                                        $TransactionId = $result2['PingId'];
-//                                        // Find the offer with the highest price
-//                                        $bestOffer = collect($result2['Offers'])->sortByDesc('Price')->first();
-//                                        // Extract details from best offer
-//                                        $Price = $bestOffer['Price'];
-//                                        $OfferId = $bestOffer['OfferId'];
-//                                        $Payout = $OfferId . '|' . $Price;
-//
-//                                        $multi_type = 0;
-//                                        $Result = 1;
-//                                    }
                                 }
                                 break;
                         }

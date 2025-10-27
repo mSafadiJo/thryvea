@@ -327,18 +327,48 @@ class CrmApi {
                                     }
                                     break;
                                 case 29:
-                                    //Clean Energy Authoroty 29
-                                    $result2 = json_decode($result, true);
-                                    if (!empty($result2['response'])) {
-                                        $result3 = $result2['response'];
-                                        if (!empty($result3['status'])) {
-                                            if ($result3['status'] == "Match") {
-                                                $TransactionId = $result3['id'];
-                                                $Payout = $result3['price'];
-                                                $multi_type = 0;
-                                                $Result = 1;
+                                    //Clean Energy Authority 29
+                                    switch ($service_id) {
+                                        case 1:
+                                            //Windows
+                                            try {
+                                                libxml_use_internal_errors(true);
+                                                $result2 = simplexml_load_string($result);
+                                                $result3 = json_encode($result2);
+                                                $result4 = json_decode($result3, TRUE);
+
+                                                if (!empty($result4)) {
+                                                    if (strpos("-" . $result, 'Match') == true) {
+                                                        $TransactionId = $result4['id'];
+                                                        $Payout = $result4['price'];
+                                                        $multi_type = 0;
+                                                        $Result = 1;
+                                                    }
+                                                }
+                                            } catch (Exception $e) {
+
                                             }
-                                        }
+                                            break;
+                                        case 6:
+                                            //Roofing
+                                            try {
+                                                libxml_use_internal_errors(true);
+                                                $result2 = simplexml_load_string($result);
+                                                $result3 = json_encode($result2);
+                                                $result4 = json_decode($result3, TRUE);
+
+                                                if (!empty($result4)) {
+                                                    if (strpos("-" . $result, 'Match') == true) {
+                                                        $TransactionId = $result4['id'];
+                                                        $Payout = $result4['price'];
+                                                        $multi_type = 0;
+                                                        $Result = 1;
+                                                    }
+                                                }
+                                            } catch (Exception $e) {
+
+                                            }
+                                            break;
                                     }
                                     break;
                                 case 32:
