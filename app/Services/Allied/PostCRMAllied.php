@@ -1664,6 +1664,21 @@ class PostCRMAllied {
                 $Lead_data_array['srs_id'] = "srs_id";
                 $Lead_data_array['source_harly'] = "srs_2245";
                 break;
+            case 37:
+                //Home Genius Exterior
+                switch ($crm_details['service_campaign_name']){
+                    case "Home Siding":
+                        $service_name = "Siding";
+                        break;
+                    case "Roofing":
+                        $service_name = "Roofing";
+                        break;
+                }
+                $Lead_data_array['service'] = $service_name;
+                $Lead_data_array['LeadID'] = $google_ts;
+                $Lead_data_array['price_hgex'] = $Lead_Cost;
+                $Lead_data_array['division_hgex'] = $city;
+                break;
         }
 
         if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
@@ -5014,6 +5029,44 @@ class PostCRMAllied {
                         }
 
                     }
+                    break;
+                case 36:
+                    //36 Premier Home Pros
+                    $url_api = "https://partner-api-prod.premier-homepros.com/leadfilter/";
+
+                    $httpheader = array(
+                        'Authorization: Bearer eyJhbGciOiJIUzI1NiIsImtpZCI6InBocGxzMSJ9.eyJzdWIiOiJmNDYzZmYyZi01YzA4LTQ3NjYtOTcyNi03MTlkZTdmMDBiNzQiLCJuYW1lIjoiVEhSWVZFQSIsInNyc19pZCI6MTQ4Niwic2NvcGUiOlsiZ2VvZ3JhcGh5Om1hcmtldGVkIl0sInR5cGUiOiJMZWFkRmlsdGVyIiwiaXNzIjoicGhwLW1hcmtldGluZyIsImF1ZCI6InBocC1sZWFkLWZpbHRlciIsImlhdCI6MTc2MTY4NDcxOSwiZXhwIjoyMDc3MDQ0NzE5LCJuYmYiOjE3NjE2ODQ3MTl9.TgkWDO0yVlE0AC0gaD8x09ODWa97WF_18nseynrmN9A',
+                        'Content-Type: application/json',
+                        'Accept: application/json',
+                    );
+
+                    $Lead_data_array = array(
+                        "first_name" => (string)$first_name,
+                        "last_name" => (string)$last_name,
+                        "address_1" => (string)$street,
+                        "city" => (string)$city,
+                        "state" => (string)$statename_code,
+                        "postal_code" =>(string)$zip,
+                        "phone_1" => (string)$number1,
+                        "email" => (string)$email,
+                        "product" => "Bathroom",
+                        "vendor_source_php" => (string)$lead_source_text,
+                        "vendor_subsource_php" => (string)$google_ts,
+                        "sroid_php" => (string)$leadsCustomerCampaign_id,
+                        "price" => (string)$Lead_Cost,
+                        "trustedform_cert_url" => (string)$trusted_form,
+                        "campaign_id" => (string)$leadsCustomerCampaign_id,
+                        "srs_id" => (int)$leadsCustomerCampaign_id
+                    );
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, json_encode($Lead_data_array, JSON_UNESCAPED_SLASHES), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2)) {
+                        if ($result2["outcome"] == "success") {
+                            return 1;
+                        }
+                    }
+                    return 0;
                     break;
 
             }
