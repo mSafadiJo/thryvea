@@ -5056,7 +5056,6 @@ class PostCRMAllied {
                         "price" => (string)$Lead_Cost,
                         "trustedform_cert_url" => (string)$trusted_form,
                         "campaign_id" => (string)$leadsCustomerCampaign_id,
-                        "srs_id" => (int)$leadsCustomerCampaign_id
                     );
 
                     $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, json_encode($Lead_data_array, JSON_UNESCAPED_SLASHES), "POST", 1, $crm_details['campaign_id']);
