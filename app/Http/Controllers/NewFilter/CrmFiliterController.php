@@ -138,37 +138,37 @@ class CrmFiliterController extends Controller
         } else {
             $Type = "Post";
             $CrmReport = DB::table('crm_responses')
-                //->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')->get();
-                   // Join campaigns_leads_users
-    ->join('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'crm_responses.campaigns_leads_users_id')
+    // Join campaigns_leads_users (left join to not drop rows)
+    ->leftJoin('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'crm_responses.campaigns_leads_users_id')
     
-    // Join Buyer Campaign
-    ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
+    // Join Buyer Campaign (via campaigns_leads_users.campaign_id)
+    ->leftJoin('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
     
     // Join Leads to get seller info
     ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
     
     // Join Seller Campaign (via leads_customers.vendor_id)
     ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
-
-
-                ->whereIn('crm_responses.campaign_id', $campaign_ids)
-                ->where(function ($query) {
-                    $query->where('crm_responses.lead_id', 0);
-                    $query->OrwhereNull('crm_responses.lead_id');
-                })
-                ->where(function ($query) {
-                    $query->where('crm_responses.ping_id', 0);
-                    $query->OrwhereNull('crm_responses.ping_id');
-                })
-                ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
-                ->orderBy('crm_responses.created_at', 'DESC')
-                ->get([
-                    'crm_responses.*',
-                    'buyer_campaigns.campaign_name as buyer_campaign_name',
-                    'seller_campaigns.campaign_name as seller_campaign_name',
-                    'leads_customers.google_ts as traffic_source',
-                ]);
+    
+    // Filters
+    ->whereIn('crm_responses.campaign_id', $campaign_ids)
+    ->where(function ($query) {
+        $query->where('crm_responses.ping_id', 0)
+              ->orWhereNull('crm_responses.ping_id');
+    })
+    ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
+    ->where(function ($query) use($query_search) {
+        $query->where('crm_responses.campaigns_leads_users_id', 'like', '%'.$query_search.'%')
+              ->orWhere(DB::raw('lower(crm_responses.response)'), 'like', '%'.strtolower($query_search).'%')
+              ->orWhere(DB::raw('lower(buyer_campaigns.campaign_name)'), 'like', '%'.strtolower($query_search).'%');
+    })
+    ->orderBy('crm_responses.created_at', 'DESC')
+    ->get([
+        'crm_responses.*',
+        'buyer_campaigns.campaign_name as buyer_campaign_name',
+        'seller_campaigns.campaign_name as seller_campaign_name',
+        'leads_customers.google_ts as traffic_source',
+    ]);
         }
 
         return (new FastExcel($CrmReport))->download('Responses.csv', function ($Crm) use($crm_id, $Type){
