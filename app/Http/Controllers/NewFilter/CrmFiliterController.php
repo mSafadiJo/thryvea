@@ -140,7 +140,7 @@ class CrmFiliterController extends Controller
             $CrmReport = DB::table('crm_responses')
                 //->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')
                 // Buyer campaign (direct relation)
-                ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_response_pings.campaign_id')
+                ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_responses.campaign_id')
 
                 // Ping leads relation
                 ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.ping_id')
