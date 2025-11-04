@@ -133,7 +133,7 @@ class CrmFiliterController extends Controller
                     'crm_response_pings.*',
                     'buyer_campaigns.campaign_name as buyer_campaign_name',
                     'seller_campaigns.campaign_name as seller_campaign_name',
-                    'ping_leads.traffic_source',
+                    'ping_leads.traffic_source as ping_traffic_source',
                 ]);
         } else {
             $Type = "Post";
@@ -162,7 +162,7 @@ class CrmFiliterController extends Controller
                 'PING Id' => $Crm->ping_id,
                 'Buyer Campaign Name' => $Crm->buyer_campaign_name,
                 'Seller Campaign Name' => $Crm->seller_campaign_name,
-                'Traffic Source' => $Crm->traffic_source,
+                'Traffic Source' => $Crm->ping_traffic_source,
                 'Type' => $Type,
                 'Result' => $Crm->response,
                 'Time' => $Crm->time,
