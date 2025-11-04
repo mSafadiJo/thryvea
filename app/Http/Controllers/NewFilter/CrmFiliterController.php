@@ -162,7 +162,7 @@ class CrmFiliterController extends Controller
                 'PING Id' => $Crm->ping_id,
                 'Buyer Campaign Name' => $Crm->buyer_campaign_name,
                 'Seller Campaign Name' => $Crm->seller_campaign_name,
-                'Traffic Source' => $Crm->seller_campaign_name,
+                'Traffic Source' => $Crm->traffic_source,
                 'Type' => $Type,
                 'Result' => $Crm->response,
                 'Time' => $Crm->time,
