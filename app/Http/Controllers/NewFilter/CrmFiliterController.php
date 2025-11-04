@@ -143,10 +143,10 @@ class CrmFiliterController extends Controller
                 ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_response_pings.campaign_id')
 
                 // Ping leads relation
-                ->leftJoin('ping_leads', 'ping_leads.lead_id', '=', 'crm_response_pings.ping_id')
+                ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.ping_id')
 
                 // Seller campaign (via ping_leads.vendor_id)
-                ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'ping_leads.vendor_id')
+                ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
 
                 ->whereIn('crm_responses.campaign_id', $campaign_ids)
                 ->where(function ($query) {
@@ -163,7 +163,7 @@ class CrmFiliterController extends Controller
                     'crm_response_pings.*',
                     'buyer_campaigns.campaign_name as buyer_campaign_name',
                     'seller_campaigns.campaign_name as seller_campaign_name',
-                    'ping_leads.traffic_source as ping_traffic_source',
+                    'leads_customers.google_ts as traffic_source',
                 ]);
         }
 
@@ -174,7 +174,7 @@ class CrmFiliterController extends Controller
                 'PING Id' => $Crm->ping_id,
                 'Buyer Campaign Name' => $Crm->buyer_campaign_name,
                 'Seller Campaign Name' => $Crm->seller_campaign_name,
-                'Traffic Source' => $Crm->ping_traffic_source,
+                'Traffic Source' => $Crm->traffic_source,
                 'Type' => $Type,
                 'Result' => $Crm->response,
                 'Time' => $Crm->time,
