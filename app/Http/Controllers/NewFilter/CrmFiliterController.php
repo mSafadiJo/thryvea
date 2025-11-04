@@ -160,7 +160,7 @@ class CrmFiliterController extends Controller
                 ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
                 ->orderBy('crm_responses.created_at', 'DESC')
                 ->get([
-                    'crm_response_pings.*',
+                    'crm_responses.*',
                     'buyer_campaigns.campaign_name as buyer_campaign_name',
                     'seller_campaigns.campaign_name as seller_campaign_name',
                     'leads_customers.google_ts as traffic_source',
