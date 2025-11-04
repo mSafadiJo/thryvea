@@ -143,7 +143,7 @@ class CrmFiliterController extends Controller
                 ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_responses.campaign_id')
 
                 // Ping leads relation
-                ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.ping_id')
+                ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.lead_id')
 
                 // Seller campaign (via ping_leads.vendor_id)
                 ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
