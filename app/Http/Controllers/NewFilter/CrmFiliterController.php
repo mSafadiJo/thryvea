@@ -139,7 +139,7 @@ class CrmFiliterController extends Controller
             $Type = "Post";
 
             $CrmReport = DB::table('crm_responses')
-    ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')
+    ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')->whereIn('crm_responses.campaign_id', $campaign_ids)
     ->select('crm_responses.*', 'campaigns.*') // <-- include all fields from both tables
     ->get();
             echo "<pre>";
