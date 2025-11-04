@@ -112,7 +112,16 @@ class CrmFiliterController extends Controller
         if ($crm_id == 1) {
             $Type = "ping";
             $CrmReport = DB::table('crm_response_pings')
-                ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_response_pings.campaign_id')
+                // Buyer campaign (direct relation)
+                ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_response_pings.campaign_id')
+
+                // Ping leads relation
+                ->leftJoin('ping_leads', 'ping_leads.lead_id', '=', 'crm_response_pings.ping_id')
+
+                // Seller campaign (via ping_leads.vendor_id)
+                ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'ping_leads.vendor_id')
+
+                //->join('campaigns', 'campaigns.campaign_id', '=', 'crm_response_pings.campaign_id')
                 ->whereIn('crm_response_pings.campaign_id', $campaign_ids)
                 ->where(function ($query) {
                     $query->where('crm_response_pings.campaigns_leads_users_id', 0);
@@ -121,12 +130,29 @@ class CrmFiliterController extends Controller
                 ->whereBetween('crm_response_pings.created_at', [$start_date, $end_date])
                 ->orderBy('crm_response_pings.created_at', 'DESC')
                 ->get([
-                    'crm_response_pings.*', 'campaigns.campaign_name'
+                    'crm_response_pings.*',
+                    'buyer_campaigns.campaign_name as buyer_campaign_name',
+                    'seller_campaigns.campaign_name as seller_campaign_name',
+                    'ping_leads.traffic_source as traffic_source',
                 ]);
-        } else {
+
+
+        }
+        else {
             $Type = "Post";
             $CrmReport = DB::table('crm_responses')
-                ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')
+
+                // Buyer campaign (direct relation)
+                ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_responses.campaign_id')
+
+                // leads_customers relation
+                ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.campaigns_leads_users_id')
+
+                // Seller campaign (via ping_leads.vendor_id)
+                ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
+
+
+               // ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')
                 ->whereIn('crm_responses.campaign_id', $campaign_ids)
                 ->where(function ($query) {
                     $query->where('crm_responses.lead_id', 0);
@@ -139,7 +165,10 @@ class CrmFiliterController extends Controller
                 ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
                 ->orderBy('crm_responses.created_at', 'DESC')
                 ->get([
-                    'crm_responses.*', 'campaigns.campaign_name'
+                    'crm_responses.*',
+                    'buyer_campaigns.campaign_name as buyer_campaign_name',
+                    'seller_campaigns.campaign_name as seller_campaign_name',
+                    'leads_customers.google_ts as traffic_source',
                 ]);
         }
 
@@ -148,7 +177,9 @@ class CrmFiliterController extends Controller
                 'ID' => $Crm->id,
                 'Lead Id' => ($crm_id == 1 ? $Crm->lead_id : $Crm->campaigns_leads_users_id),
                 'PING Id' => $Crm->ping_id,
-                'Campaign Name' => $Crm->campaign_name,
+                'Buyer Campaign Name' => $Crm->buyer_campaign_name,
+                'seller Campaign Name' => $Crm->seller_campaign_name,
+                'Traffic Source' => $Crm->traffic_source,
                 'Type' => $Type,
                 'Result' => $Crm->response,
                 'Time' => $Crm->time,
