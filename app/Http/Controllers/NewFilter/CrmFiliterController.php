@@ -137,41 +137,38 @@ class CrmFiliterController extends Controller
                 ]);
         } else {
             $Type = "Post";
-
             $CrmReport = DB::table('crm_responses')
-    ->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')->whereIn('crm_responses.campaign_id', $campaign_ids)
-    ->select('crm_responses.*', 'campaigns.*') // <-- include all fields from both tables
-    ->get();
-            echo "<pre>";
-            print_r($CrmReport); die();
-            // $CrmReport = DB::table('crm_responses')
-            //     //->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')->get();
-            //     // Buyer campaign (direct relation)
-            //     ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'crm_responses.campaign_id')
+                //->join('campaigns', 'campaigns.campaign_id', '=', 'crm_responses.campaign_id')->get();
+                   // Join campaigns_leads_users
+    ->join('campaigns_leads_users', 'campaigns_leads_users.campaigns_leads_users_id', '=', 'crm_responses.campaigns_leads_users_id')
+    
+    // Join Buyer Campaign
+    ->join('campaigns as buyer_campaigns', 'buyer_campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
+    
+    // Join Leads to get seller info
+    ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
+    
+    // Join Seller Campaign (via leads_customers.vendor_id)
+    ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
 
-            //     // Ping leads relation
-            //     ->leftJoin('leads_customers', 'leads_customers.lead_id', '=', 'crm_responses.lead_id')
 
-            //     // Seller campaign (via ping_leads.vendor_id)
-            //     ->leftJoin('campaigns as seller_campaigns', 'seller_campaigns.vendor_id', '=', 'leads_customers.vendor_id')
-
-            //     ->whereIn('crm_responses.campaign_id', $campaign_ids)
-            //     ->where(function ($query) {
-            //         $query->where('crm_responses.lead_id', 0);
-            //         $query->OrwhereNull('crm_responses.lead_id');
-            //     })
-            //     ->where(function ($query) {
-            //         $query->where('crm_responses.ping_id', 0);
-            //         $query->OrwhereNull('crm_responses.ping_id');
-            //     })
-            //     ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
-            //     ->orderBy('crm_responses.created_at', 'DESC')
-            //     ->get([
-            //         'crm_responses.*',
-            //         'buyer_campaigns.campaign_name as buyer_campaign_name',
-            //         'seller_campaigns.campaign_name as seller_campaign_name',
-            //         'leads_customers.google_ts as traffic_source',
-            //     ]);
+                ->whereIn('crm_responses.campaign_id', $campaign_ids)
+                ->where(function ($query) {
+                    $query->where('crm_responses.lead_id', 0);
+                    $query->OrwhereNull('crm_responses.lead_id');
+                })
+                ->where(function ($query) {
+                    $query->where('crm_responses.ping_id', 0);
+                    $query->OrwhereNull('crm_responses.ping_id');
+                })
+                ->whereBetween('crm_responses.created_at', [$start_date, $end_date])
+                ->orderBy('crm_responses.created_at', 'DESC')
+                ->get([
+                    'crm_responses.*',
+                    'buyer_campaigns.campaign_name as buyer_campaign_name',
+                    'seller_campaigns.campaign_name as seller_campaign_name',
+                    'leads_customers.google_ts as traffic_source',
+                ]);
         }
 
         return (new FastExcel($CrmReport))->download('Responses.csv', function ($Crm) use($crm_id, $Type){
