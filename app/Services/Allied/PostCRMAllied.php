@@ -4406,7 +4406,7 @@ class PostCRMAllied {
                                     $authorized_to_make_changes = "Yes";
                             }
 
-                            $Lead_data_array .="&number=$number_of_windows_data&project=$project_nature_data&homeowner=$homeowner&authorized_to_make_changes=$authorized_to_make_changes";
+                            $Lead_data_array .="&number=$number_of_windows_data&project=$project_nature_data&homeowner=$homeowner&authorized_to_make_changes=$authorized_to_make_changes&tcpa_text=$TCPAText";
                             break;
                         case 2:
                             //Solar
@@ -4460,7 +4460,7 @@ class PostCRMAllied {
                                     $roof_shade_data = "4";
                             }
 
-                            $Lead_data_array .="&homeowner=$OwnHome&electric_bill=$average_bill&electric_utility_provider=$utility_provider&roof_shade=$roof_shade_data";
+                            $Lead_data_array .="&homeowner=$OwnHome&electric_bill=$average_bill&electric_utility_provider=$utility_provider&roof_shade=$roof_shade_data&tcpa_text=$TCPAText";
                             break;
                         case 6:
                             //Roofing
@@ -4582,7 +4582,7 @@ class PostCRMAllied {
                                     $BuyTimeframe = "2";
                             }
 
-                            $Lead_data_array .= "&project=$bathroom_type_data&homeowner=$ownership&timeframe=$BuyTimeframe&authorized_to_make_changes=Yes";
+                            $Lead_data_array .= "&project=$bathroom_type_data&homeowner=$ownership&timeframe=$BuyTimeframe&authorized_to_make_changes=Yes&tcpa_text=$TCPAText";
                             break;
                     }
 
