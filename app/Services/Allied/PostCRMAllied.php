@@ -4343,7 +4343,7 @@ class PostCRMAllied {
                             $SessionLength = "3000";
                         }
 
-                    $Lead_data_array = "ping_id=$TransactionId&first_name=$first_name&last_name=$last_name&address=$street&phone=$number1&email=$email&city=$city&session_length=$SessionLength&ip=$IPAddress&useragent=$UserAgent&country_iso_2=US&region=$statename_code&referrer=$OriginalURL2&zipcode=$zip&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form&s1=$google_ts";
+                    $Lead_data_array = "ping_id=$TransactionId&first_name=$first_name&last_name=$last_name&address=$street&phone=$number1&email=$email&city=$city&session_length=$SessionLength&ip=$IPAddress&useragent=$UserAgent&country_iso_2=US&region=$statename_code&referrer=$OriginalURL2&zipcode=$zip&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form&s2=$google_ts";
 
                     switch ($lead_type_service_id){
                         case 1:
