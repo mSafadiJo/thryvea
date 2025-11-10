@@ -676,9 +676,15 @@ class WebSitesAPIController extends Controller
         $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
         $campaigns_list_ping_ex = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
 
+Log::error("listOFCampain_pingDB_ex",$campaigns_list_direct_ex);
+        Log::error("listOFCampain_pingDB_ex",$listOFCampain_pingDB_ex);
+        Log::error("campaigns_list_ping_ex",$campaigns_list_ping_ex);
+        
         $campaigns_list_sh = array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh);
         $campaigns_list_ex = array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex);
 
+Log::error("campaigns_list_ex",$campaigns_list_ex);
+        
         //Filtration For cap Ex & Shared
         $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
             ->select('campaigns_leads_users_type_bid','campaign_id',
@@ -760,6 +766,9 @@ class WebSitesAPIController extends Controller
         $listOFCampainDB_array_ping_ex = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_ex, $data_msg, 1, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
 
+Log::error("listOFCampainDB_array_exclusive",$listOFCampainDB_array_exclusive);
+        Log::error("listOFCampainDB_array_ping_ex",$listOFCampainDB_array_ping_ex);
+        
         //multi pings api responses
         $crm_api_file = new CrmApi();
         $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);
