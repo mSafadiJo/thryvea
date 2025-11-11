@@ -1679,6 +1679,13 @@ class PostCRMAllied {
                 $Lead_data_array['price_hgex'] = $Lead_Cost;
                 $Lead_data_array['division_hgex'] = $city;
                 break;
+            case 39:
+                //Long Roofing 39
+                $Lead_data_array['comments'] = $leadsCustomerCampaign_id;
+                $Lead_data_array['referrer_id_prod'] = $leadsCustomerCampaign_id;
+                $Lead_data_array['price'] = $Lead_Cost;
+                $Lead_data_array['product'] = $service_name;
+                break;
         }
 
         if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
