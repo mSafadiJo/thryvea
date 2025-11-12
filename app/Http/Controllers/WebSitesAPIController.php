@@ -588,7 +588,6 @@ class WebSitesAPIController extends Controller
 
         Log::error("listOFCampainDB_array_exclusive",$listOFCampainDB_array_exclusive);
         Log::error("listOFCampainDB_array_ping_ex",$listOFCampainDB_array_ping_ex);
-        die("before send to crm");
         //multi pings api responses
         $crm_api_file = new CrmApi();
         $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);
