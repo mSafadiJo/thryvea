@@ -150,7 +150,7 @@ class WebSitesAPIController extends Controller
             's3',
             'gclid'
         ]);
-Log::error("step 1");
+        Log::error("step 1");
         $main_api_file = new ApiMain();
         $response_code = array();
         if( !($request->campaign_id == config('services.ApiLead.API_Campaign_ID', '') &&
@@ -310,14 +310,15 @@ Log::error("step 1");
             //For Restructure the Domain name ==========================================================================
             $request['serverDomain'] = trim(str_replace(['https://', 'http://', 'www.'], '', $request['serverDomain']));
             //For Restructure the Domain name ==========================================================================
-Log::error("step 2");
+            Log::error("step 2");
             //Add LeadsCustomer ==============================================================================================
             $leadCustomerStore = new LeadsCustomer();
 
             $allservicesQues = new AllServicesQuestions();
 
             $leadCustomerStore = $allservicesQues->websitesAPIControllerAddLeadCustomer($leadCustomerStore, $request, $lead_source_id, $lead_source2, $dataMassageForDB, $tcpa_compliant, $tcpa_consent_text, $is_blocked_lead_info);
-Log::error("step 3");
+            Log::error("step 3");
+
             $leadCustomerStore->save();
             $leadCustomer_id = DB::getPdo()->lastInsertId();
             Log::error("step 4");
@@ -326,7 +327,7 @@ Log::error("step 3");
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
-Log::error("step 5");
+            Log::error("step 5");
         } catch (Exception $e) {
             Log::error("step 6");
             $response_code = array(
@@ -397,7 +398,7 @@ Log::error("step 5");
                 return json_encode($response_code);die();
             }
         } else {
-             Log::error("step 8");
+            Log::error("step 8");
             $response_code = array(
                 'response_code' => 'false',
                 'message' => 'Reject',
@@ -416,7 +417,7 @@ Log::error("step 5");
         if( !empty($request['universal_leadid']) ) {
             $main_api_file->claim_jornaya_id($request['universal_leadid']);
         }
-Log::error("step 9");
+        Log::error("step 9");
         //Add Seconds Service to $LeaddataIDs Array
         if(!empty($request['is_sec_service'])){
             $LeaddataIDs['is_sec_service'] = $request['is_sec_service'];
@@ -425,7 +426,7 @@ Log::error("step 9");
         $service_info = DB::table('service__campaigns')
             ->where('service_campaign_id', $request['service_id'])
             ->first(['service_campaign_name']);
-Log::error("step 10");
+        Log::error("step 10");
         //Lead Info =====================================================================================================================
         $city_arr = explode('=>', $request['city_name']);
         $county_arr = explode('=>', $request['county_name']);
@@ -479,7 +480,7 @@ Log::error("step 10");
         $LeaddataIDs['is_brand_lead']  = ( !empty($request->brand_buyer_id) ? 1 : 0 );
         $LeaddataIDs['brand_buyer_id'] = ( !empty($request->brand_buyer_id) ? $request->brand_buyer_id : 0 );
         //================================================================================
-Log::error("step 11");
+        Log::error("step 11");
         //Select List Of Campaign
         $service_queries = new ServiceQueries();
         $listOFCampain_exclusiveDB = $service_queries->service_queries_new_way($request->service_id, $LeaddataIDs,  1, 0, $address, $lead_source, 0,strtolower($request['tc']), $request['serverDomain']);
@@ -487,19 +488,22 @@ Log::error("step 11");
         $listOFCampain_pingDB_ex = $service_queries->service_queries_new_way($request->service_id, $LeaddataIDs,  1, 1, $address, $lead_source, 0,strtolower($request['tc']), $request['serverDomain']);
         $listOFCampain_pingDB_sh = $service_queries->service_queries_new_way($request->service_id, $LeaddataIDs,  2, 1, $address, $lead_source, 0,strtolower($request['tc']), $request['serverDomain']);
 
+        Log::error("listOFCampain_exclusiveDB", ['data' => $listOFCampain_exclusiveDB->toJson()]);
+        Log::error("listOFCampain_pingDB_ex", ['data' => $listOFCampain_pingDB_ex->toJson()]);
+
         $campaigns_list_direct_sh = $listOFCampain_sharedDB->pluck('campaign_id')->toArray();
         $campaigns_list_ping_sh = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
         $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
         $campaigns_list_ping_ex = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
 
-Log::error("listOFCampain_pingDB_ex",$campaigns_list_direct_ex);
-        Log::error("listOFCampain_pingDB_ex",$listOFCampain_pingDB_ex);
-        Log::error("campaigns_list_ping_ex",$campaigns_list_ping_ex);
-        
+        Log::error("campaigns_list_direct_ex", ['data' => $campaigns_list_direct_ex]);
+
+        Log::error("campaigns_list_ping_ex", ['data' => $campaigns_list_ping_ex]);
+
         $campaigns_list_sh = array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh);
         $campaigns_list_ex = array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex);
 
-Log::error("campaigns_list_ex",$campaigns_list_ex);
+        Log::error("campaigns_list_ex", ['data' => $campaigns_list_ex]);
         
         //Filtration For cap Ex & Shared
         $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
@@ -582,9 +586,9 @@ Log::error("campaigns_list_ex",$campaigns_list_ex);
         $listOFCampainDB_array_ping_ex = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_ex, $data_msg, 1, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
 
-Log::error("listOFCampainDB_array_exclusive",$listOFCampainDB_array_exclusive);
+        Log::error("listOFCampainDB_array_exclusive",$listOFCampainDB_array_exclusive);
         Log::error("listOFCampainDB_array_ping_ex",$listOFCampainDB_array_ping_ex);
-        
+        die("before send to crm");
         //multi pings api responses
         $crm_api_file = new CrmApi();
         $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);
