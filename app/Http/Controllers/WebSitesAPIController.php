@@ -150,7 +150,7 @@ class WebSitesAPIController extends Controller
             's3',
             'gclid'
         ]);
-
+Log::error("step 1");
         $main_api_file = new ApiMain();
         $response_code = array();
         if( !($request->campaign_id == config('services.ApiLead.API_Campaign_ID', '') &&
@@ -310,211 +310,25 @@ class WebSitesAPIController extends Controller
             //For Restructure the Domain name ==========================================================================
             $request['serverDomain'] = trim(str_replace(['https://', 'http://', 'www.'], '', $request['serverDomain']));
             //For Restructure the Domain name ==========================================================================
-
+Log::error("step 2");
             //Add LeadsCustomer ==============================================================================================
             $leadCustomerStore = new LeadsCustomer();
 
             $allservicesQues = new AllServicesQuestions();
 
             $leadCustomerStore = $allservicesQues->websitesAPIControllerAddLeadCustomer($leadCustomerStore, $request, $lead_source_id, $lead_source2, $dataMassageForDB, $tcpa_compliant, $tcpa_consent_text, $is_blocked_lead_info);
-
+Log::error("step 3");
             $leadCustomerStore->save();
             $leadCustomer_id = DB::getPdo()->lastInsertId();
+            Log::error("step 4");
             //Add LeadsCustomer ==============================================================================================
 
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
-
-//            if(strtolower(substr($request['tc'], 0, 1)) == 'o' || strtolower(substr($request['tc'], 0, 2)) == 'tl'){
-//                if($is_lead_review != 1){
-//                    //IPQS IP Validation
-//                    $lead_ip_validation = $api_validations->lead_ip_validation_ipqs($request->ipaddress);
-//                    if ($lead_ip_validation != "true") {
-//                        LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-//                            "response_data" => $lead_ip_validation,
-//                            "status" => 4,
-//                            "flag" => 1
-//                        ]);
-//
-//                        $response_code = array(
-//                            'response_code' => 'false',
-//                            'message' => 'Reject',
-//                            'error' => $lead_ip_validation,
-//                            'responce_code' => 'false'
-//                        );
-//
-//                        return json_encode($response_code);die();
-//                    }
-//                }
-//            }
-
-//        if(!empty($request->ipaddress) && $is_lead_review == 0){
-//            $ip_address = $request->ipaddress;
-//            $apiToken = "xvS204UnNAuBABLERblpdHHXEvx50t8X";
-//            $user_language = "en-US";
-//            $strictness = "1";
-//
-//            $urlRequest = "https://ipqualityscore.com/api/json/ip/$apiToken/$ip_address?strictness=$strictness&user_language=$user_language";
-//
-//            $init = curl_init();
-//            curl_setopt($init, CURLOPT_URL, $urlRequest);//connect the server
-//            curl_setopt($init, CURLOPT_POST, 1);
-//            curl_setopt($init, CURLOPT_RETURNTRANSFER, true); //the result of connection
-//            curl_setopt($init, CURLOPT_HEADER, false); //get back the header
-//            curl_setopt($init, CURLOPT_TIMEOUT, 3); //Time Out 3s
-//            $output = curl_exec($init);
-//            curl_close($init);
-//
-//            $result = json_decode($output, true);
-//            if(!empty($result['success'])){
-//                //if($result['vpn'] || $result['country_code'] != "US"){
-//                if($result['country_code'] != "US"){
-//                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-//                        "response_data" => "Visitor is suspicious!",
-//                        "status" => 4,
-//                        "flag" => 1
-//                    ]);
-//
-//                    $response_code = array(
-//                        'response_code' => 'false',
-//                        'message' => 'Reject',
-//                        'error' => "Visitor is suspicious!",
-//                        'responce_code' => 'false'
-//                    );
-//
-//                    return json_encode($response_code);die();
-//                }
-//            }
-//        }
-
-            //ipregistry IP Validation
-//            if(strtolower(substr($request['tc'], 0, 1)) == 'o') {
-//                //ipregistry IP Validation
-//                $ipregistry_validation = $api_validations->ipregistry_validation($request['ipaddress']);
-//
-//                if ($ipregistry_validation != "true") {
-//                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-//                        "response_data" => $ipregistry_validation,
-//                        "status" => 4,
-//                        "flag" => 1
-//                    ]);
-//
-//                    $response_code = array(
-//                        'response_code' => 'false',
-//                        'message' => 'Reject',
-//                        'error' => $ipregistry_validation,
-//                        'responce_code' => 'false'
-//                    );
-//
-//                    return json_encode($response_code);
-//                    die();
-//                }
-//            }
-
-
-//            if(strtolower(substr($request['tc'], 0, 1)) != 's') {
-//                //trestleiq Validation
-//                $trestleiq_validation = $api_validations->trestleiq_validation($request['phone_number'], $request['email'], $request['fname'], $request['lname']);
-//                if ($trestleiq_validation != "true") {
-//                    LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
-//                        "response_data" => $trestleiq_validation,
-//                        "status" => 4,
-//                        "flag" => 1
-//                    ]);
-//
-//                    $response_code = array(
-//                        'response_code' => 'false',
-//                        'message' => 'Reject',
-//                        'error' => $trestleiq_validation,
-//                        'responce_code' => 'false'
-//                    );
-//
-//                    return json_encode($response_code);
-//                    die();
-//                }
-//            }
-
-            //Server to server Conversion =================================================================
-            if(!empty($request['token'])){
-                $token_data_conv = $request['token'];
-                $url_conv = "";
-                if( strtolower(substr($request['tc'], 0, 2)) == 'pz' ) {
-                    //For Roy (Popunder)
-                    $id = "1GB9D5GA7C3G5922DCAA";
-                    $url_conv = "https://www.conversionpx.com/?id=$id&value=0&token=$token_data_conv";
-                    //$url_conv = "https://tracking.propelmedia.com/?id=$id&value=0&token=$token_data_conv";
-                } elseif( strtolower(substr($request['tc'], 0, 1)) == 'p' ) {
-                    //For Roy (Popunder)
-                    $id = "1GB3F8GA096GAFA46C6A";
-                    $url_conv = "https://www.conversionpx.com/?id=$id&value=0&token=$token_data_conv";
-                    //$url_conv = "https://tracking.propelmedia.com/?id=$id&value=0&token=$token_data_conv";
-                } elseif( strtolower(substr($request['tc'], 0, 2)) == 'ra' ) {
-                    $url_conv = "https://eu.rollerads.com/conversion/$token_data_conv/aid/17460/8d65c8bef45410b4";
-                } elseif( strtolower(substr($request['tc'], 0, 3)) == 'htf' ) {
-                    //Has Traffic S2S
-                    //https://discounthomeremodeling.com?w=htf1&x={revenue}&y=1040&z={target}&token={clickId}&s={cpv}
-                    $revenue = (!empty($request['c']) ? $request['c'] : "");
-                    $url_conv = "https://postback.hastraffic.com/?clickid=$token_data_conv&revenue=$revenue&aid=9689";
-                } elseif( strtolower(substr($request['tc'], 0, 4)) == 'rlad' ) {
-                    //RollerAds S2S
-                    //https://discounthomeremodeling.com?w=rlad1&y=1052&token={network_token}
-                    $url_conv = "https://trckprofit.com/click.php?cnv_id=$token_data_conv&payout=0";
-                } elseif( strtolower(substr($request['tc'], 0, 2)) == 'jn' ) {
-                    //Jeeng S2S
-                    //https://cs-external.powerinbox.com/postback/notify?pi_clickid={network_token}
-                    $url_conv = "https://cs-external.powerinbox.com/postback/notify?pi_clickid=$token_data_conv";
-                } elseif( strtolower(substr($request['tc'], 0, 2)) == 'tb' ) {
-                    //Taboola S2S
-                    $url_conv = "https://trc.taboola.com/actions-handler/log/3/s2s-action?click-id=$token_data_conv&name=lead";
-                }
-                elseif( strtolower(substr($request['tc'], 0, 2)) == 'zt' ) {
-                    //zeeto S2S
-                    $url_conv = "https://monetize.zeeto.io/postback/$token_data_conv?ze=e4";
-
-                }
-//                elseif( strtolower(substr($request['tc'], 0, 1)) == 'o' ) {
-//                    //One Pride Group S2S
-//                    $url_conv = "https://offers-onepride-group.affise.com/postback?clickid=$token_data_conv&sum=0";
-//                }
-                $main_api_file->server_to_server_conv($url_conv);
-            }
-            if(!empty($request['k'])){
-                $token_data_conv = $request['k'];
-                $url_conv = "";
-                if( strtolower(substr($request['tc'], 0, 2)) == 'pa' ){
-                    //For Roy (propeller ads)
-                    $url_conv = "http://ad.propellerads.com/conversion.php?aid=3654511&pid=&tid=123703&visitor_id=$token_data_conv";
-                } elseif( strtolower(substr($request['tc'], 0, 2)) == 'zp' ){
-                    //For Yanal (ZeroPark)
-                    $url_conv = "http://zp-postback.com/zppostback/40ecd931-4a26-11ed-93e6-12beee04f19b?cid=$token_data_conv";
-                }
-//                elseif( strtolower(substr($request['tc'], 0, 2)) == 'dm' ) {
-//                    //Dynuin Media S2S
-//                    $price_g = (!empty($request['g']) ? $request['g'] : '12');
-//                    $url_conv = "https://dynuinmedia.go2cloud.org/aff_lsr?transaction_id=$token_data_conv&amount=$price_g";
-//                }
-                $main_api_file->server_to_server_conv($url_conv);
-            }
-            //Travis Pushnami server to server
-            if( strtolower($request['tc']) == "push1" ){
-                $transid = "";
-                if( !empty($request['s1']) ){
-                    $transid = $request['s1'];
-                }
-
-                $hid = "";
-                if( !empty($request['s2']) ){
-                    $hid = $request['s2'];
-                }
-
-                $ate = 6;
-
-                $url_conv = "https://www.groovast.com/rd/apx.php?id=517type=4&hid=$hid&transid=$transid&ate=$ate";
-                $main_api_file->server_to_server_conv($url_conv);
-            }
-            //Server to server Conversion =================================================================
+Log::error("step 5");
         } catch (Exception $e) {
+            Log::error("step 6");
             $response_code = array(
                 'response_code' => 'false',
                 'message' => 'Reject',
@@ -526,6 +340,7 @@ class WebSitesAPIController extends Controller
         }
 
         if( $leadCustomer_id >= 1 ){
+            Log::error("step 7");
             $response_code = array(
                 'response_code' => 'true',
                 'message' => 'Lead Accepted',
@@ -582,6 +397,7 @@ class WebSitesAPIController extends Controller
                 return json_encode($response_code);die();
             }
         } else {
+             Log::error("step 8");
             $response_code = array(
                 'response_code' => 'false',
                 'message' => 'Reject',
@@ -600,7 +416,7 @@ class WebSitesAPIController extends Controller
         if( !empty($request['universal_leadid']) ) {
             $main_api_file->claim_jornaya_id($request['universal_leadid']);
         }
-
+Log::error("step 9");
         //Add Seconds Service to $LeaddataIDs Array
         if(!empty($request['is_sec_service'])){
             $LeaddataIDs['is_sec_service'] = $request['is_sec_service'];
@@ -609,7 +425,7 @@ class WebSitesAPIController extends Controller
         $service_info = DB::table('service__campaigns')
             ->where('service_campaign_id', $request['service_id'])
             ->first(['service_campaign_name']);
-
+Log::error("step 10");
         //Lead Info =====================================================================================================================
         $city_arr = explode('=>', $request['city_name']);
         $county_arr = explode('=>', $request['county_name']);
@@ -663,7 +479,7 @@ class WebSitesAPIController extends Controller
         $LeaddataIDs['is_brand_lead']  = ( !empty($request->brand_buyer_id) ? 1 : 0 );
         $LeaddataIDs['brand_buyer_id'] = ( !empty($request->brand_buyer_id) ? $request->brand_buyer_id : 0 );
         //================================================================================
-
+Log::error("step 11");
         //Select List Of Campaign
         $service_queries = new ServiceQueries();
         $listOFCampain_exclusiveDB = $service_queries->service_queries_new_way($request->service_id, $LeaddataIDs,  1, 0, $address, $lead_source, 0,strtolower($request['tc']), $request['serverDomain']);
