@@ -320,7 +320,8 @@ class WebSitesAPIController extends Controller
             Log::error("step 3");
 
             $leadCustomerStore->save();
-            $leadCustomer_id = DB::getPdo()->lastInsertId();
+           // $leadCustomer_id = DB::getPdo()->lastInsertId();
+            $leadCustomer_id = $leadCustomerStore->lead_id;
             Log::error("step 4");
             //Add LeadsCustomer ==============================================================================================
 
