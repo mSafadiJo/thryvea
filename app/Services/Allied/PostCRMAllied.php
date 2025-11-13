@@ -1686,6 +1686,22 @@ class PostCRMAllied {
                 $Lead_data_array['price'] = $Lead_Cost;
                 $Lead_data_array['product'] = $service_name;
                 break;
+            case 41:
+                //PJ Fitzpatrick
+                switch ($crm_details['service_campaign_name']){
+                    case "Window":
+                        $service_name = "window";
+                        break;
+                    case "Bathroom":
+                        $service_name = "bath";
+                        break;
+                    case "Roofing":
+                        $service_name = "roof";
+                        break;
+                }
+                $Lead_data_array['original_source'] = "Thryvea";
+                $Lead_data_array['product'] = $service_name;
+                break;
         }
 
         if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
