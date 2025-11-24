@@ -3053,6 +3053,227 @@ class PingCRMAllied
                         }
 
                         break;
+                    case 43:
+                        //Adopt A Contractor ========================
+                        $numcategory = 0;
+                        switch ($lead_type_service_id) {
+                            case 1:
+                                //Windows
+                                $number_of_window = trim($Leaddatadetails['number_of_window']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                if ($project_nature != "Repair") {
+                                    $numcategory = ($number_of_window == 1 ? "318" : "232");
+                                } else {
+                                    $numcategory = "299";
+                                }
+                                break;
+                            case 2:
+                                //Solar
+                                $numcategory = "80";
+                                break;
+                            case 6:
+                                //Roofing
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+
+                                if ($property_type == "Commercial") {
+                                    $numcategory = "205";
+                                } else {
+                                    switch ($roof_type) {
+                                        case "Asphalt Roofing":
+                                            switch ($project_nature) {
+                                                case "Repair existing roof":
+                                                    $numcategory = "265";
+                                                    break;
+                                                case "Completely replace roof":
+                                                    $numcategory = "271";
+                                                    break;
+                                                default:
+                                                    $numcategory = "259";
+                                            }
+                                            break;
+                                        case "Wood Shake/Composite Roofing":
+                                            switch ($project_nature) {
+                                                case "Repair existing roof":
+                                                    $numcategory = "269";
+                                                    break;
+                                                case "Completely replace roof":
+                                                    $numcategory = "276";
+                                                    break;
+                                                default:
+                                                    $numcategory = "264";
+                                            }
+                                            break;
+                                        case "Metal Roofing":
+                                            switch ($project_nature) {
+                                                case "Repair existing roof":
+                                                    $numcategory = "266";
+                                                    break;
+                                                case "Completely replace roof":
+                                                    $numcategory = "273";
+                                                    break;
+                                                default:
+                                                    $numcategory = "261";
+                                            }
+                                            break;
+                                        case "Natural Slate Roofing":
+                                            switch ($project_nature) {
+                                                case "Repair existing roof":
+                                                    $numcategory = "267";
+                                                    break;
+                                                case "Completely replace roof":
+                                                    $numcategory = "274";
+                                                    break;
+                                                default:
+                                                    $numcategory = "262";
+                                            }
+                                            break;
+                                        case "Tile Roofing":
+                                            switch ($project_nature) {
+                                                case "Repair existing roof":
+                                                    $numcategory = "268";
+                                                    break;
+                                                case "Completely replace roof":
+                                                    $numcategory = "275";
+                                                    break;
+                                                default:
+                                                    $numcategory = "263";
+                                            }
+                                            break;
+                                    }
+                                }
+                                break;
+                            case 7:
+                                //Home Siding
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $numcategory = ($project_nature == "Repair" ? "297" : "23");
+                                break;
+                            case 9:
+                                //Bathroom
+                                $numcategory = "193";
+                                break;
+                        }
+
+                        if (config('app.env', 'local') == "local") {
+                            $key = "test_mode";
+                            $google_ts = "match";
+                            $partnerid = "THR";
+                        } else {
+                            $key = "8f8e198a7bdf919736a97535923787e0";
+                            $partnerid = "THR";
+                        }
+
+
+                        $trusted_form = substr($trusted_form, strrpos($trusted_form, '/') + 1);
+
+                        $trusted_form_available = $universal_leadid_available = 0;
+                        if (!empty($trusted_form)) {
+                            $trusted_form_available = 1;
+                        }
+                        if (!empty($LeadId)) {
+                            $universal_leadid_available = 1;
+                        }
+
+                        $url_api_ping = "http://api.letsmakealead.com/Ping_Partner.php?";
+                        $Lead_data_ping = "";
+                        $httpheader = array(
+                            "cache-control: no-cache",
+                            "Accept: application/json",
+                            "content-type: application/json"
+                        );
+
+                        $TCPAText = urlencode($TCPAText);
+
+                        $url_api_ping .= "partnerid=$partnerid&subid=$google_ts&key=$key&numcategory=$numcategory&zipcode=$zip&trusted_form_available=$trusted_form_available&universal_leadid_available=$universal_leadid_available&trusted_form_token=$trusted_form&universal_leadid=$LeadId&city=$city&ip=$IPAddress&tcpa_optin=$tcpa_compliant&tcpa_text=$TCPAText";
+
+                        if ($lead_type_service_id == 2) {
+                            $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                            $utility_provider = trim($Leaddatadetails['utility_provider']);
+
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $average_bill = '50';
+                                    break;
+                                case '$51 - $100':
+                                    $average_bill = '100';
+                                    break;
+                                case '$101 - $150':
+                                    $average_bill = '150';
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = '200';
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = '300';
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = '400';
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = '500';
+                                    break;
+                                default:
+                                    $average_bill = '600';
+                            }
+
+                            $url_api_ping .= "&average_monthly_electricity_bill=$average_bill&electricity_service_provider=$utility_provider";
+                        }
+
+                        if ($type == 2) {
+                            $hash1 = md5($leadCustomer_id);
+                            if ($numberOfCamp >= 3) {
+                                $numberOfCamp = 3;
+                                $hash1 .= "," . md5($leadCustomer_id + 2);
+                            } else if ($numberOfCamp == 2) {
+                                $hash1 .= "," . md5($leadCustomer_id + 1);
+                            }
+
+                            $url_api_ping .= "&shared=1&nb_legs_available=3&nb_legs_sold=$numberOfCamp&hash_legs_sold=$hash1";
+                        }
+
+                        $url_api_ping = str_replace(" ", "%20", $url_api_ping);
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api_ping,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => $Lead_data_ping,
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, $Lead_data_ping, "POST", $returns_data, $campaign_id);
+                            if (!empty($result)) {
+                                if (strpos("-" . $result, 'ACCEPTED') == false) {
+                                    $TransactionId = "";
+                                    $Payout = 0;
+                                    $Result = 0;
+                                } else {
+                                    $data = $result;
+                                    $arr_explode = explode("<br>", $data);
+                                    $Price = 0;
+                                    $Token = "";
+                                    if (!empty($arr_explode[1])) {
+                                        $Token = trim(str_replace("Token:", "", $arr_explode[1]));
+                                    }
+                                    if (!empty($arr_explode[2])) {
+                                        $Price = trim(str_replace("Price:", "", $arr_explode[2]));
+                                    }
+
+                                    $TransactionId = $Token;
+                                    $Payout = $Price;
+                                    $multi_type = 1;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

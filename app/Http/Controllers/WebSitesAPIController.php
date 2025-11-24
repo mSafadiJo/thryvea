@@ -573,7 +573,7 @@ class WebSitesAPIController extends Controller
         $listOFCampainDB_array_shared = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_sharedDB, $data_msg, 10, 2, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_ex = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_ex, $data_msg, 1, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
-        
+
         //multi pings api responses
         $crm_api_file = new CrmApi();
         $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);

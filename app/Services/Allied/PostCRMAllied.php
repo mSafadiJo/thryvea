@@ -5090,6 +5090,201 @@ class PostCRMAllied {
                     }
                     return 0;
                     break;
+                case 43:
+                    //Adopt A Contractor ==============================
+                    $numcategory = 0;
+                    switch ($crm_details['service_id']) {
+                        case 1:
+                            //Windows
+                            $number_of_window = trim($crm_details['data']['number_of_window']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            if ($project_nature != "Repair") {
+                                $numcategory = ($number_of_window == 1 ? "318" : "232");
+                            } else {
+                                $numcategory = "299";
+                            }
+                            break;
+                        case 2:
+                            //Solar
+                            $numcategory = "80";
+                            break;
+                        case 6:
+                            //Roofing
+                            $property_type = trim($crm_details['data']['property_type']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $roof_type = trim($crm_details['data']['roof_type']);
+
+                            if ($property_type == "Commercial") {
+                                $numcategory = "205";
+                            } else {
+                                switch ($roof_type) {
+                                    case "Asphalt Roofing":
+                                        switch ($project_nature) {
+                                            case "Repair existing roof":
+                                                $numcategory = "265";
+                                                break;
+                                            case "Completely replace roof":
+                                                $numcategory = "271";
+                                                break;
+                                            default:
+                                                $numcategory = "259";
+                                        }
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        switch ($project_nature) {
+                                            case "Repair existing roof":
+                                                $numcategory = "269";
+                                                break;
+                                            case "Completely replace roof":
+                                                $numcategory = "276";
+                                                break;
+                                            default:
+                                                $numcategory = "264";
+                                        }
+                                        break;
+                                    case "Metal Roofing":
+                                        switch ($project_nature) {
+                                            case "Repair existing roof":
+                                                $numcategory = "266";
+                                                break;
+                                            case "Completely replace roof":
+                                                $numcategory = "273";
+                                                break;
+                                            default:
+                                                $numcategory = "261";
+                                        }
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        switch ($project_nature) {
+                                            case "Repair existing roof":
+                                                $numcategory = "267";
+                                                break;
+                                            case "Completely replace roof":
+                                                $numcategory = "274";
+                                                break;
+                                            default:
+                                                $numcategory = "262";
+                                        }
+                                        break;
+                                    case "Tile Roofing":
+                                        switch ($project_nature) {
+                                            case "Repair existing roof":
+                                                $numcategory = "268";
+                                                break;
+                                            case "Completely replace roof":
+                                                $numcategory = "275";
+                                                break;
+                                            default:
+                                                $numcategory = "263";
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                        case 7:
+                            //Home Siding
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $numcategory = ($project_nature == "Repair" ? "297" : "23");
+                            break;
+                        case 9:
+                            //Bathroom
+                            $numcategory = "193";
+                            break;
+                    }
+
+                    if (config('app.env', 'local') == "local") {
+                        $key = "test_mode";
+                        $google_ts = "match";
+                        $partnerid = "THR";
+                    } else {
+                        $key = "aa0da7f3c033c2244b72dbdbaf969847";
+                        $partnerid = "THR";
+                    }
+
+                    $trusted_form = substr($data_msg['trusted_form'], strrpos($data_msg['trusted_form'], '/') + 1);
+
+                    $trusted_form_available = $universal_leadid_available = 0;
+                    if (!empty($trusted_form)) {
+                        $trusted_form_available = 1;
+                    }
+                    if (!empty($LeadId)) {
+                        $universal_leadid_available = 1;
+                    }
+
+                    $url_api_post = "http://api.letsmakealead.com/Post_Partner.php?";
+
+                    $httpheader = array(
+                        "cache-control: no-cache",
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $confirmation_id = $data_msg['ping_post_data']['TransactionId'];
+
+                        $TCPAText = urlencode($TCPAText);
+
+                        $url_api_post .= "partnerid=$partnerid&subid=$google_ts&key=$key&numcategory=$numcategory&token=$confirmation_id&zipcode=$zip&firstname=$first_name&lastname=$last_name&address=$street&telephone=$number1&email=$email&trusted_form_available=$trusted_form_available&universal_leadid_available=$universal_leadid_available&trusted_form_token=$trusted_form&universal_leadid=$LeadId&city=$city&ip=$IPAddress&tcpa_optin=$tcpa_compliant&tcpa_text=$TCPAText";
+
+                        if ($crm_details['service_id'] == 2) {
+                            $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                            $utility_provider = trim($crm_details['data']['utility_provider']);
+
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $average_bill = '50';
+                                    break;
+                                case '$51 - $100':
+                                    $average_bill = '100';
+                                    break;
+                                case '$101 - $150':
+                                    $average_bill = '150';
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = '200';
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = '300';
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = '400';
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = '500';
+                                    break;
+                                default:
+                                    $average_bill = '600';
+                            }
+
+                            $url_api_post .= "&average_monthly_electricity_bill=$average_bill&electricity_service_provider=$utility_provider";
+                        }
+
+                        $numberOfCamp = $crm_details['count_of_camp'];
+                        if ($listOFCampainDB_type == "Shared") {
+                            $hash1 = md5($leadsCustomerCampaign_id);
+                            if ($numberOfCamp >= 3) {
+                                $numberOfCamp = 3;
+                                $hash1 .= "," . md5($leadsCustomerCampaign_id + 1) . "," . md5($leadsCustomerCampaign_id + 2);
+                            } else if ($numberOfCamp == 2) {
+                                $hash1 .= "," . md5($leadsCustomerCampaign_id + 1);
+                            }
+
+                            $url_api_post .= "&shared=1&nb_legs_available=3&nb_legs_sold=$numberOfCamp&hash_legs_sold=$hash1";
+                        }
+
+                        $url_api_post = str_replace(" ", "%20", $url_api_post);
+
+                        $Lead_data_post = "";
+
+                        $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, $Lead_data_post, "POST", 1, $crm_details['campaign_id']);
+
+                        if (!empty($result)) {
+                            if (strpos("-" . $result, 'ACCEPTED') == true) {
+                                return 1;
+                            }
+                        }
+                    }
+                    break;
 
             }
             return 0;

@@ -314,7 +314,7 @@ class CrmApi {
                                         }
                                     }
                                     break;
-                                    case 23:
+                                case 23:
                                     //HomeQuote 23
                                     $result2 = json_decode($result, true);
                                     if (!empty($result2['Result'])) {
@@ -391,6 +391,32 @@ class CrmApi {
                                             $TransactionId = $result2['auth_code'];
                                             $Payout = $result2['price'];
                                             $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
+                                case 43:
+                                    //Adopt A Contractor
+                                    if (!empty($result)) {
+                                        if (strpos("-" . $result, 'ACCEPTED') == false) {
+                                            $TransactionId = "";
+                                            $Payout = 0;
+                                            $Result = 0;
+                                        } else {
+                                            $data = $result;
+                                            $arr_explode = explode("<br>", $data);
+                                            $Price = 0;
+                                            $Token = "";
+                                            if (!empty($arr_explode[1])) {
+                                                $Token = trim(str_replace("Token:", "", $arr_explode[1]));
+                                            }
+                                            if (!empty($arr_explode[2])) {
+                                                $Price = trim(str_replace("Price:", "", $arr_explode[2]));
+                                            }
+
+                                            $TransactionId = $Token;
+                                            $Payout = $Price;
+                                            $multi_type = 1;
                                             $Result = 1;
                                         }
                                     }
