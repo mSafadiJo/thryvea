@@ -3160,7 +3160,7 @@ class PingCRMAllied
                             $google_ts = "match";
                             $partnerid = "THR";
                         } else {
-                            $key = "8f8e198a7bdf919736a97535923787e0";
+                            $key = "a260f21d7bd315a350b387a7e72a9c7d";
                             $partnerid = "THR";
                         }
 
