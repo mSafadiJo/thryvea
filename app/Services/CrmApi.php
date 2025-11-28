@@ -421,6 +421,19 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 42:
+                                    //point to web
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['success'])) {
+                                        if ($result2['success'] == "true") {
+                                            $TransactionId = $result2['data']['ping_id'];
+                                            $Payout = $result2['data']['max_bid'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
+
                             }
                     }
                 }

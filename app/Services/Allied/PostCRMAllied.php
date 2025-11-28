@@ -2311,6 +2311,10 @@ class PostCRMAllied {
 
                     $url_api .= "&leadtoken=$LeadId&type=$type_data&source_id=$source_id&source_key=$source_key&tcpa=$tcpa_compliant2&tcpa_text=$TCPAText&TrustedForm=$trusted_form&telephone=$number1";
                     break;
+                case 44:
+                    //UptownLeads LLC  1045
+                    $url_api .= "&trusted_form_cert_id=$trusted_form&jornaya_lead_id=$LeadId&tcpa_consent_language=$TCPAText&landing_page_url=$OriginalURL2&lp_s2=$google_ts";
+                    break;
 
             }
 
@@ -2336,6 +2340,22 @@ class PostCRMAllied {
                             $category = "Windows";
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$homeowner&residential_commercia=$residential_commercia&category=$category";
+                            break;
+                        case 44:
+                            //UptownLeads LLC  1045
+                            switch ($number_of_windows) {
+                                case "1":
+                                case "2":
+                                    $service = ($project_nature == "Repair" ? "Windows Repair 2 Wood Windows" : "Windows Install 2 Wood windows");
+                                    break;
+                                case "3-5":
+                                    $service = ($project_nature == "Repair" ? "Windows Repair 3-5 Wood Windows" : "Windows Install 3-5 Wood Windows");
+                                    break;
+                                default:
+                                    $service = ($project_nature == "Repair" ? "Windows Repair 6-9 Wood Windows" : "Windows Install 6-9 Wood windows");
+                            }
+
+                            $url_api .= "&service=$service";
                             break;
                         default:
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -2455,6 +2475,58 @@ class PostCRMAllied {
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$homeowner&residential_commercia=$residential_commercia&category=$category";
                             break;
+                        case 44:
+                            //UptownLeads LLC  1045
+                            switch ($Type_OfFlooring) {
+                                case "Vinyl Linoleum Flooring":
+                                    switch ($project_nature) {
+                                        case "Install New Flooring":
+                                        case "Refinish Existing Flooring":
+                                            $service = 'Flooring Vinyl Linoleum Install Home';
+                                            break;
+                                        default:
+                                            $service = 'Flooring Vinyl Linoleum Repair Home';
+                                    }
+                                    break;
+                                case  "Tile Flooring":
+                                    switch ($project_nature) {
+                                        case "Install New Flooring":
+                                        case "Refinish Existing Flooring":
+                                            $service = 'Flooring Tile Install';
+                                            break;
+                                        default:
+                                            $service = 'Flooring Tile Repair';
+                                    }
+                                    break;
+                                case "Hardwood Flooring":
+                                    switch ($project_nature) {
+                                        case "Install New Flooring":
+                                            $service = 'Flooring Hardwood Install Materials Purchased Home';
+                                            break;
+                                        case "Refinish Existing Flooring":
+                                            $service = 'Flooring Hardwood Refinishing Materials Purchased Home';
+                                            break;
+                                        default:
+                                            $service = 'Flooring Hardwood Repair Materials Purchased Home';
+                                    }
+                                    break;
+                                case "Laminate Flooring":
+                                    $service = 'Flooring Laminate Materials Purchased Home';
+                                    break;
+                                case "Carpet":
+                                default:
+                                    switch ($project_nature) {
+                                        case "Install New Flooring":
+                                        case "Refinish Existing Flooring":
+                                            $service = 'Flooring Carpet Install Materials Purchased';
+                                            break;
+                                        default:
+                                            $service = 'Flooring Carpet Repair Materials Purchased';
+                                    }
+                            }
+
+                            $url_api .= "&service=$service";
+                            break;
                     }
                     break;
                 case 5:
@@ -2512,6 +2584,61 @@ class PostCRMAllied {
                             $category = "Roofing";
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$home_owner&residential_commercia=$residential_commercia&category=$category";
+                            break;
+                        case 44:
+                            //UptownLeads LLC  1045
+                            switch ($roof_type) {
+                                case "Asphalt Roofing":
+                                    switch ($project_nature) {
+                                        case "Install roof on new construction":
+                                            $service = 'Roofing Install on New Construction Asphalt';
+                                            break;
+                                        case "Completely replace roof":
+                                            $service = 'Roofing Replacement Asphalt';
+                                            break;
+                                        default:
+                                            $service = 'Roofing Repair Asphalt';
+                                    }
+                                    break;
+                                case  "Metal Roofing":
+                                    switch ($project_nature) {
+                                        case "Install roof on new construction":
+                                            $service = 'Roofing Install on New Construction Metal';
+                                            break;
+                                        case "Completely replace roof":
+                                            $service = 'Roofing Replacement Metal';
+                                            break;
+                                        default:
+                                            $service = 'Roofing Repair Metal';
+                                    }
+                                    break;
+                                case "Natural Slate Roofing":
+                                    switch ($project_nature) {
+                                        case "Install roof on new construction":
+                                            $service = 'Roofing Install on New Construction Natural Slate';
+                                            break;
+                                        case "Completely replace roof":
+                                            $service = 'Roofing Replacement Natural Slate';
+                                            break;
+                                        default:
+                                            $service = 'Roofing Repair Natural Slate';
+                                    }
+                                    break;
+                                case "Tile Roofing":
+                                default:
+                                    switch ($project_nature) {
+                                        case "Install roof on new construction":
+                                            $service = 'Roofing Install on New Construction Tile';
+                                            break;
+                                        case "Completely replace roof":
+                                            $service = 'Roofing Replacement Tile';
+                                            break;
+                                        default:
+                                            $service = 'Roofing Repair Tile';
+                                    }
+                            }
+
+                            $url_api .= "&service=$service";
                             break;
                         default:
                             $owner = "yes";
@@ -2648,6 +2775,25 @@ class PostCRMAllied {
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$home_owner&residential_commercia=$residential_commercia&category=$category";
                             break;
+                        case 44:
+                            //UptownLeads LLC  1045
+                            switch ($type_of_siding) {
+                                case "Vinyl Siding":
+                                    $service = ($project_nature == "Repair section(s) of siding" ? "Siding Vinyl Repair Sections of Siding" : "Siding Vinyl Replace Existing");
+                                    break;
+                                case "Brickface Siding" || "Stoneface Siding":
+                                    $service = ($project_nature == "Repair section(s) of siding" ? "Siding Brickface Repair Sections of Siding" : "Siding Brickface Replace Existing");
+                                    break;
+                                case "Composite wood Siding":
+                                    $service = ($project_nature == "Repair section(s) of siding" ? "Siding Composite Wood Repair Sections of Siding" : "Siding Composite Wood Replace Existing");
+                                    break;
+                                case "Aluminium Siding":
+                                default:
+                                    $service = ($project_nature == "Repair section(s) of siding" ? "Siding Aluminum Repair Sections of Siding" : "Siding Aluminum Replace Existing");
+                            }
+
+                            $url_api .= "&service=$service";
+                            break;
                     }
                     break;
                 case 8:
@@ -2685,6 +2831,12 @@ class PostCRMAllied {
                             $category = "Bathroom";
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$home_owner&residential_commercia=$residential_commercia&category=$category";
+                            break;
+                        case 44:
+                            //UptownLeads LLC  1045
+                            $service = "Bath Remodel no walls added or removed";
+
+                            $url_api .= "&service=$service";
                             break;
                     }
                     break;
@@ -5282,6 +5434,137 @@ class PostCRMAllied {
                             if (strpos("-" . $result, 'ACCEPTED') == true) {
                                 return 1;
                             }
+                        }
+                    }
+                    break;
+                case 42:
+                    //point to web 39
+
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+                    } else {
+                        return 0;
+                    }
+
+                    $url_api = "https://homeimprove.io/api/host-post/leads/post";
+                    $httpheader = array(
+                        "Accept: application/json",
+                        "Content-Type: application/json",
+                    );
+
+                    $Lead_data_array = array(
+                        "lp_ping_id" => $TransactionId,
+                        "external_id" => $leadsCustomerCampaign_id,
+                        "zip_code" => $zip,
+                        "ip_address" => $IPAddress,
+                        "user_agent" => $UserAgent,
+                        "leadid_tcpa_disclosure" => $TCPAText,
+                        "trustedform_cert_url" => $trusted_form,
+                        "seconds_on_landing" => $SessionLength,
+                        "source" => "thv".$google_ts,
+                        "jornaya_leadid" => $LeadId,
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "phone" => $number1,
+                        "email" => $email,
+                        "address" => $street,
+                        "street" => $street,
+                        "city" => $city,
+                        "state" => $statename_code,
+                    );
+
+                    switch ($lead_type_service_id) {
+                        case 1:
+                            //Window
+                            $number_of_windows = trim($crm_details['data']['number_of_window']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+
+                            $homeowner = ($ownership == "Yes" ? "yes" : "no");
+                            $ProjectType = ($project_nature == "Repair" ? "Windows Repair" : "Windows Install");
+
+                            switch ($number_of_windows) {
+                                case "1":
+                                    $number_of_windows_data = "1";
+                                    break;
+                                case "2":
+                                    $number_of_windows_data = "2";
+                                    break;
+                                case "3-5":
+                                    $number_of_windows_data = "3-5";
+                                    break;
+                                case "6-9":
+                                    $number_of_windows_data = "6-9";
+                                    break;
+                                default:
+                                    $number_of_windows_data = "more";
+                            }
+
+                            $Lead_data_array['project_type'] = $ProjectType;
+                            $Lead_data_array['vertical'] = "window";
+                            $Lead_data_array['home_owner'] = $homeowner;
+                            $Lead_data_array['number_of_windows'] = $number_of_windows_data;
+                            $Lead_data_array['landing_page_url'] = "thewindowsinstall.com";
+
+                            $httpheader[] = "X-API-Key: d2luZG93Xzc3MzUx";
+                            break;
+                        case 6:
+                            //Roofing
+                            $Type_OfRoofing = trim($crm_details['data']['roof_type']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $property_type = trim($crm_details['data']['property_type']);
+
+                            switch ($Type_OfRoofing) {
+                                case "Asphalt Roofing":
+                                    $roofmaterial = "Asphalt Shingle";
+                                    break;
+                                case "Wood Shake/Composite Roofing":
+                                    $roofmaterial = "wood";
+                                    break;
+                                case "Metal Roofing":
+                                    $roofmaterial = "Metal";
+                                    break;
+                                case "Natural Slate Roofing":
+                                    $roofmaterial = "Natural Slate";
+                                    break;
+                                case "Tile Roofing":
+                                    $roofmaterial = "Tile";
+                                    break;
+                                default:
+                                    $roofmaterial = "Flat/Single Ply";
+                            }
+
+                            $ProjectType = ($project_nature == "Repair existing roof" ? "Roof Repair" : "Roof Install");
+
+                            $Lead_data_array['project_type'] = $ProjectType;
+                            $Lead_data_array['vertical'] = "roof";
+                            $Lead_data_array['home_owner'] = "yes";
+                            $Lead_data_array['roofing_type'] = $roofmaterial;
+                            $Lead_data_array['landing_page_url'] = "homeremodelingpro.net";
+
+                            $httpheader[] = "X-API-Key: cm9vZl83NzM1MTc2";
+                            break;
+                        case 9:
+                            //Bathroom
+                            $bathroom_type_name = trim($crm_details['data']['services']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $homeowner = ($ownership == "Yes" ? "yes" : "no");
+
+                            $Lead_data_array['home_owner'] = $homeowner;
+                            $Lead_data_array['remodel_walls'] = "yes";
+                            $Lead_data_array['vertical'] = "bath-remodel";
+                            $Lead_data_array['landing_page_url'] = "thebathroomremodel.net";
+
+                            $httpheader[] = "X-API-Key: YmF0aC1yZW1vZGVs";
+                            break;
+                    }
+
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2['success'])) {
+                        if ($result2['success'] == "true") {
+                            return 1;
                         }
                     }
                     break;
