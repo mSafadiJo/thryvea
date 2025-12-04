@@ -1412,7 +1412,7 @@ class PingCRMAllied
                         break;
                     case 44:
                         //UptownLeads LLC  1045
-                        $url_api .= "&trusted_form_cert_id=$trusted_form&jornaya_lead_id=$LeadId&tcpa_consent_language=$TCPAText&landing_page_url=$OriginalURL2&lp_s2=$google_ts";
+                        $url_api .= "&trusted_form_cert_id=$trusted_form&jornaya_lead_id=$LeadId&tcpa_consent_language=$TCPAText";
                         break;
                 }
 
@@ -1453,7 +1453,7 @@ class PingCRMAllied
                                         $service = ($project_nature == "Repair" ? "Windows Repair 6-9 Wood Windows" : "Windows Install 6-9 Wood windows");
                                 }
 
-                                $url_api .= "&service=$service";
+                                $url_api .= "&service=$service&landing_page_url=thewindowsinstall.com&lp_s2=thv$google_ts";
                                 break;
                             default:
                                 $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -1624,7 +1624,7 @@ class PingCRMAllied
                                         }
                                 }
 
-                                $url_api .= "&service=$service";
+                                $url_api .= "&service=$service&landing_page_url=theflooringinstall.net&lp_s2=thv$google_ts";
                                 break;
 
                         }
@@ -1738,7 +1738,7 @@ class PingCRMAllied
                                         }
                                 }
 
-                                $url_api .= "&service=$service";
+                                $url_api .= "&service=$service&landing_page_url=homeremodelingpro.net&lp_s2=thv$google_ts";
                                 break;
                             default:
                                 $owner = "yes";
@@ -1890,7 +1890,7 @@ class PingCRMAllied
                                         $service = ($project_nature == "Repair section(s) of siding" ? "Siding Aluminum Repair Sections of Siding" : "Siding Aluminum Replace Existing");
                                 }
 
-                                $url_api .= "&service=$service";
+                                $url_api .= "&service=$service&landing_page_url=homeremodelingpro.net&lp_s2=thv$google_ts";
                                 break;
                         }
                         break;
@@ -1934,7 +1934,7 @@ class PingCRMAllied
                                 //UptownLeads LLC  1045
                                 $service = "Bath Remodel no walls added or removed";
 
-                                $url_api .= "&service=$service";
+                                $url_api .= "&service=$service&landing_page_url=thebathroomremodel.net&lp_s2=thv$google_ts";
                                 break;
 
                         }
@@ -3479,7 +3479,7 @@ class PingCRMAllied
                                 $Lead_data_array['number_of_windows'] = $number_of_windows_data;
                                 $Lead_data_array['landing_page_url'] = "thewindowsinstall.com";
 
-                                $httpheader[] = "X-API-Key: d2luZG93Xzc3MzUx";
+                                $httpheader[] = "X-API-Key: MTZfd2luZG93XzE3NjQ3NTk3MjlfNjkz";
                                 break;
                             case 6:
                                 //Roofing
@@ -3515,7 +3515,7 @@ class PingCRMAllied
                                 $Lead_data_array['roofing_type'] = $roofmaterial;
                                 $Lead_data_array['landing_page_url'] = "homeremodelingpro.net";
 
-                                $httpheader[] = "X-API-Key: cm9vZl83NzM1MTc2";
+                                $httpheader[] = "X-API-Key: MTZfcm9vZl8xNzY0NzU5Nzg1XzY5MzAx";
                                 break;
                             case 9:
                                 //Bathroom
@@ -3527,7 +3527,7 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "bath-remodel";
                                 $Lead_data_array['remodel_walls'] = "yes";
                                 $Lead_data_array['landing_page_url'] = "thebathroomremodel.net";
-                                $httpheader[] = "X-API-Key: YmF0aC1yZW1vZGVs";
+                                $httpheader[] = "X-API-Key: MTZfYmF0aC1yZW1vZGVsXzE3NjQ3NTk2";
                                 break;
                         }
 
