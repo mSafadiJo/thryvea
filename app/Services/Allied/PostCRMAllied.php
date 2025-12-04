@@ -5568,7 +5568,79 @@ class PostCRMAllied {
                         }
                     }
                     break;
+case 45:
+                    // Floor Coverings Internationa (BirdDog)45
+                    $url = "http://bdmleadmanagement.valid1.net/Leads.aspx?";
 
+                    $body = [
+                        "FirstName" => $first_name,
+                        "LastName" => $last_name,
+                        "Address" => $street,
+                        "City" => $city,
+                        "State" => $statename_code,
+                        "Zip" => $zip,
+                        "email" => $email,
+                        "PhoneNumber" => $number1,
+                        "alid" => "2834",
+                        "oid" => "10117",
+                        "Campaign" => "BDM6",
+                        "LeadID" => $LeadId,
+                        "TrustedFormCert" => $trusted_form,
+                        "cert" => $trusted_form,
+                        "Code" => "35",
+
+                    ];
+
+                    $httpheader = array(
+                        "cache-control: no-cache",
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    if (config('app.env', 'local') == "local") {
+                        $body['BDMLeadType'] = 'test';
+                        $body['Zip'] = '92126';
+                        $body['State'] = 'CA';
+                    } else {
+                        $body['BDMLeadType'] = 'live';
+                    }
+
+                    switch ($lead_type_service_id) {
+                        case 4:
+                            //Flooring
+                            $Type_OfFlooring = trim($crm_details['data']['flooring_type']);
+
+                            switch ($Type_OfFlooring) {
+                                case "Vinyl Linoleum Flooring":
+                                    $taskId = "Vinyl";
+                                    break;
+                                case "Tile Flooring":
+                                    $taskId = "Tile";
+                                    break;
+                                case "Hardwood Flooring":
+                                    $taskId = "Wood Floors";
+                                    break;
+                                case "Laminate Flooring":
+                                    $taskId = "Laminate";
+                                    break;
+                                default:
+                                    $taskId = "Carpet";
+                            }
+
+                            $body["ServiceType"] = $taskId;
+
+                            $url .= http_build_query($body);
+
+                            $response = $crm_api_file->api_send_data($url, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
+
+                            if (str_contains(strtolower($response), 'success -')) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                            break;
+                    }
+                    break;
             }
             return 0;
         } catch (Exception $e) {
