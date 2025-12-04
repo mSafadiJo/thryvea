@@ -2861,6 +2861,133 @@ class PingCRMAllied
                                     }
                                 }
                                 break;
+                            case 2:
+                                //Solar
+                                $property_type_data = 1;
+                                $times_remaining_to_sell = 4;
+                                $times_previously_sold = 0;
+                                $inquiry_datetime = date('m/d/Y H:i:s');
+
+                                $httpheader = array(
+                                    'Authorization: Basic cmVzdC11c2VyOjVTOGNCRHEmRWYha3BMKk5XNXVM',
+                                    'Content-Type: application/xml',
+                                );
+
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                switch ($monthly_electric_bill) {
+                                    case '$0 - $50':
+                                        $monthly_bill = 50;
+                                        break;
+                                    case '$51 - $100':
+                                        $monthly_bill = 100;
+                                        break;
+                                    case '$101 - $150':
+                                        $monthly_bill = 150;
+                                        break;
+                                    case '$151 - $200':
+                                        $monthly_bill = 200;
+                                        break;
+                                    case '$201 - $300':
+                                        $monthly_bill = 300;
+                                        break;
+                                    case '$301 - $400':
+                                        $monthly_bill = 400;
+                                        break;
+                                    case '$401 - $500':
+                                        $monthly_bill = 500;
+                                        break;
+                                    default:
+                                        $monthly_bill = 600;
+                                }
+
+                                switch ($roof_shade) {
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = 4;
+                                        break;
+                                    case "Partial Sun":
+                                        $roof_shade_data = 2;
+                                        break;
+                                    default:
+                                        $roof_shade_data = 1;
+                                }
+
+                                if (config('app.env', 'local') == "local") {
+                                    //Test Mode
+                                    $url_api_ping = "https://uat.sbbnetinc.com/rest/api/solar/submit-inquiry";
+                                    $source_name = "test";
+                                    $vendor_id = "8";
+                                } else {
+                                    //Live Mode
+                                    $url_api_ping = "https://live.sbbnetinc.com/rest/api/solar/submit-inquiry";
+                                    $source_name = "thrwi";
+                                    $vendor_id = "2506";
+                                }
+
+                                $utility_company_id = "00000000";
+                                $hot_water_inquiry = 0;
+                                $electric_inquiry = 1;
+
+
+                                $Lead_data_ping = '<cea_ping>
+                                  <consumer_inquiry>
+                                    <property_sun_exposure>' . $roof_shade_data . '</property_sun_exposure>
+                                    <property_type>' . $property_type_data . '</property_type>
+                                    <property_zip_code>' . $zip . '</property_zip_code>
+                                    <monthly_electricity_cost>' . $monthly_bill . '</monthly_electricity_cost>
+                                    <utility_company_id>' . $utility_company_id . '</utility_company_id>
+                                    <universal_lead_id>' . $LeadId . '</universal_lead_id>
+                                    <consumer_ip_address>' . $IPAddress . '</consumer_ip_address>
+                                    <times_remaining_to_sell>' . $times_remaining_to_sell . '</times_remaining_to_sell>
+                                    <times_previously_sold>' . $times_previously_sold . '</times_previously_sold>
+                                    <hot_water_inquiry>' . $hot_water_inquiry . '</hot_water_inquiry>
+                                    <electric_inquiry>' . $electric_inquiry . '</electric_inquiry>
+                                    <inquiry_datetime>' . $inquiry_datetime . '</inquiry_datetime>
+                                    <vendor_lead_id>' . $leadCustomer_id . '</vendor_lead_id>
+                                    <active_prospect_url>' . $trusted_form . '</active_prospect_url>
+                                    <source_name>' . $source_name . '</source_name>
+                                    <vendor_id>' . $vendor_id . '</vendor_id>
+                                    <vendor_pub_id>' . $google_ts . '</vendor_pub_id>
+                                  </consumer_inquiry>
+                                </cea_ping>';
+
+                                $ping_crm_apis = array(
+                                    "url" => $url_api_ping,
+                                    "header" => $httpheader,
+                                    "lead_id" => $leadCustomer_id,
+                                    "inputs" => $Lead_data_ping,
+                                    "method" => "POST",
+                                    "campaign_id" => $campaign_id,
+                                    "service_id" => $lead_type_service_id,
+                                    "user_id" => $user_id,
+                                    "returns_data" => $returns_data,
+                                    "crm_type" => 0
+                                );
+
+                                if($is_multi_api == 0) {
+                                    $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, $Lead_data_ping, "POST", $returns_data, $campaign_id);
+                                    try {
+                                        libxml_use_internal_errors(true);
+                                        $result2 = simplexml_load_string($result);
+                                        $result3 = json_encode($result2);
+                                        $result4 = json_decode($result3, TRUE);
+
+                                        if (!empty($result4)) {
+                                            if (strpos("-" . $result, 'Match') == true) {
+                                                $TransactionId = $result4['id'];
+                                                $Payout = $result4['price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+
+                                    }
+                                }
+                                break;
                             case 6:
                                 //Roofing
                                 $Type_OfRoofing = trim($Leaddatadetails['roof_type']);

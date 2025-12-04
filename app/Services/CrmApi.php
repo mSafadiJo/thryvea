@@ -349,6 +349,26 @@ class CrmApi {
 
                                             }
                                             break;
+                                        case 2:
+                                            //Solar
+                                            try {
+                                                libxml_use_internal_errors(true);
+                                                $result2 = simplexml_load_string($result);
+                                                $result3 = json_encode($result2);
+                                                $result4 = json_decode($result3, TRUE);
+
+                                                if (!empty($result4)) {
+                                                    if (strpos("-" . $result, 'Match') == true) {
+                                                        $TransactionId = $result4['id'];
+                                                        $Payout = $result4['price'];
+                                                        $multi_type = 0;
+                                                        $Result = 1;
+                                                    }
+                                                }
+                                            } catch (Exception $e) {
+
+                                            }
+                                            break;
                                         case 6:
                                             //Roofing
                                             try {

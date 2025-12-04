@@ -4858,6 +4858,117 @@ class PostCRMAllied {
                                     return 1;
                                 }
                                 break;
+                            case 2:
+                                //Solar
+                                $property_type_data = 1;
+                                $property_owner = 1;
+                                $times_remaining_to_sell = 4;
+                                $times_previously_sold = 0;
+                                $inquiry_datetime = date('m/d/Y H:i:s');
+
+                                $httpheader = array(
+                                    'Authorization: Basic cmVzdC11c2VyOjVTOGNCRHEmRWYha3BMKk5XNXVM',
+                                    'Content-Type: application/xml',
+                                );
+
+                                $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                                $utility_provider = trim($crm_details['data']['utility_provider']);
+                                $roof_shade = trim($crm_details['data']['roof_shade']);
+                                $property_type = trim($crm_details['data']['property_type']);
+
+                                switch ($monthly_electric_bill) {
+                                    case '$0 - $50':
+                                        $monthly_bill = 50;
+                                        break;
+                                    case '$51 - $100':
+                                        $monthly_bill = 100;
+                                        break;
+                                    case '$101 - $150':
+                                        $monthly_bill = 150;
+                                        break;
+                                    case '$151 - $200':
+                                        $monthly_bill = 200;
+                                        break;
+                                    case '$201 - $300':
+                                        $monthly_bill = 300;
+                                        break;
+                                    case '$301 - $400':
+                                        $monthly_bill = 400;
+                                        break;
+                                    case '$401 - $500':
+                                        $monthly_bill = 500;
+                                        break;
+                                    default:
+                                        $monthly_bill = 600;
+                                }
+
+                                switch ($roof_shade) {
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = 4;
+                                        break;
+                                    case "Partial Sun":
+                                        $roof_shade_data = 2;
+                                        break;
+                                    default:
+                                        $roof_shade_data = 1;
+                                }
+
+                                if (config('app.env', 'local') == "local") {
+                                    //Test Mode
+                                    $url_api_post = "https://uat.sbbnetinc.com/rest/api/solar/submit-inquiry";
+                                    $source_name = "test";
+                                    $vendor_id = "8";
+                                } else {
+                                    //Live Mode
+                                    $url_api_post = "https://live.sbbnetinc.com/rest/api/solar/submit-inquiry";
+                                    $source_name = "thrwi";
+                                    $vendor_id = "2506";
+                                }
+
+                                $utility_company_id = "00000000";
+                                $hot_water_inquiry = 0;
+                                $electric_inquiry = 1;
+
+                                $Lead_data_post = '<cea_post>
+                                  <consumer_inquiry>
+                                    <property_sun_exposure>' . $roof_shade_data . '</property_sun_exposure>
+                                    <property_owner>' . $property_owner . '</property_owner>
+                                    <property_type>' . $property_type_data . '</property_type>
+                                    <property_zip_code>' . $zip . '</property_zip_code>
+                                    <property_state_code>' . $statename_code . '</property_state_code>
+                                    <property_city>' . $city . '</property_city>
+                                    <property_street_address>' . $street . '</property_street_address>
+                                    <monthly_electricity_cost>' . $monthly_bill . '</monthly_electricity_cost>
+                                    <utility_company_id>' . $utility_company_id . '</utility_company_id>
+                                    <contact_phone>' . $number1 . '</contact_phone>
+                                    <contact_email>' . $email . '</contact_email>
+                                    <contact_last_name>' . $last_name . '</contact_last_name>
+                                    <contact_first_name>' . $first_name . '</contact_first_name>
+                                    <times_remaining_to_sell>' . $times_remaining_to_sell . '</times_remaining_to_sell>
+                                    <times_previously_sold>' . $times_previously_sold . '</times_previously_sold>
+                                    <hot_water_inquiry>' . $hot_water_inquiry . '</hot_water_inquiry>
+                                    <electric_inquiry>' . $electric_inquiry . '</electric_inquiry>
+                                    <consumer_ip_address>' . $IPAddress . '</consumer_ip_address>
+                                    <inquiry_datetime>' . $inquiry_datetime . '</inquiry_datetime>
+                                    <vendor_lead_id>' . $leadsCustomerCampaign_id . '</vendor_lead_id>
+                                    <source_name>' . $source_name . '</source_name>
+                                    <vendor_id>' . $vendor_id . '</vendor_id>
+                                    <consumer_inquiry_id>' . $TransactionId . '</consumer_inquiry_id>
+                                    <universal_lead_id>' . $LeadId . '</universal_lead_id>
+                                    <active_prospect_url>' . $trusted_form . '</active_prospect_url>
+                                    <vendor_pub_id>' . $google_ts . '</vendor_pub_id>
+                                  </consumer_inquiry>
+                                </cea_post>';
+
+
+                                $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $crm_details['leadsCustomerCampaign_id'], $Lead_data_post, "POST", 1, $crm_details['campaign_id']);
+
+                                if (!empty($result)) {
+                                    if (strpos("-" . $result, 'Accepted') == true || strpos("-" . $result, 'Match') == true) {
+                                        return 1;
+                                    }
+                                }
+                                break;
                             case 6:
                                 //Roofing
                                 $Type_OfRoofing = trim($crm_details['data']['roof_type']);
@@ -5568,7 +5679,7 @@ class PostCRMAllied {
                         }
                     }
                     break;
-case 45:
+                case 45:
                     // Floor Coverings Internationa (BirdDog)45
                     $url = "http://bdmleadmanagement.valid1.net/Leads.aspx?";
 
