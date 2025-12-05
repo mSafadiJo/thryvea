@@ -2355,7 +2355,7 @@ class PostCRMAllied {
                                     $service = ($project_nature == "Repair" ? "Windows Repair 6-9 Wood Windows" : "Windows Install 6-9 Wood windows");
                             }
 
-                            $url_api .= "&service=$service&landing_page_url=thewindowsinstall.com&lp_s2=thv$google_ts";
+                            $url_api .= "&service=$service&landing_page_url=https://thewindowsinstall.com/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
                         default:
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -2525,7 +2525,7 @@ class PostCRMAllied {
                                     }
                             }
 
-                            $url_api .= "&service=$service&landing_page_url=theflooringinstall.net&lp_s2=thv$google_ts";
+                            $url_api .= "&service=$service&landing_page_url=https://theflooringinstall.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
                     }
                     break;
@@ -2638,7 +2638,7 @@ class PostCRMAllied {
                                     }
                             }
 
-                            $url_api .= "&service=$service&landing_page_url=homeremodelingpro.net&lp_s2=thv$google_ts";
+                            $url_api .= "&service=$service&landing_page_url=https://homeremodelingpro.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
                         default:
                             $owner = "yes";
@@ -2792,7 +2792,7 @@ class PostCRMAllied {
                                     $service = ($project_nature == "Repair section(s) of siding" ? "Siding Aluminum Repair Sections of Siding" : "Siding Aluminum Replace Existing");
                             }
 
-                            $url_api .= "&service=$service&landing_page_url=homeremodelingpro.net&lp_s2=thv$google_ts";
+                            $url_api .= "&service=$service&landing_page_url=https://homeremodelingpro.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
                     }
                     break;
@@ -2836,7 +2836,7 @@ class PostCRMAllied {
                             //UptownLeads LLC  1045
                             $service = "Bath Remodel no walls added or removed";
 
-                            $url_api .= "&service=$service&landing_page_url=thebathroomremodel.net&lp_s2=thv$google_ts";
+                            $url_api .= "&service=$service&landing_page_url=https://thebathroomremodel.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
                     }
                     break;
