@@ -1897,15 +1897,33 @@ class MainApiController extends Controller
                     // for special source
                     // checks if there's a special source in campaign settings to set a specific price for the lead
                     $is_special_source = 0;
-                    if (!empty($if_campaign_is_set->special_source) && $if_campaign_is_set->special_source != "[]") {
-                        if (in_array($google_ts, json_decode($if_campaign_is_set->special_source, true))) {
-                            $is_special_source = 1;
-                        }
+                    $special_source_price = 0;
+
+                    $tier1 = json_decode($if_campaign_is_set->special_source, true);
+                    $tier2 = json_decode($if_campaign_is_set->special_source_tier2, true);
+                    $tier3 = json_decode($if_campaign_is_set->special_source_tier3, true);
+                    $tier4 = json_decode($if_campaign_is_set->special_source_tier4, true);
+
+                    if (!empty($tier1) && in_array($google_ts, $tier1)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price;
+
+                    } else if (!empty($tier2) && in_array($google_ts, $tier2)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier2;
+
+                    } else if (!empty($tier3) && in_array($google_ts, $tier3)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier3;
+
+                    } else if (!empty($tier4) && in_array($google_ts, $tier4)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier4;
                     }
 
                     if ($if_campaign_is_set->if_static_cost == 1) {
                         if ($is_special_source == 1) {
-                            $price_return = $if_campaign_is_set->special_source_price;
+                            $price_return = $special_source_price;
                         } else if ($is_special == 1) {
                             $price_return = $if_campaign_is_set->special_budget_bid_exclusive;
                         } else {
@@ -1913,7 +1931,7 @@ class MainApiController extends Controller
                         }
                     } else {
                         if ($is_special_source == 1) {
-                            $price_return += $budget_bid - ($budget_bid * ($if_campaign_is_set->special_source_price / 100));
+                            $price_return += $budget_bid - ($budget_bid * ($special_source_price / 100));
                         } else if ($is_special == 1) {
                             $price_return += $budget_bid - ($budget_bid * ($if_campaign_is_set->special_budget_bid_exclusive / 100));
                         } else {

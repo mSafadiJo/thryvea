@@ -56,7 +56,7 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label for="Campaign_name">Campaign Name<span
-                                                                    class="requiredFields">*</span></label>
+                                                                class="requiredFields">*</span></label>
                                                         <input type="text" class="form-control" id="Campaign_name"
                                                                name="Campaign_name" placeholder="" required=""
                                                                value="{{ $campaign->campaign_name }}">
@@ -66,7 +66,7 @@
                                                     <div class="form-group">
 
                                                         <label for="Lead Source">Lead Source<span
-                                                                    class=""></span></label>
+                                                                class=""></span></label>
                                                         <select id="LeadSourceList" class="select2 form-control"
                                                                 name="typeOFLead_Source" required
                                                                 data-placeholder="Choose ...">
@@ -77,7 +77,7 @@
                                                                                 selected>{{ $val->name }}</option>
                                                                     @else
                                                                         <option
-                                                                                value="{{ $val->name }}">{{ $val->name }}</option>
+                                                                            value="{{ $val->name }}">{{ $val->name }}</option>
                                                                     @endif
                                                                 @endforeach
                                                             </optgroup>
@@ -90,15 +90,15 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label for="service_id">Service Name<span
-                                                                    class="requiredFields">*</span></label>
+                                                                class="requiredFields">*</span></label>
                                                         <select class="select2 form-control" name="service_id"
                                                                 id="service_idCampainAddAdmnin" required="">
                                                             <optgroup label="Service Name">
                                                                 @if( !empty( $services ) )
                                                                     @foreach( $services as $service )
                                                                         <option
-                                                                                value="{{ $service->service_campaign_id }}"
-                                                                                @if( $service->service_campaign_id ==  $campaign->service_campaign_id ) selected @endif>{{ $service->service_campaign_name }}</option>
+                                                                            value="{{ $service->service_campaign_id }}"
+                                                                            @if( $service->service_campaign_id ==  $campaign->service_campaign_id ) selected @endif>{{ $service->service_campaign_name }}</option>
                                                                     @endforeach
                                                                 @endif
                                                             </optgroup>
@@ -410,7 +410,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label for="propertytype">Property Type<span
-                                                                    class="requiredFields">*</span></label>
+                                                                class="requiredFields">*</span></label>
                                                         <select id="propertytype" name="propertytype[]"
                                                                 class="select2 form-control select2-multiple"
                                                                 required="" multiple="multiple"
@@ -427,7 +427,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label for="Installings">Type Of Service<span
-                                                                    class="requiredFields">*</span></label>
+                                                                class="requiredFields">*</span></label>
                                                         <select id="Installings" name="Installings[]"
                                                                 class="select2 form-control select2-multiple"
                                                                 required="" multiple="multiple"
@@ -443,7 +443,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group">
                                                         <label for="homeowned">Owner<span
-                                                                    class="requiredFields">*</span></label>
+                                                                class="requiredFields">*</span></label>
                                                         <select id="homeowned" name="homeowned[]"
                                                                 class="select2 form-control select2-multiple"
                                                                 required="" multiple="multiple"
@@ -468,7 +468,7 @@
                                                         <label class="form-group switch">
                                                             <input type="checkbox" name="is_ping_account"
                                                                    id="is_ping_account" value="1"
-                                                            <?php
+                                                                <?php
                                                                 if ($campaign->is_ping_account !== null) {
                                                                     if ($campaign->is_ping_account == 1) {
                                                                         echo "checked";
@@ -547,7 +547,7 @@
                                                         <label class="form-group switch">
                                                             <input type="checkbox" name="if_static_cost"
                                                                    id="if_static_cost" value="1"
-                                                            <?php
+                                                                <?php
                                                                 if ($campaign->if_static_cost !== null) {
                                                                     if ($campaign->if_static_cost == 1) {
                                                                         echo "checked";
@@ -580,14 +580,14 @@
                                                                     @foreach($address['states'] as $state)
                                                                         @if( empty(json_decode($campaign->special_state,true)) )
                                                                             <option
-                                                                                    value="{{ $state->state_id }}">{{ $state->state_code }}</option>
+                                                                                value="{{ $state->state_id }}">{{ $state->state_code }}</option>
                                                                         @else
                                                                             @if( in_array($state->state_id, json_decode($campaign->special_state,true)) )
                                                                                 <option value="{{ $state->state_id }}"
                                                                                         selected>{{ $state->state_code }}</option>
                                                                             @else
                                                                                 <option
-                                                                                        value="{{ $state->state_id }}">{{ $state->state_code }}</option>
+                                                                                    value="{{ $state->state_id }}">{{ $state->state_code }}</option>
                                                                             @endif
                                                                         @endif
                                                                     @endforeach
@@ -607,24 +607,85 @@
                                                                @else value="0" @endif>
                                                     </div>
                                                 </div>
+
+
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
-                                                        <label for="special_source">Special Sources (separated by comas)</label>
+                                                        <label for="special_source">Special Sources (tier 1) (separated by comas)</label>
                                                         <br>
                                                         <span>for example: source1,source2,source3</span>
-                                                        <textarea class="form-control" id="special_source" name="special_source" placeholder="src"> @if($campaign->special_source) {{ implode(",", json_decode($campaign->special_source, true)) }}  @endif   </textarea>
-
+                                                        <input type="text" class="form-control" id="special_source" name="special_source" placeholder="src"
+                                                               @if($campaign->special_source) value="{{ implode(",", json_decode($campaign->special_source, true)) }}" @else value="" @endif>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
-                                                        <label for="special_source_price">Special Source Profit/Cost</label>
+                                                        <label for="special_source_price">Special Source Profit/Cost (tier 1)</label>
                                                         <br>
                                                         <br>
                                                         <input type="number" class="form-control" id="special_source_price" name="special_source_price" placeholder="%"
                                                                @if($campaign->special_source_price) value="{{ $campaign->special_source_price }}" @else value="0" @endif>
                                                     </div>
                                                 </div>
+                                                {{--//Special Sources(tire 2)--}}
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source">Special Sources(tier 2) (separated by comas)</label>
+                                                        <br>
+                                                        <span>for example: source1,source2,source3</span>
+                                                        <input type="text" class="form-control" id="special_source" name="special_source_tier2" placeholder="src"
+                                                               @if($campaign->special_source_tier2) value="{{ implode(",", json_decode($campaign->special_source_tier2, true)) }}" @else value="" @endif>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source_price">Special Source Profit/Cost (tier 2)</label>
+                                                        <br>
+                                                        <br>
+                                                        <input type="number" class="form-control" id="special_source_price" name="special_source_price_tier2" placeholder="%"
+                                                               @if($campaign->special_source_price_tier2) value="{{ $campaign->special_source_price_tier2 }}" @else value="0" @endif>
+                                                    </div>
+                                                </div>
+                                                {{--//Special Sources(tire 3)--}}
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source">Special Sources(tier 3) (separated by comas)</label>
+                                                        <br>
+                                                        <span>for example: source1,source2,source3</span>
+                                                        <input type="text" class="form-control" id="special_source" name="special_source_tier3" placeholder="src"
+                                                               @if($campaign->special_source_tier3) value="{{ implode(",", json_decode($campaign->special_source_tier3, true)) }}" @else value="" @endif>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source_price">Special Source Profit/Cost (tier 3)</label>
+                                                        <br>
+                                                        <br>
+                                                        <input type="number" class="form-control" id="special_source_price" name="special_source_price_tier3" placeholder="%"
+                                                               @if($campaign->special_source_price_tier3) value="{{ $campaign->special_source_price_tier3 }}" @else value="0" @endif>
+                                                    </div>
+                                                </div>
+                                                {{--//Special Sources(tire 4)--}}
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source">Special Sources(tier 4) (separated by comas)</label>
+                                                        <br>
+                                                        <span>for example: source1,source2,source3</span>
+                                                        <input type="text" class="form-control" id="special_source" name="special_source_tier4" placeholder="src"
+                                                               @if($campaign->special_source_tier4) value="{{ implode(",", json_decode($campaign->special_source_tier4, true)) }}" @else value="" @endif>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="special_source_price">Special Source Profit/Cost (tier 4)</label>
+                                                        <br>
+                                                        <br>
+                                                        <input type="number" class="form-control" id="special_source_price" name="special_source_price_tier4" placeholder="%"
+                                                               @if($campaign->special_source_price_tier4) value="{{ $campaign->special_source_price_tier4 }}" @else value="0" @endif>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
                                         </div>
                                     </div>

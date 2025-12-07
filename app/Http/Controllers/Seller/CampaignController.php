@@ -314,6 +314,10 @@ class CampaignController extends Controller
         $budget_bid_exclusive = (!empty($request['budget_bid_exclusive']) ? $request['budget_bid_exclusive'] : 0);
 
         $specialSource = (!empty($request['special_source']) ?  explode(",", strtolower($request['special_source'])) : '');
+        $specialSource_tier2 = (!empty($request['special_source_tier2']) ?  explode(",", strtolower($request['special_source_tier2'])) : '');
+        $specialSource_tier3 = (!empty($request['special_source_tier3']) ?  explode(",", strtolower($request['special_source_tier3'])) : '');
+        $specialSource_tier4 = (!empty($request['special_source_tier4']) ?  explode(",", strtolower($request['special_source_tier4'])) : '');
+
 
         $campaign = new Campaign();
 
@@ -345,6 +349,16 @@ class CampaignController extends Controller
         $campaign->special_state = (!empty($request['special_state']) ? json_encode($request['special_state']) : '[]');
         $campaign->special_source = (!empty($specialSource) ? json_encode($specialSource) : '[]');
         $campaign->special_source_price = (!empty($request['special_source_price']) ?  $request['special_source_price'] : 0);
+
+        $campaign->special_source_tier2 = (!empty($specialSource_tier2) ? json_encode($specialSource_tier2) : '[]');
+        $campaign->special_source_price_tier2 = (!empty($request['special_source_price_tier2']) ?  $request['special_source_price_tier2'] : 0);
+
+        $campaign->special_source_tier3 = (!empty($specialSource_tier3) ? json_encode($specialSource_tier3) : '[]');
+        $campaign->special_source_price_tier3 = (!empty($request['special_source_price_tier3']) ?  $request['special_source_price_tier3'] : 0);
+
+        $campaign->special_source_tier4 = (!empty($specialSource_tier4) ? json_encode($specialSource_tier4) : '[]');
+        $campaign->special_source_price_tier4 = (!empty($request['special_source_price_tier4']) ?  $request['special_source_price_tier4'] : 0);
+
         $campaign->vendor_id = time();
         $campaign->crm = "[]";
         $campaign->is_multi_crms = 0;
@@ -772,6 +786,9 @@ class CampaignController extends Controller
         }
 
         $specialSource = (!empty($request['special_source']) ?  explode(",", strtolower($request['special_source'])) : '');
+        $specialSource_tier2 = (!empty($request['special_source_tier2']) ?  explode(",", strtolower($request['special_source_tier2'])) : '');
+        $specialSource_tier3 = (!empty($request['special_source_tier3']) ?  explode(",", strtolower($request['special_source_tier3'])) : '');
+        $specialSource_tier4 = (!empty($request['special_source_tier4']) ?  explode(",", strtolower($request['special_source_tier4'])) : '');
 
 
         DB::table('campaigns')->where('campaign_id', $campaign_id)
@@ -794,6 +811,14 @@ class CampaignController extends Controller
                 'special_state'                             => (!empty($request['special_state']) ? json_encode($request['special_state']) : '[]'),
                 'special_source'                            => (!empty($specialSource) ? json_encode($specialSource) : '[]'),
                 'special_source_price'                      => (!empty($request['special_source_price']) ?  $request['special_source_price'] : 0),
+                'special_source_tier2'                      => (!empty($specialSource_tier2) ? json_encode($specialSource_tier2) : '[]'),
+                'special_source_price_tier2'                => (!empty($request['special_source_price_tier2']) ?  $request['special_source_price_tier2'] : 0),
+
+                'special_source_tier3'                      => (!empty($specialSource_tier3) ? json_encode($specialSource_tier3) : '[]'),
+                'special_source_price_tier3'                => (!empty($request['special_source_price_tier3']) ?  $request['special_source_price_tier3'] : 0),
+
+                'special_source_tier4'                      => (!empty($specialSource_tier4) ? json_encode($specialSource_tier4) : '[]'),
+                'special_source_price_tier4'                => (!empty($request['special_source_price_tier4']) ?  $request['special_source_price_tier4'] : 0),
             ]);
 
         $dbQuery = DB::table('campaigns_questions')->where('campaign_id', $campaign_id);

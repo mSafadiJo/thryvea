@@ -289,7 +289,7 @@
                                                             <label for="budget_bid_shared" style="display: block;">Is PING & POST</label>
                                                             <label class="form-group switch">
                                                                 <input type="checkbox" name="is_ping_account" id="is_ping_account" value="1"
-                                                                <?php
+                                                                    <?php
                                                                     if(old('is_ping_account') !== null){
                                                                         if(old('is_ping_account') == 1){
                                                                             echo "checked";
@@ -365,7 +365,7 @@
                                                             <label for="if_static_cost" style="display: block;">If static price (PING & POST Only)</label>
                                                             <label class="form-group switch">
                                                                 <input type="checkbox" name="if_static_cost" id="if_static_cost" value="1"
-                                                                <?php
+                                                                    <?php
                                                                     if(old('if_static_cost') !== null){
                                                                         if(old('if_static_cost') == 1){
                                                                             echo "checked";
@@ -413,24 +413,88 @@
                                                                    @if(old('special_budget_bid_exclusive')) value="{{ old('special_budget_bid_exclusive') }}" @else value="0" @endif>
                                                         </div>
                                                     </div>
+
+
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="special_source">Special Sources (separated by comas)</label>
+                                                            <label for="special_source">Special Sources (tier 1) (separated by comas)</label>
                                                             <br>
                                                             <span>for example: source1,source2,source3</span>
-                                                            <textarea class="form-control" id="special_source" name="special_source" placeholder="src"> @if(old('special_source')) {{ old('special_source') }} @endif   </textarea>
-
+                                                            <input type="text" class="form-control" id="special_source" name="special_source" placeholder="src"
+                                                                   @if(old('special_source')) value="{{ old('special_source') }}" @else value="" @endif>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="special_source_price">Special Source Profit/Cost</label>
+                                                            <label for="special_source_price">Special Source Profit/Cost (tier 1)</label>
                                                             <br>
                                                             <br>
                                                             <input type="number" class="form-control" id="special_source_price" name="special_source_price" placeholder="%"
                                                                    @if(old('special_source_price')) value="{{ old('special_source_price') }}" @else value="0" @endif>
                                                         </div>
                                                     </div>
+                                                    {{--//Special Sources(tire 2)--}}
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source">Special Sources(tier 2) (separated by comas)</label>
+                                                            <br>
+                                                            <span>for example: source1,source2,source3</span>
+                                                            <input type="text" class="form-control" id="special_source" name="special_source_tier2" placeholder="src"
+                                                                   @if(old('special_source_tier2')) value="{{ old('special_source_tier2') }}" @else value="" @endif>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source_price">Special Source Profit/Cost (tier 2) </label>
+                                                            <br>
+                                                            <br>
+                                                            <input type="number" class="form-control" id="special_source_price" name="special_source_price_tier2" placeholder="%"
+                                                                   @if(old('special_source_price_tier2')) value="{{ old('special_source_price_tier2') }}" @else value="0" @endif>
+                                                        </div>
+                                                    </div>
+                                                    {{--//Special Sources(tire 3)--}}
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source">Special Sources(tier 3) (separated by comas)</label>
+                                                            <br>
+                                                            <span>for example: source1,source2,source3</span>
+                                                            <input type="text" class="form-control" id="special_source" name="special_source_tier3" placeholder="src"
+                                                                   @if(old('special_source_tier3')) value="{{ old('special_source_tier3') }}" @else value="" @endif>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source_price">Special Source Profit/Cost (tier 3) </label>
+                                                            <br>
+                                                            <br>
+                                                            <input type="number" class="form-control" id="special_source_price3" name="special_source_price_tier3" placeholder="%"
+                                                                   @if(old('special_source_price_tier3')) value="{{ old('special_source_price_tier_tier3') }}" @else value="0" @endif>
+                                                        </div>
+                                                    </div>
+                                                    {{--//Special Sources(tire 4)--}}
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source">Special Sources(tier 4) (separated by comas)</label>
+                                                            <br>
+                                                            <span>for example: source1,source2,source3</span>
+                                                            <input type="text" class="form-control" id="special_source" name="special_source_tier4" placeholder="src"
+                                                                   @if(old('special_source_tier4')) value="{{ old('special_source_tier4') }}" @else value="" @endif>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="special_source_price">Special Source Profit/Cost (tier 4) </label>
+                                                            <br>
+                                                            <br>
+                                                            <input type="number" class="form-control" id="special_source_price" name="special_source_price_tier4" placeholder="%"
+                                                                   @if(old('special_source_price_tier4')) value="{{ old('special_source_price_tier_tier4') }}" @else value="0" @endif>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
                                                 </div>
                                             </div>
                                         </div>
