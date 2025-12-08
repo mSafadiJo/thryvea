@@ -5206,7 +5206,7 @@ class PostCRMAllied {
 
                             case 1: // Windows
                                 $num = trim($crm_details['data']['number_of_window']);
-                                $num = $num == "3-5" ? "5" : ($num == "6-9" ? "9" : ($num ?: "10"));
+                                $num = ($num === "3-5") ? "5" : (($num === "6-9") ? "9" : "10");
                                 $projectType = trim($crm_details['data']['project_nature']) == "Repair"
                                     ? "Need repair services at this time"
                                     : "Interested in replacement windows";

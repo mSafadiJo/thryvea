@@ -3193,7 +3193,7 @@ class PingCRMAllied
 
                         // 2) Base Meta (common for all)
                         $base_meta = [
-                            "landing_page_url"      => $OriginalURL2,
+                            "landing_page_url"      => ($OriginalURL2 ?: "will provide on post"),
                             "source_id"             => $google_ts,
                             "lead_id_code"          => $LeadId,
                             "trusted_form_cert_url" => $trusted_form,
@@ -3214,7 +3214,7 @@ class PingCRMAllied
 
                             case 1: // WINDOWS
                                 $num = trim($Leaddatadetails['number_of_window']);
-                                $num = ($num == "3-5" ? "5" : ($num == "6-9" ? "9" : ($num ?: "10")));
+                                $num = ($num === "3-5") ? "5" : (($num === "6-9") ? "9" : "10");
 
                                 $service_data = [
                                     "windows" => [
