@@ -3604,7 +3604,7 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "window";
                                 $Lead_data_array['home_owner'] = $homeowner;
                                 $Lead_data_array['number_of_windows'] = $number_of_windows_data;
-                                $Lead_data_array['landing_page_url'] = "thewindowsinstall.com";
+                                $Lead_data_array['landing_page_url'] = "https://thewindowsinstall.com/Quote?ts=thv$google_ts";
 
                                 $httpheader[] = "X-API-Key: MTZfd2luZG93XzE3NjQ3NTk3MjlfNjkz";
                                 break;
@@ -3640,7 +3640,7 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "roof";
                                 $Lead_data_array['home_owner'] = "yes";
                                 $Lead_data_array['roofing_type'] = $roofmaterial;
-                                $Lead_data_array['landing_page_url'] = "homeremodelingpro.net";
+                                $Lead_data_array['landing_page_url'] = "https://homeremodelingpro.net/Quote?ts=thv$google_ts";
 
                                 $httpheader[] = "X-API-Key: MTZfcm9vZl8xNzY0NzU5Nzg1XzY5MzAx";
                                 break;
@@ -3653,7 +3653,7 @@ class PingCRMAllied
                                 $Lead_data_array['home_owner'] = $homeowner;
                                 $Lead_data_array['vertical'] = "bath-remodel";
                                 $Lead_data_array['remodel_walls'] = "yes";
-                                $Lead_data_array['landing_page_url'] = "thebathroomremodel.net";
+                                $Lead_data_array['landing_page_url'] = "https://thebathroomremodel.net/Quote?ts=thv$google_ts";
                                 $httpheader[] = "X-API-Key: MTZfYmF0aC1yZW1vZGVsXzE3NjQ3NTk2";
                                 break;
                         }
