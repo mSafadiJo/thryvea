@@ -5744,11 +5744,18 @@ class PostCRMAllied {
 
                             $response = $crm_api_file->api_send_data($url, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
 
-                            if (str_contains(strtolower($response), 'success -')) {
+                            $response = trim($response);
+
+                            // Extract JSON part (before HTML)
+                            $jsonPart = strstr($response, '{');
+
+                            $data = json_decode($jsonPart, true);
+
+                            if (isset($data['success']) && $data['success'] === true) {
                                 return 1;
-                            } else {
-                                return 0;
                             }
+
+                            return 0;
                             break;
                     }
                     break;
