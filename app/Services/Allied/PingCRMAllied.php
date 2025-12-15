@@ -2923,8 +2923,8 @@ class PingCRMAllied
                                 } else {
                                     //Live Mode
                                     $url_api_ping = "https://live.sbbnetinc.com/rest/api/solar/submit-inquiry";
-                                    $source_name = "thrwi";
-                                    $vendor_id = "2506";
+                                    $source_name = "THRYVEASOT1";
+                                    $vendor_id = "65046";
                                 }
 
                                 $utility_company_id = "00000000";
