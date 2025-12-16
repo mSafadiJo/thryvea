@@ -5571,7 +5571,7 @@ class PostCRMAllied {
                         "user_agent" => $UserAgent,
                         "leadid_tcpa_disclosure" => $TCPAText,
                         "trustedform_cert_url" => $trusted_form,
-                        "seconds_on_landing" => $SessionLength,
+                        "seconds_on_landing" => $SessionLength ?? "40",
                         "source" => "thv".$google_ts,
                         "jornaya_leadid" => $LeadId,
                         "first_name" => $first_name,
