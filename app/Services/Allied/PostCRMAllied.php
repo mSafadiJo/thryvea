@@ -5746,15 +5746,15 @@ class PostCRMAllied {
 
                             $response = trim($response);
 
-                            // Extract JSON part (before HTML)
-                            $jsonPart = strstr($response, '{');
+                            $endPos = strpos($response, '}');
+                            if ($endPos !== false) {
+                                $jsonPart = substr($response, 0, $endPos + 1);
+                                $data = json_decode($jsonPart, true);
 
-                            $data = json_decode($jsonPart, true);
-
-                            if (isset($data['success']) && $data['success'] === true) {
-                                return 1;
+                                if (!empty($data['success'])) {
+                                    return 1;
+                                }
                             }
-
                             return 0;
                             break;
                     }
