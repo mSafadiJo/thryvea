@@ -3621,9 +3621,6 @@ class PingCRMAllied
                                     case "Wood Shake/Composite Roofing":
                                         $roofmaterial = "wood";
                                         break;
-                                    case "Metal Roofing":
-                                        $roofmaterial = "Metal";
-                                        break;
                                     case "Natural Slate Roofing":
                                         $roofmaterial = "Natural Slate";
                                         break;

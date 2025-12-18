@@ -5629,9 +5629,6 @@ class PostCRMAllied {
                                 case "Asphalt Roofing":
                                     $roofmaterial = "Asphalt Shingle";
                                     break;
-                                case "Wood Shake/Composite Roofing":
-                                    $roofmaterial = "wood";
-                                    break;
                                 case "Metal Roofing":
                                     $roofmaterial = "Metal";
                                     break;
