@@ -3682,6 +3682,68 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 47:
+                        // Modernize
+
+                        if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
+                            //Test Mode
+                            $url_api = "https://hsapiservice.quinstage.com/ping-post/pings";
+                        }else{
+                            $url_api = "https://form-service-hs.qnst.com/ping-post/pings";
+                        }
+
+                        $httpheader = array(
+                            "content-type: application/json",
+                        );
+
+                        $tagId = "204670250";
+
+                        $Lead_data_array = array(
+                            "tagId" => $tagId,
+                            "postalCode" => $zip,
+                            "partnerSourceId" => "THV1",
+                            "publisherSubId" => "THV1$google_ts",
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 9:
+                                // Bathroom
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+
+                                $Lead_data_array['ownHome'] = $homeowner;
+                                $Lead_data_array['service'] = "BATH_REMODEL";
+                                $Lead_data_array['OptIn1'] = "No";
+                                $Lead_data_array['buyTimeframe'] = "Don't know";
+                                break;
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2)) {
+                                if ($result2['status'] == "success"){
+                                    $TransactionId = $result2['pingToken'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

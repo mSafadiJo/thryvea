@@ -5756,6 +5756,62 @@ class PostCRMAllied {
                             break;
                     }
                     break;
+                case 47:
+                    // Modernize
+                    if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
+                        //Test Mode
+                        $url_api = "https://hsapiservice.quinstage.com/ping-post/posts";
+                    }else{
+                        $url_api = "https://form-service-hs.qnst.com/ping-post/posts";
+                    }
+
+                    $httpheader = array(
+                        "content-type: application/json",
+                    );
+
+                    $tagId = "204670250";
+                    $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+
+                    $Lead_data_array = array(
+                        "tagId" => $tagId,
+                        "postalCode" => $zip,
+                        "partnerSourceId" => "THV1",
+                        "publisherSubId" => "THV1$google_ts",
+                        "pingToken" => $TransactionId,
+                        "homePhoneConsentLanguage" => "By clicking the Finish button and submitting this form, you provide your electronic signature and agree to this website’s Privacy Policy and Terms And Conditions. You also expressly consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from West Shore Home and up to four (4) additional Premier Partners and marketing partners at the phone number, physical address, and email address provided above, regarding the requested home service. This consent applies even if you are listed on any State or Federal Do Not Call registry. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.",
+                        "leadIDToken" => $LeadId,
+                        "trustedFormToken" => $trusted_form,
+                        "firstName" => $first_name,
+                        "lastName" => $last_name,
+                        "address" => $street,
+                        "city" => $city,
+                        "state" => $statename_code,
+                        "phone" => $number1,
+                        "email" => $email
+
+                    );
+
+                    switch ($lead_type_service_id) {
+                        case 9:
+                            // Bathroom
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+
+                            $Lead_data_array['ownHome'] = $homeowner;
+                            $Lead_data_array['service'] = "BATH_REMODEL";
+                            $Lead_data_array['OptIn1'] = "No";
+                            $Lead_data_array['buyTimeframe'] = "Don't know";
+                            break;
+                    }
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2)) {
+                        if ($result2['status'] == "success") {
+                            return 1;
+                        }
+                    }
+                    break;
             }
             return 0;
         } catch (Exception $e) {
