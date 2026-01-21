@@ -3153,7 +3153,7 @@ class AdminCampaignController extends Controller{
             'data' => $dataMassageForBuyers,
             'trusted_form' => "https://cert.trustedform.com/b71a7be83072f19bdd6dc4945be254567599992d",
             'service_id' => $campaign->service_campaign_id,
-            'street' => "12233 test",
+            'street' => "245 CAPELLA RD",
             'City' => "Los Angeles",
             'State' => "California",
             'state_code' => "CA",
