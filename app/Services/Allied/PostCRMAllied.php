@@ -5671,7 +5671,7 @@ class PostCRMAllied {
                     $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
                     $result2 = json_decode($result, true);
                     if (!empty($result2['success'])) {
-                        if ($result2['success'] == "true") {
+                        if ($result2['data']['status'] == "ACCEPTED") {
                             return 1;
                         }
                     }
