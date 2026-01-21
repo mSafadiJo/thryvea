@@ -3728,7 +3728,8 @@ class PingCRMAllied
                             "service_id" => $lead_type_service_id,
                             "user_id" => $user_id,
                             "returns_data" => $returns_data,
-                            "crm_type" => 0
+                            "crm_type" => 0,
+                            "trustedFormToken" => $trusted_form,
                         );
 
                         if($is_multi_api == 0) {
