@@ -5796,9 +5796,18 @@ class PostCRMAllied {
                             // Bathroom
                             $ownership = trim($crm_details['data']['homeOwn']);
                             $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+                            $bathroom_type_name = trim($crm_details['data']['services']);
+
+                            switch ($bathroom_type_name){
+                                case "Shower / Bath":
+                                    $bathroom_type_name_data = "BATHROOM_REFACING";
+                                    break;
+                                default:
+                                    $bathroom_type_name_data = "BATH_REMODEL";
+                            }
 
                             $Lead_data_array['ownHome'] = $homeowner;
-                            $Lead_data_array['service'] = "BATH_REMODEL";
+                            $Lead_data_array['service'] = $bathroom_type_name;
                             $Lead_data_array['OptIn1'] = "No";
                             $Lead_data_array['buyTimeframe'] = "Don't know";
                             break;
