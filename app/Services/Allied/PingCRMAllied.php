@@ -3701,8 +3701,8 @@ class PingCRMAllied
                         $Lead_data_array = array(
                             "tagId" => $tagId,
                             "postalCode" => $zip,
-                            "partnerSourceId" => "THV1",
-                            "publisherSubId" => "THV1$google_ts",
+                            "partnerSourceId" => "THV1$google_ts" ,
+                            "publisherSubId" => "THV1" ,
                         );
 
                         switch ($lead_type_service_id){
