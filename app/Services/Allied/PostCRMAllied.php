@@ -5775,8 +5775,8 @@ class PostCRMAllied {
                     $Lead_data_array = array(
                         "tagId" => $tagId,
                         "postalCode" => $zip,
-                        "partnerSourceId" => "THV1",
-                        "publisherSubId" => "THV1$google_ts",
+                        "partnerSourceId" =>"THV1$google_ts" ,
+                        "publisherSubId" => "THV1",
                         "pingToken" => $TransactionId,
                         "homePhoneConsentLanguage" => "By clicking the Finish button and submitting this form, you provide your electronic signature and agree to this website’s Privacy Policy and Terms And Conditions. You also expressly consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from West Shore Home and up to four (4) additional Premier Partners and marketing partners at the phone number, physical address, and email address provided above, regarding the requested home service. This consent applies even if you are listed on any State or Federal Do Not Call registry. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.",
                         "leadIDToken" => $LeadId,
