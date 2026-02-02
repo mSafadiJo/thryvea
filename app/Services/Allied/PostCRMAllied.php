@@ -5807,7 +5807,7 @@ class PostCRMAllied {
                             }
 
                             $Lead_data_array['ownHome'] = $homeowner;
-                            $Lead_data_array['service'] = $bathroom_type_name;
+                            $Lead_data_array['service'] = $bathroom_type_name_data;
                             $Lead_data_array['OptIn1'] = "No";
                             $Lead_data_array['buyTimeframe'] = "Don't know";
                             break;
