@@ -1702,6 +1702,27 @@ class PostCRMAllied {
                 $Lead_data_array['original_source'] = "Thryvea";
                 $Lead_data_array['product'] = $service_name;
                 break;
+            case 51:
+                //C Michael Exteriors 347
+                switch ($crm_details['service_id']){
+                    case 1:
+                        $srs_id = "1080";
+                        $product = "Win";
+                        break;
+                    case 9:
+                        $srs_id = "1081";
+                        $product = "Bath";
+                        break;
+                    default:
+                        $srs_id = "";
+                        $product = "";
+                }
+
+                $Lead_data_array['product'] = $product;
+                $Lead_data_array['srs_id'] = $srs_id;
+                $Lead_data_array['notes'] = $leadsCustomerCampaign_id;
+                $Lead_data_array['comments'] = $leadsCustomerCampaign_id;
+                break;
         }
 
         if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
