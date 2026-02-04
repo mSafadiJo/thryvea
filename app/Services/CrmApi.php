@@ -222,6 +222,7 @@ class CrmApi {
 
                                     }
                                     break;
+
                             }
                     }
                 }
@@ -460,6 +461,18 @@ class CrmApi {
                                         if ($result2['status'] == "success"){
                                             $TransactionId = $result2['pingToken'];
                                             $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
+                                case 49:
+                                    // 1302	HomeYou
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2)) {
+                                        if ($result2['success'] == "true"){
+                                            $TransactionId = $result2['lead_token'];
+                                            $Payout = $result2['payout'];
                                             $multi_type = 0;
                                             $Result = 1;
                                         }

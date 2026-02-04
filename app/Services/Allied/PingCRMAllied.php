@@ -3753,6 +3753,342 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 49:
+                        // 1302	HomeYou
+                        $url_api = "https://api.wiserleads.com/services/ping";
+
+                        $httpheader = array(
+                            "content-type: application/json",
+                            "Accept: application/json"
+                        );
+
+                        $campaignToken = "6bfb05308c3a88f7a71c3a3d029b3088f60fe0bc";
+                        $campaignCode = "thryvea-llc-pingpost";
+
+                        $Lead_data_array = array(
+                            "campaign" => $campaignCode,
+                            "campaign_token" => $campaignToken,
+                            "zipcode" => $zip,
+                            "source" => "THV1",//$lead_source_text,
+                            "certification_type" => "TrustedForm",
+                            "tcpa_consent" => "Yes",
+                            "redirect_url" => "No",
+                            "test" => "true",
+
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                // Windows
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+
+                                $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+
+                                switch ($number_of_windows){
+                                    case '1':
+                                        switch ($project_nature) {
+                                            case "Repair":
+                                                $project_type = "Repair";
+                                                break;
+                                            default:
+                                                $project_type = "Install";
+                                        }
+                                        $number_windows = "1";
+                                        break;
+                                    case '2':
+                                        switch ($project_nature) {
+                                            case "Repair":
+                                                $project_type = "Repair";
+                                                break;
+                                            default:
+                                                $project_type = "Install";
+                                        }
+                                        $number_windows = "2";
+                                        break;
+                                    case "3-5":
+                                        switch ($project_nature) {
+                                            case "Repair":
+                                                $project_type = "Repair";
+                                                break;
+                                            default:
+                                                $project_type = "Install";
+                                        }
+                                        $number_windows = "3-5";
+                                        break;
+                                    case "6-9":
+                                    default:
+                                        switch ($project_nature) {
+                                            case "Repair":
+                                                $project_type = "Repair";
+                                                break;
+                                            default:
+                                                $project_type = "Install";
+                                        }
+                                        $number_windows = "6-9";
+                                        break;
+                                }
+
+                                $Lead_data_array['ownhome'] = $homeowner;
+                                $Lead_data_array['service_code'] = "WINDOWS";
+                                $Lead_data_array['NumberOfWindows'] = $number_windows;
+                                $Lead_data_array['WindowsProjectScope'] = $project_type;
+                                $Lead_data_array['WindowMaterial'] = "Vinyl";
+                                break;
+                            case 2:
+                                // Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $homeowner = ($property_type == "Rented" ? "No" : "Yes");
+
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                    case '$51 - $100':
+                                        $average_bill = "less_than_100";
+                                        break;
+                                    case '$101 - $150':
+                                    case '$151 - $200':
+                                        $average_bill = "from_100_to_200";
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = "from_200_to_300";
+                                        break;
+                                    default:
+                                        $average_bill = "more_than_300";
+                                }
+
+                                $Lead_data_array['ownhome'] = $homeowner;
+                                $Lead_data_array['service_code'] = "SOLAR";
+                                $Lead_data_array['monthly_bill'] = $average_bill;
+                                $Lead_data_array['description'] = "Requested Solar Solution: $power_solution, Utility Provider: $utility_provider, Roof Shade: $roof_shade";
+                                $Lead_data_array['house_size'] = "";
+                                break;
+                            case 4:
+                                // Flooring
+                                $Type_OfFlooring = trim($Leaddatadetails['flooring_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                switch ($Type_OfFlooring) {
+                                    case "Vinyl Linoleum Flooring":
+                                        $serviceCode = "FLOORING_VINYL_LINOLEUM";
+                                        switch ($project_nature){
+                                            case "Install New Flooring":
+                                                $project_type = " Install";
+                                                break;
+                                            default:
+                                                $project_type = "Repair";
+                                        }
+                                        break;
+                                    case "Tile Flooring":
+                                        $serviceCode = "FLOORING_TILE";
+                                        switch ($project_nature){
+                                            case "Install New Flooring":
+                                                $project_type = "Install";
+                                                break;
+                                            default:
+                                                $project_type = "Repair";
+                                        }
+                                        break;
+                                    case "Hardwood Flooring":
+                                        $serviceCode = "FLOORING_HARDWOOD";
+                                        switch ($project_nature){
+                                            case "Install New Flooring":
+                                                $project_type = "Install";
+                                                break;
+                                            case "Refinish Existing Flooring":
+                                                $project_type = "Refinishing";
+                                                break;
+                                            default:
+                                                $project_type = "Repair";
+                                        }
+                                        $Lead_data_array['MaterialPurchase'] = "No";
+                                        break;
+                                    case "Carpet":
+                                        switch ($project_nature){
+                                            case "Install New Flooring":
+                                                $project_type = "Install";
+                                                $serviceCode = "CARPET";
+                                                break;
+                                            default:
+                                                $serviceCode = "CARPET_REPAIR";
+                                                $project_type = "Repair";
+                                        }
+                                        break;
+                                    default:
+                                        $serviceCode = "FLOORING_LAMINATE";
+                                        switch ($project_nature){
+                                            case "Install New Flooring":
+                                                $project_type = "Install";
+                                                break;
+                                            default:
+                                                $project_type = "Repair";
+                                        }
+                                        $Lead_data_array['MaterialPurchase'] = "No";
+                                }
+
+                                $homeowner = ($ownership == 'Yes' ? "Yes" : "No");
+
+
+                                $Lead_data_array['ownhome'] = $homeowner;
+                                $Lead_data_array['service_code'] = $serviceCode;
+                                $Lead_data_array['CommercialLocation'] = "Home";
+                                $Lead_data_array['FlooringProjectScope'] = $project_type;
+                                break;
+                            case 6:
+                                // Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $residential = ($property_type == "Residential" ? "Yes" : "No");
+
+                                switch ($roof_type){
+                                    case "Asphalt Roofing":
+                                        $serviceCode = "ROOFING_ASPHALT";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                            case "Completely replace roof":
+                                                $project_nature_data = "Completely replace roof";
+                                                break;
+                                            default:
+                                                $project_nature_data = "Repair existing roof";
+                                        }
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        $serviceCode = "ROOFING_COMPOSITE";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "Install roof on new construction";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "Completely replace roof";
+                                                break;
+                                            default:
+                                                $project_nature_data = "Repair existing roof";
+                                        }
+                                        break;
+                                    case "Metal Roofing":
+                                        $serviceCode = "ROOFING_METAL";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "Install new roof";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "Replace existing roof";
+                                                break;
+                                            default:
+                                                $project_nature_data = "Repair existing roof";
+                                        }
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $serviceCode = "ROOFING_NATURAL_SLATE";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "Install roof on new construction";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "Completely replace roof";
+                                                break;
+                                            default:
+                                                $project_nature_data = "Repair existing roof";
+                                        }
+                                        break;
+                                    default:
+                                        $serviceCode = "ROOFING_TILE";
+                                        switch ($project_nature){
+                                            case "Install roof on new construction":
+                                                $project_nature_data = "Install roof on new construction";
+                                                break;
+                                            case "Completely replace roof":
+                                                $project_nature_data = "Completely replace roof";
+                                                break;
+                                            default:
+                                                $project_nature_data = "Repair existing roof";
+                                        }
+                                }
+
+                                $Lead_data_array['ownhome'] = $residential;
+                                $Lead_data_array['service_code'] = $serviceCode;
+                                $Lead_data_array['RoofingPlan'] = $project_nature_data;
+                                break;
+                            case 7:
+                                //Home Siding
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $SecurityUsage = ($ownership == "Yes" ? "Yes" : "No");
+                                $project_nature_data = ($project_nature == "Repair section(s) of siding" ? "Repair section(s) of siding" : "Siding for a new home");
+
+                                switch($type_of_siding){
+                                    case "Vinyl Siding":
+                                        $service_code = "SIDING_VINYL";
+                                        break;
+                                    case "Brickface Siding":
+                                        $service_code = "SIDING_BRICKFACE";
+                                        break;
+                                    case "Stoneface Siding":
+                                        $service_code = "SIDING_STONEFACE";
+                                        break;
+                                    case "Composite wood Siding":
+                                        $service_code = "SIDING_COMPOSITE_WOOD";
+                                        break;
+                                    default:
+                                        $service_code = "SIDING_ALUMINIUM";
+                                }
+
+                                $Lead_data_array['ownhome'] = $SecurityUsage;
+                                $Lead_data_array['service_code'] = $service_code;
+                                $Lead_data_array['ProjectPlan'] = $project_nature_data;
+                                break;
+                            case 9:
+                                // Bathroom
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+
+                                $Lead_data_array['ownhome'] = $homeowner;
+                                $Lead_data_array['service_code'] = "BATH_REMODEL";
+                                $Lead_data_array['OptIn1'] = "No";
+                                break;
+                        }
+
+                        $Lead_data_array['status'] = "Planning & Budgeting";
+                        $Lead_data_array['timeframe'] = "Timing is Flexible";
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2)) {
+                                if ($result2['success'] == "true"){
+                                    $TransactionId = $result2['lead_token'];
+                                    $Payout = $result2['payout'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
