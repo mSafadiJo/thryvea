@@ -4089,6 +4089,611 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 52:
+                        //Billy.com	536
+                        if ($trusted_form == "NA" || $trusted_form == "N/A"
+                            || $trusted_form == "https://cert.trustedform.com/Will_Provide_on_Post"
+                            || $trusted_form == "https://cert.trustedform.com/will_send_on_post"
+                            || $trusted_form == "https://cert.trustedform.com"
+                            || empty($LeadId) || empty($trusted_form) ) {
+                            if($is_multi_api == 0) {
+                                $data_response = array(
+                                    'TransactionId' => $TransactionId,
+                                    'Payout' => $Payout,
+                                    'Result' => $Result,
+                                    'multi_type' => $multi_type,
+                                    'campaign_id' => $campaign->campaign_id
+                                );
+
+                                return json_encode($data_response);
+                            } else {
+                                return $ping_crm_apis;
+                            }
+                        }
+
+                        $property_type_data = "UNKNOWN";
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //Windows
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $apiId = "CB6B8D7AA4604F23BADF9FCC7E530E39";
+                                $apiPassword = "2290628";
+
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                if ($project_nature == "Repair") {
+                                    $taskId = "WINDOW_REPAIR";
+                                }
+                                else {
+                                    $taskId = ($number_of_windows == 1 ? "WINDOW_INSTALL_SINGLE" : "WINDOWS_INSTALL_MULTIPLE");
+                                }
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 268,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 2:
+                                //Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $apiId = "C32EA063999E4F389D88C4F473D3DF7B";
+                                $apiPassword = "650878a08";
+
+
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50' || '$51 - $100':
+                                        $average_bill = 'Below100';
+                                        break;
+                                    case '$101 - $150':
+                                        $average_bill = 'Above100Below150';
+                                        break;
+                                    case '$151 - $200':
+                                        $average_bill = 'Above150Below200';
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = 'Above250Below300';
+                                        break;
+                                    default:
+                                        $average_bill = 'Above350';
+                                }
+
+                                switch ($property_type){
+                                    case "Business":
+                                        $homeowner = "Unknown";
+                                        $property_type_data = "Business";
+                                        break;
+                                    case "Rented":
+                                        $homeowner = "Rent";
+                                        break;
+                                    default:
+                                        $homeowner = "Own";
+                                }
+
+                                switch ($roof_shade){
+                                    case "Full Sun":
+                                        $roof_shade_data = "Full";
+                                        break;
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = "Shaded";
+                                        break;
+                                    case "Partial Sun":
+                                        $roof_shade_data = "Partial";
+                                        break;
+                                    default:
+                                        $roof_shade_data = "Unknown";
+                                }
+
+                                $taskId = "SL01";
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 265,
+                                    "residenceOwnership" => $homeowner,
+                                    "sunExposure" => $roof_shade_data,
+                                    "averageBill" => $average_bill,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 4:
+                                //Flooring
+                                $Type_OfFlooring = trim($Leaddatadetails['flooring_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "11714E54BA2E4DED8EDD6F9ED49645A7";
+                                    $apiPassword = "53194403";
+                                } else {
+                                    $apiId = "B66256A0C87A4AED9E46C3D0E680E06C";
+                                    $apiPassword = "b7fa088";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                switch ($Type_OfFlooring){
+                                    case "Vinyl Linoleum Flooring":
+                                        $taskId = ($project_nature == "Repair Existing Flooring" ? "VINYL_OR_LINOLEUM_FLOORING_REPAIR" : "VINYL_OR_LINOLEUM_FLOORING_INSTALL");
+                                        break;
+                                    case "Tile Flooring":
+                                        $taskId = ($project_nature == "Repair Existing Flooring" ? "TILE_FLOORING_REPAIR" : "TILE_FLOORING_INSTALL");
+                                        break;
+                                    case "Hardwood Flooring":
+                                        $taskId = ($project_nature == "Repair Existing Flooring" ? "WOOD_FLOOR_REPAIR" : "HARDWOOD_FLOOR_INSTALL");
+                                        break;
+                                    case "Laminate Flooring":
+                                        $taskId = ($project_nature == "Repair Existing Flooring" ? "LAMINATE_FLOORING_REPAIR" : "LAMINATE_FLOORING_INSTALL");
+                                        break;
+                                    default:
+                                        $taskId = ($project_nature == "Repair Existing Flooring" ? "CARPET_REPAIR" : "CARPET_INSTALL");
+                                }
+
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 296,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 5:
+                                //Walk-In Tubs
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "E613988B6DAD46999BC87DDCD96B598B";
+                                    $apiPassword = "6272f2461";
+                                } else {
+                                    $apiId = "6A06932627054925BE702BF5F054B3FA";
+                                    $apiPassword = "3da6e4a6";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $taskId = "BATHROOM_REMODEL_WALK_IN_TUB_INSTALLATION_OR_CONVERSION";
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 272,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 6:
+                                //Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $apiId = "6746244027444005B30D7593F9F708F7";
+                                $apiPassword = "8676b50263";
+
+                                $property_type_data = ($property_type == "Residential" ? "RESIDENTIAL" : "BUSINESS");
+                                $roofJob = ($project_nature == "Repair existing roof" ? "ROOFREPAIR" : "ROOFINSTALL");
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                switch ($roof_type){
+                                    case "Asphalt Roofing":
+                                        $taskId = ($project_nature == "Repair existing roof" ? "ROOF_REPAIR_ASPHALT_SHINGLE" : "ROOF_INSTALL_ASPHALT_SHINGLE");
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        $taskId = ($project_nature == "Repair existing roof" ? "ROOF_REPAIR_WOOD_SHAKE_COMP" : "ROOF_INSTALL_WOOD_SHAKE_COMP");
+                                        break;
+                                    case "Metal Roofing":
+                                        $taskId = ($project_nature == "Repair existing roof" ? "ROOF_REPAIR_METAL" : "ROOF_INSTALL_METAL");
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $taskId = ($project_nature == "Repair existing roof" ? "ROOF_REPAIR_NATURAL_SLATE" : "ROOF_INSTALL_NATURAL_SLATE");
+                                        break;
+                                    default:
+                                        $taskId = ($project_nature == "Repair existing roof" ? "ROOF_REPAIR_TILE" : "ROOF_INSTALL_TILE");
+                                }
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 267,
+                                    "residenceOwnership" => "UNKNOWN",
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "roofJob" => $roofJob,
+                                    "taskId" => $taskId,
+                                );
+                                break;
+                            case 7:
+                                //Home Siding
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $apiId = "896E4AFE01EA464D850CEA8938CF5C94";
+                                $apiPassword = "d905dd37a";
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                switch ($type_of_siding){
+                                    case "Vinyl Siding":
+                                        $taskId = ($project_nature == "Repair section(s) of siding" ? "VINYL_REPAIR" : "VINYL_INSTALL");
+                                        break;
+                                    case "Brickface Siding":
+                                    case "Stoneface Siding":
+                                        $taskId = ($project_nature == "Repair section(s) of siding" ? "BRICK_OR_STONE_REPAIR" : "BRICK_OR_STONE_INSTALL");
+                                        break;
+                                    case "Composite wood Siding":
+                                        $taskId = ($project_nature == "Repair section(s) of siding" ? "WOOD_REPAIR" : "WOOD_INSTALL");
+                                        break;
+                                    default:
+                                        $taskId = ($project_nature == "Repair section(s) of siding" ? "OTHER_REPAIR" : "OTHER_INSTALL");
+                                }
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 270,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 8:
+                                //Kitchen
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "E613988B6DAD46999BC87DDCD96B598B";
+                                    $apiPassword = "6272f2461";
+                                } else {
+                                    $apiId = "6A06932627054925BE702BF5F054B3FA";
+                                    $apiPassword = "3da6e4a6";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $taskId = "KITCHEN_REMODEL_FULL_REMODEL";
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 272,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 9:
+                                //Bathroom
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $bathroom_type = trim($Leaddatadetails['services']);
+
+                                $apiId = "1341F28CA037414E8BEC279ED3D7E565";
+                                $apiPassword = "17d6deb596";
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                switch ($bathroom_type) {
+                                    case "Full Remodel":
+                                        $taskId = "BATHROOM_REMODEL_COMPLETE_REMODEL";
+                                        break;
+                                    case "Shower / Bath":
+                                        $taskId = "BATHROOM_REMODEL_SHOWER_INSTALL_OR_UPGRADE";
+                                        break;
+                                    default:
+                                        $taskId = "BATHROOM_REMODEL_VANITY_FIXTURES_SINKS_TOILETS_OTHER";
+                                }
+
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 272,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 11:
+                                //Furnace
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "DDCADDE8EA3243A0AE74773FEDF22E38";
+                                    $apiPassword = "780653716";
+                                } else {
+                                    $apiId = "3328BA95151844CD8C5C7392AA7C1631";
+                                    $apiPassword = "b403f7e7";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $taskId = ($project_nature == "Repair" ? "FURNACE_HEATING_SYSTEM_REPAIR" : "FURNACE_HEATING_SYSTEM_INSTALL");
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 295,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 12:
+                                //Boiler
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "DDCADDE8EA3243A0AE74773FEDF22E38";
+                                    $apiPassword = "780653716";
+                                } else {
+                                    $apiId = "3328BA95151844CD8C5C7392AA7C1631";
+                                    $apiPassword = "b403f7e7";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $taskId = ($project_nature == "Repair" ? "BOILER_REPAIR" : "BOILER_INSTALL");
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 295,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 13:
+                                //Central A/C
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "DDCADDE8EA3243A0AE74773FEDF22E38";
+                                    $apiPassword = "780653716";
+                                } else {
+                                    $apiId = "3328BA95151844CD8C5C7392AA7C1631";
+                                    $apiPassword = "b403f7e7";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                $taskId = ($project_nature == "Repair" ? "CENTRAL_AC_REPAIR" : "CENTRAL_AC_INSTALL");
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 295,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                            case 21:
+                                //Gutter
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $service = trim($Leaddatadetails['service']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                if (str_contains($campaign_name, 'Affiliate')){
+                                    $apiId = "30C0192829814AF5A457400DE0BBC199";
+                                    $apiPassword = "ad3afb64";
+                                } else {
+                                    $apiId = "BE4E358AC8F540E7AEFA9CCC7F99F5A1";
+                                    $apiPassword = "3aa5b7a9";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "IMMEDIATELY";
+                                        break;
+                                    case 'Within 6 months':
+                                    default:
+                                        $timeframe = "1-3_MONTHS";
+                                }
+
+                                switch ($service){
+                                    case "Galvanized Steel":
+                                        $taskId = ($project_nature == "Repair" ? "GALVANIZED_GUTTERS_REPAIR" : "GALVANIZED_GUTTERS_INSTALL");
+                                        break;
+                                    case "PVC":
+                                        $taskId = ($project_nature == "Repair" ? "PVC_GUTTERS_REPAIR" : "PVC_GUTTERS_INSTALL");
+                                        break;
+                                    case "Wood":
+                                        $taskId = ($project_nature == "Repair" ? "WOOD_GUTTERS_REPAIR" : "WOOD_GUTTERS_INSTALL");
+                                        break;
+                                    case "Seamless Aluminum":
+                                    default:
+                                        $taskId = ($project_nature == "Repair" ? "SEAMLESS_METAL_GUTTERS_REPAIR" : "SEAMLESS_METAL_GUTTERS_INSTALL");
+                                }
+
+                                $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                                $Lead_data_array_service = array(
+                                    "apiId" => $apiId,
+                                    "apiPassword" => $apiPassword,
+                                    "productId" => 271,
+                                    "residenceOwnership" => $homeowner,
+                                    "bestTimeToCall" => "ANYTIME",
+                                    "timeframe" => $timeframe,
+                                    "taskId" => $taskId
+                                );
+                                break;
+                        }
+
+                        $Lead_data_array_general = array(
+                            "state" => $statename_code,
+                            "zip" => $zip,
+                            "tcpa" => $tcpa_compliant2,
+                            "landingPage" => $OriginalURL2,
+                            "city" => $city,
+                            "ipAddress" => $IPAddress,
+                            "tcpaText" => $TCPAText,
+                            "jornayaLeadId" => $LeadId,
+                            "trustedFormURL" => $trusted_form,
+                            "userAgent" => $UserAgent,
+                            "source" => $google_ts,
+                            "propertyType" => $property_type_data
+                        );
+
+                        $Lead_data_array_ping = array_merge($Lead_data_array_general, $Lead_data_array_service);
+
+//                        if (config('app.env', 'local') == "local") {
+//                            //Test Mode
+//                            $Lead_data_array_ping['testMode'] = "1";
+//                        }
+
+                        $url_api = "https://leads.billy-partners.com/ping/";
+                        $httpheader = array(
+                            "cache-control: no-cache",
+                            "Accept: application/json",
+                            "content-type: application/json"
+                        );
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array_ping)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "continue") {
+                                    $TransactionId = $result2['promise'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
