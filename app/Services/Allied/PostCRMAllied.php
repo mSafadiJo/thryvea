@@ -4504,7 +4504,7 @@ class PostCRMAllied {
                         "city" => $city,
                         "state" => $statename_code,
                         "postal_code" => $zip,
-                        "trustedform_cert_url" => "https://cert.trustedform.com/35a2349b187daa986e23403503571a0f7d66945d",
+                        "trustedform_cert_url" => $trusted_form_link,
                         "product" => "RLCC-BS-D",
                         "keyword_source_mill" => "Thryvea",
                     );
