@@ -6701,6 +6701,9 @@ class PostCRMAllied {
                             break;
                     }
 
+                    if ($tcpa_compliant2 = "No"){
+                        $TCPAText = "UNKNOWN";
+                    }
                     $Lead_data_array_general = array(
                         "state" => $statename_code,
                         "zip" => $zip,
@@ -6745,6 +6748,245 @@ class PostCRMAllied {
                         if ($result2['status'] == 1) {
                             return 1;
                         }
+                    }
+                    break;
+                case 53:
+                    // ecrux 660
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+                    } else {
+                        return 0;
+                    }
+                    $url_api = "https://leadvantage.co/api/287ebb39c711d47b00ccd35f5b232ed6a459/";
+                    $httpheader = array(
+                        "Accept: application/json",
+                    );
+                    $start_time = (!empty($crm_details['data']['start_time']) ? trim($crm_details['data']['start_time']) : "Not Sure");
+                    switch ($start_time) {
+                        case "Immediately":
+                            $start_time_data = "Immediately";
+                            break;
+                        case "Not Sure":
+                            $start_time_data = "Flexible";
+                            break;
+                        default:
+                            $start_time_data = "More than 2 weeks";
+                    }
+
+                    $ownership = (!empty($crm_details['data']['homeOwn']) ? trim($crm_details['data']['homeOwn']) : "");
+                    $property_type_roofing = (!empty($crm_details['data']['property_type']) ? trim($crm_details['data']['property_type']) : "");
+
+                    switch ($property_type_roofing) {
+                        case "Residential":
+                            $property_type_data = "Yes";
+                            break;
+                        default:
+                            switch ($ownership) {
+                                case "Yes":
+                                    $property_type_data = "Yes";
+                                    break;
+                                case "No, But Authorized to Make Changes":
+                                    $property_type_data = "Authorized";
+                                    break;
+                                default:
+                                    $property_type_data = "No";
+                            }
+                    }
+
+                    $Lead_data_array = array(
+                        'email' => $email,
+                        'SRC' => 'THV1',
+                        'zip' => $zip,
+                        'ipAddress' => $IPAddress,
+                        'TCPAConsent' => $tcpa_compliant,
+                        'TCPAConsentLanguage' => $TCPAText,
+                        'firstname' => $first_name,
+                        'lastname' => $last_name,
+                        'phone' => $number1,
+                        'address' => $street,
+                        'city' => $street,
+                        'state' => $street,
+                        "timeframe" => $start_time_data,
+                        "homeowner" => $property_type_data,
+                        "lead_id" => $TransactionId,
+                        "TrustedForm" => $trusted_form,
+                    );
+
+                    if (config('app.env', 'local') == "local") {
+                        //Test Mode
+                        $Lead_data_array['Test_Lead'] = "1";
+                    }
+
+                    switch ($lead_type_service_id) {
+                        case 1:
+                            //windows
+                            $number_of_windows = trim($crm_details['data']['number_of_window']);
+                            $project_natureWindows = trim($crm_details['data']['project_nature']);
+
+                            $Lead_data_array['Home_Improvement_Product'] = "Windows";
+                            $Lead_data_array['subcat'] = "Windows - Window Installation";
+                            $Lead_data_array['No_Of_Windows'] = $number_of_windows;
+                            $Lead_data_array['WindowMaterial'] = "NA";
+                            break;
+                        case 4:
+                            //Flooring
+                            $Type_OfFlooring = trim($crm_details['data']['flooring_type']);
+
+                            switch ($Type_OfFlooring) {
+                                case "Vinyl Linoleum Flooring":
+                                    $flooring_typesubcat = "Flooring - Vinyl";
+                                    break;
+                                case "Hardwood Flooring":
+                                    $flooring_typesubcat = "Flooring - Hardwood";
+                                    break;
+                                case "Carpet":
+                                    $flooring_typesubcat = "Flooring - Carpet";
+                                    break;
+                                case "Laminate Flooring":
+                                    $flooring_typesubcat = "Flooring - Laminate";
+                                    break;
+                                case "Tile Flooring":
+                                default:
+                                    $flooring_typesubcat = "Flooring - Tile";
+                            }
+
+                            $Lead_data_array['Home_Improvement_Product'] = "Flooring";
+                            $Lead_data_array['subcat'] = $flooring_typesubcat;
+
+                            break;
+                        case 6:
+                            //roofing
+                            $project_natureRoofing = trim($crm_details['data']['project_nature']);
+
+                            $roof_type = trim($crm_details['data']['roof_type']);
+                            $roof_type_SubCat = "Composite Shingle Roof Installation";
+                            switch ($project_natureRoofing) {
+                                case "Repair existing roof":
+                                    $roof_type_SubCat = "Roof Repair";
+                                    break;
+                                default:
+                                    switch ($roof_type) {
+                                        case "Asphalt Roofing":
+                                            $roof_type_SubCat = "Asphalt Shingle Roof Installation";
+                                            break;
+                                        case "Metal Roofing":
+                                            $roof_type_SubCat = "Metal Roof Installation";
+                                            break;
+                                        case "Natural Slate Roofing":
+                                            $roof_type_SubCat = "Slate Roof Installation";
+                                            break;
+                                        case "Tile Roofing":
+                                            $roof_type_SubCat = "Tile Roof Installation";
+                                            break;
+                                        case "Wood Shake/Composite Roofing":
+                                        default:
+                                            $roof_type_SubCat = "Composite Shingle Roof Installation";
+                                    }
+                            }
+                            $Lead_data_array['Home_Improvement_Product'] = "Roofing";
+                            $Lead_data_array['subcat'] = "Roofing - " . $roof_type_SubCat;
+                            $Lead_data_array['JobType'] = $project_natureRoofing;
+                            break;
+                        case 7:
+                            //Home Siding
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $type_of_siding = trim($crm_details['data']['type_of_siding']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            $homeowner = ($ownership == "Yes" ? "OWN" : "RENT");
+
+                            switch ($type_of_siding){
+                                case "Vinyl Siding":
+                                    $subcat = ($project_nature == "Repair section(s) of siding" ? "Siding - Siding Repair" : "Siding - Vinyl Siding Installation");
+                                    break;
+                                case "Brickface Siding":
+                                case "Stoneface Siding":
+                                    $subcat = ($project_nature == "Repair section(s) of siding" ? "Siding - Siding Repair" : "Siding - Brick/Stone Siding Installation");
+                                    break;
+                                case "Composite wood Siding":
+                                    $subcat = ($project_nature == "Repair section(s) of siding" ? "Siding - Siding Repair" : "Siding - Wood Siding Installation");
+                                    break;
+                                case "Aluminium Siding":
+                                    $subcat = ($project_nature == "Repair section(s) of siding" ? "Siding - Siding Repair" : "Siding - Aluminum Siding Installation");
+                                    break;
+                                default:
+                                    $subcat = ($project_nature == "Repair section(s) of siding" ? "Siding - Siding Repair" : "Siding - Metal Siding Installation");
+                            }
+
+                            $Lead_data_array['Home_Improvement_Product'] = "Siding";
+                            $Lead_data_array['subcat'] = $subcat;
+                            break;
+                        case 8:
+                            //kitchen
+                            $service_kitchen = trim($crm_details['data']['services']);
+                            $servicefloorPanKitchen = "No";
+                            $serviceCabinetsKitchen = "No";
+                            $serviceSinksKitchen = "No";
+                            $serviceCounertopsKitchen = "No";
+                            $servicefloorKitchen = "No";
+                            $serviceLightingKitchen = "No";
+                            switch ($service_kitchen) {
+                                case "Full Kitchen Remodeling":
+                                    $servicefloorPanKitchen = "Yes";
+                                    $serviceCabinetsKitchen = "Yes";
+                                    $serviceSinksKitchen = "Yes";
+                                    $serviceCounertopsKitchen = "Yes";
+                                    $servicefloorKitchen = "Yes";
+                                    $serviceLightingKitchen = "Yes";
+                                    break;
+                                case "Cabinet Refacing":
+                                case "Cabinet Install":
+                                    $serviceCabinetsKitchen = "Yes";
+                                    break;
+                            }
+                            $Lead_data_array['Home_Improvement_Product'] = "Remodels";
+                            $Lead_data_array['subcat'] = "Remodels - Kitchen Remodel";
+                            $Lead_data_array['Change_Kitchen_Floorpan'] = $servicefloorPanKitchen;
+                            $Lead_data_array['Change_Kitchen_Cabinets'] = $serviceCabinetsKitchen;
+                            $Lead_data_array['Move_Kitchen_Appliances'] = "NA";
+                            $Lead_data_array['Change_Kitchen_Sinks'] = $serviceSinksKitchen;
+                            $Lead_data_array['Change_Kitchen_Counertops'] = $serviceCounertopsKitchen;
+                            $Lead_data_array['Change_Kitchen_Flooring'] = $servicefloorKitchen;
+                            $Lead_data_array['Change_Kitchen_Lighting'] = $serviceLightingKitchen;
+                            break;
+                        case 9:
+                            $bathroom_type_name = trim($crm_details['data']['services']);
+                            $serviceBathroom_Floorplan = "No";
+                            $serviceBathroom_Shower_Bath = "No";
+                            $serviceBathroom_Toilet = "No";
+                            $serviceBathroom_Cabinets = "No";
+                            $serviceBathroom_Countertops = "No";
+                            $serviceBathroom_Sinks = "No";
+                            $serviceBathroom_Flooring = "No";
+                            switch ($bathroom_type_name) {
+                                case "Flooring":
+                                    $serviceBathroom_Floorplan = "Yes";
+                                    break;
+                                case "Shower / Bath":
+                                    $serviceBathroom_Shower_Bath = "Yes";
+                                    break;
+                                case "Sinks":
+                                    $serviceBathroom_Sinks = "Yes";
+                                    break;
+                                case "Toilet":
+                                    $serviceBathroom_Toilet = "Yes";
+                                    break;
+                            }
+                            $Lead_data_array['Home_Improvement_Product'] = "Remodels";
+                            $Lead_data_array['subcat'] = "Remodels - Bathroom Remodel";
+                            $Lead_data_array['Change_Bathroom_Floorplan'] = $serviceBathroom_Floorplan;
+                            $Lead_data_array['Change_Bathroom_Shower_Bath'] = $serviceBathroom_Shower_Bath;
+                            $Lead_data_array['Change_Bathroom_Toilet'] = $serviceBathroom_Toilet;
+                            $Lead_data_array['Change_Bathroom_Cabinets'] = $serviceBathroom_Cabinets;
+                            $Lead_data_array['Change_Bathroom_Countertops'] = $serviceBathroom_Countertops;
+                            $Lead_data_array['Change_Bathroom_Sinks'] = $serviceBathroom_Sinks;
+                            $Lead_data_array['Change_Bathroom_Flooring'] = $serviceBathroom_Flooring;
+                            break;
+                    }
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, http_build_query($Lead_data_array), "POST", 1, $crm_details['campaign_id']);
+                    if (str_contains(strtolower($result), "success")) {
+                        return 1;
                     }
                     break;
             }

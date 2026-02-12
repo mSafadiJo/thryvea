@@ -490,6 +490,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 53:
+                                    // ecrux 660
+                                    if (str_contains(strtolower($result) , "success")){
+                                        $bidLeadIDExctract = explode("|" , $result);
+                                        $leadIDecrux = $bidLeadIDExctract[1];
+                                        $bid = $bidLeadIDExctract[2];
+                                        $TransactionId = $leadIDecrux;
+                                        $Payout = $bid;
+                                        $multi_type = 0;
+                                        $Result = 1;
+                                    }
+                                    break;
 
                             }
                     }
