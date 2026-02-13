@@ -647,30 +647,36 @@ class WebSitesAPIController extends Controller
             $url_conv = "";
 
             if ($finel_price != 0){
-                if( strtolower(substr($request['tc'], 0, 2)) == 'tl' ) {
-                    //Turtle Leads S2S
-                    $url_conv = "https://www.dpvyw6trk.com/?nid=2167&transaction_id=$token_data_conv&amount=".$finel_price;
-                    $r = array($url_conv);
-                    Log::info('Turtle Leads', $r);
-                }
-                elseif( strtolower(substr($request['tc'], 0, 1)) == 'o' ) {
-                    //One Pride Group S2S
-                    $url_conv = "https://offers-onepride-group.affise.com/postback?clickid=$token_data_conv&publisher_id=".$request["c"]."&sum=$finel_price";
-                }
-                elseif( strtolower(substr($request['tc'], 0, 2)) == 'dm' ) {
-                    //Dynuin Media S2S
-                    $url_conv = "https://script.google.com/macros/s/AKfycbzZInhdAno6v-Cza0ccQeQEU7UfZh1qd720ELB63CMrA4Rpv5AoSYgZQpZcWZqA0vL-/exec?transaction_id=$token_data_conv&payout=$finel_price&affiliate_id=".$request["c"]."&ref_id=6516&adv=allied";
-//                    $url_conv = "https://dynuinmedia.go2cloud.org/aff_lsr?transaction_id=$token_data_conv&amount=$finel_price";
-                    $r = array($url_conv);
-                    Log::info('Dynuin Media Leads', $r);
+//                if( strtolower(substr($request['tc'], 0, 2)) == 'tl' ) {
+//                    //Turtle Leads S2S
+//                    $url_conv = "https://www.dpvyw6trk.com/?nid=2167&transaction_id=$token_data_conv&amount=".$finel_price;
+//                    $r = array($url_conv);
+//                    Log::info('Turtle Leads', $r);
+//                }
+//                elseif( strtolower(substr($request['tc'], 0, 1)) == 'o' ) {
+//                    //One Pride Group S2S
+//                    $url_conv = "https://offers-onepride-group.affise.com/postback?clickid=$token_data_conv&publisher_id=".$request["c"]."&sum=$finel_price";
+//                }
+//                elseif( strtolower(substr($request['tc'], 0, 2)) == 'dm' ) {
+//                    //Dynuin Media S2S
+//                    $url_conv = "https://script.google.com/macros/s/AKfycbzZInhdAno6v-Cza0ccQeQEU7UfZh1qd720ELB63CMrA4Rpv5AoSYgZQpZcWZqA0vL-/exec?transaction_id=$token_data_conv&payout=$finel_price&affiliate_id=".$request["c"]."&ref_id=6516&adv=allied";
+////                    $url_conv = "https://dynuinmedia.go2cloud.org/aff_lsr?transaction_id=$token_data_conv&amount=$finel_price";
+//                    $r = array($url_conv);
+//                    Log::info('Dynuin Media Leads', $r);
+//
+//                }elseif( strtolower(substr($request['tc'], 0, 2)) == 'sm' ) {
+//                    //scoremobi sm
+//                    $url_conv = "http://scoremobi.fuse-cloud.com/pb?tid=$token_data_conv&adv_cvalue=".$finel_price;
+//                    $r = array($url_conv);
+//                    Log::info('scoremobi', $r);
+//                }
+                 if( strtolower(substr($request['tc'], 0, 2)) == 'mo' ) {
+                    //Mobidea
+                    $url_conv = "https://postback.mobidea.ai/postback?click_id=$token_data_conv&security_token=a19ae8a5-b2cf-4dc2-928c-55c04f17e00b&sale_amount=$finel_price";
 
-                }elseif( strtolower(substr($request['tc'], 0, 2)) == 'sm' ) {
-                    //scoremobi sm
-                    $url_conv = "http://scoremobi.fuse-cloud.com/pb?tid=$token_data_conv&adv_cvalue=".$finel_price;
                     $r = array($url_conv);
-                    Log::info('scoremobi', $r);
+                    Log::info('Mobidea', $r);
                 }
-
                 $main_api_file->server_to_server_conv($url_conv);
             }
         }
