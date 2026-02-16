@@ -502,6 +502,18 @@ class CrmApi {
                                         $Result = 1;
                                     }
                                     break;
+                                case 54:
+                                    //LeadLabx 928
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "continue") {
+                                            $TransactionId = $result2['promise'];
+                                            $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }

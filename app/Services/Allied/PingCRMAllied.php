@@ -4907,6 +4907,279 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 54:
+                        //Brand Genius
+                        $httpheader = array(
+                            "cache-control: no-cache",
+                            "Accept: application/json",
+                            "content-type: application/json"
+                        );
+
+                        $Lead_data_array_ping = array(
+                            "userIp" => $IPAddress,
+                            "webSiteUrl" => $OriginalURL2,
+                            "bg_city" => $city,
+                            "bg_state" => $statename_code,
+                            "bg_user_agent" => $UserAgent,
+                            "bg_postal_code" => $zip
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //Windows
+                                $apiId = "E3F2562F62514667BD9AA3FC871EB6E6";
+                                $apiPassword = "1f51cc22";
+                                $productId = "295";
+
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                                switch ($number_of_windows) {
+                                    case "1":
+                                    case "2":
+                                    case "3-5":
+                                        $wndw_number = "3-5";
+                                        break;
+                                    case "6-9":
+                                        $wndw_number = "6-9";
+                                        break;
+                                    default:
+                                        $wndw_number = "10+";
+                                }
+
+                                $Lead_data_array_ping["apiId"] = $apiId;
+                                $Lead_data_array_ping["apiPassword"] = $apiPassword;
+                                $Lead_data_array_ping["productId"] = $productId;
+                                $Lead_data_array_ping["bg_ownhome"] = $homeowner;
+                                $Lead_data_array_ping["bg_service"] = "Other";
+                                $Lead_data_array_ping["bg_buytimeframe"] = "Immediately";
+                                $Lead_data_array_ping["bg_how_many_windows_are_involved"] = $wndw_number;
+
+                                break;
+                            case 4:
+                                //Flooring
+                                $Type_OfFlooring = trim($Leaddatadetails['flooring_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $apiId = "9D770B4F1B344D9BBC9C10CE2AAA7FFB";
+                                $apiPassword = "702500790";
+                                $productId = "300";
+
+                                switch ($Type_OfFlooring){
+                                    case "Vinyl Linoleum Flooring":
+                                        $typeOfFlooring = "Linoleum";
+                                        break;
+                                    case "Tile Flooring":
+                                        $typeOfFlooring = "Tile";
+                                        break;
+                                    case "Hardwood Flooring":
+                                        $typeOfFlooring = "Hardwood";
+                                        break;
+                                    case "Laminate Flooring":
+                                        $typeOfFlooring = "Laminate";
+                                        break;
+                                    default:
+                                        $typeOfFlooring = "Carpet";
+                                }
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "6 Months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Exploring";
+                                }
+
+                                $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                                $Lead_data_array_ping["apiId"] = $apiId;
+                                $Lead_data_array_ping["apiPassword"] = $apiPassword;
+                                $Lead_data_array_ping["productId"] = $productId;
+                                $Lead_data_array_ping["bg_ownhome"] = $homeowner;
+                                $Lead_data_array_ping["bg_service"] = $typeOfFlooring;
+                                $Lead_data_array_ping["bg_buytimeframe"] = $Timeframe;
+
+                                break;
+                            case 6:
+                                //Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $residential = ($property_type == "Residential" ? "YES" : "NO");
+
+                                $apiId = "29F2250460A6467B8982F29D44EA23E5";
+                                $apiPassword = "e17d229";
+                                $productId = "299";
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "6 Months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Exploring";
+                                }
+
+                                switch ($roof_type){
+                                    case "Asphalt Roofing":
+                                        $roofType="Asphalt";
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        $roofType="Wood Shake";
+                                        break;
+                                    case "Metal Roofing":
+                                        $roofType="Metal";
+                                        break;
+                                    case "Tile Roofing":
+                                        $roofType="Tile";
+                                        break;
+                                    default:
+                                        $roofType="Asphalt";
+                                }
+
+                                $Lead_data_array_ping["apiId"] = $apiId;
+                                $Lead_data_array_ping["apiPassword"] = $apiPassword;
+                                $Lead_data_array_ping["productId"] = $productId;
+                                $Lead_data_array_ping["bg_ownhome"] = $residential;
+                                $Lead_data_array_ping["bg_service"] = $roofType;
+                                $Lead_data_array_ping["bg_buytimeframe"] = $Timeframe;
+                                break;
+                            case 7:
+                                //Home Siding
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                                $apiId = "6C55BC3B584246AA997EDAD7A2D9FDCF";
+                                $apiPassword = "6be80bbcb";
+                                $productId = "294";
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "6 Months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Exploring";
+                                }
+
+                                switch($type_of_siding){
+                                    case "Vinyl Siding":
+                                        $type_of_siding_data = "Vinyl";
+                                        break;
+                                    case "Composite wood Siding":
+                                        $type_of_siding_data = "Wood";
+                                        break;
+                                    case "Fiber Cement Siding":
+                                        $type_of_siding_data = "Fiber Cement";
+                                        break;
+                                    default:
+                                        $type_of_siding_data = "Masonry Siding";
+                                }
+
+
+                                $Lead_data_array_ping["apiId"] = $apiId;
+                                $Lead_data_array_ping["apiPassword"] = $apiPassword;
+                                $Lead_data_array_ping["productId"] = $productId;
+                                $Lead_data_array_ping["bg_ownhome"] = $homeowner;
+                                $Lead_data_array_ping["bg_service"] = $type_of_siding_data;
+                                $Lead_data_array_ping["bg_buytimeframe"] = $Timeframe;
+                                break;
+                            case 9:
+                                //Bathroom
+                                $bathroom_type_name = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $apiId = "7C52CC310A704D60A1B7AB92373F8A37";
+                                $apiPassword = "3a58b15e5";
+                                $productId = "265";
+
+                                $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+                                switch ($bathroom_type_name){
+                                    case "Flooring":
+                                        $bathroomType = "FLOORING";
+                                        break;
+                                    case "Shower / Bath":
+                                        $bathroomType = "SHOWER_BATH";
+                                        break;
+                                    case "Sinks":
+                                        $bathroomType = "SINKS";
+                                        break;
+                                    case "Toilet":
+                                        $bathroomType = "TOILET";
+                                        break;
+                                    default:
+                                        $bathroomType = "FULL_REMODEL";
+                                }
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "6 Months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Exploring";
+                                }
+
+
+                                $Lead_data_array_ping["apiId"] = $apiId;
+                                $Lead_data_array_ping["apiPassword"] = $apiPassword;
+                                $Lead_data_array_ping["productId"] = $productId;
+                                $Lead_data_array_ping["bg_ownhome"] = $homeowner;
+                                $Lead_data_array_ping["bg_service"] = "Bathroom Remodeling";
+                                $Lead_data_array_ping["bg_buytimeframe"] = $Timeframe;
+                                break;
+                        }
+
+                        $url_api = "https://leads-inst566-client.phonexa.com/ping/";
+
+                        if (config('app.env', 'local') == "local") {
+                            // Test Mode
+                            $Lead_data_array_ping['testMode'] = "1";
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array_ping)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "continue") {
+                                    $TransactionId = $result2['promise'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 
