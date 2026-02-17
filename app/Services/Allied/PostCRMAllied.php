@@ -5584,6 +5584,10 @@ class PostCRMAllied {
                         "Content-Type: application/json",
                     );
 
+                    if ($TCPAText = "" || empty($TCPAText) ){
+                        $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
+                    }
+
                     $Lead_data_array = array(
                         "lp_ping_id" => $TransactionId,
                         "external_id" => $leadsCustomerCampaign_id,
