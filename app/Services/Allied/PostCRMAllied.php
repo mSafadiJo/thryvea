@@ -2336,6 +2336,27 @@ class PostCRMAllied {
                     //UptownLeads LLC  1045
                     $url_api .= "&trusted_form_cert_id=$trusted_form&jornaya_lead_id=$LeadId&tcpa_consent_language=$TCPAText";
                     break;
+                case 58:
+                    //MILI Group LLC 1025
+                    $type_data = $crm_details['listOFCampainDB_type'];
+
+                    if ($trusted_form == "NA" || $trusted_form == "N/A" || $trusted_form == "https://cert.trustedform.com"){
+                        $trusted_form = "";
+                    }
+
+                    $trusted_form_cert_id = "";
+                    if(!empty($trusted_form)){
+                        $trusted_form_cert_arr = explode("/", $trusted_form);
+                        $trusted_form_cert_id = (!empty($trusted_form_cert_arr[3]) ? $trusted_form_cert_arr[3] : "");
+                    }
+
+                    $pub_id = "TY-7202";
+
+                    $tcpa_compliant2 = strtoupper($tcpa_compliant2);
+                    $tcpa_compliant2 = ($tcpa_compliant2 == "Yes" ? "YES" : "NO");
+
+                    $url_api .= "&universal_leadid=$LeadId&type=$type_data&pub_id=$pub_id&tcpa_language=$TCPAText&TCPA=$tcpa_compliant2&trusted_form=$trusted_form&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form_cert_id&landing_page=$OriginalURL2&user_agent=$UserAgent";
+                    break;
 
             }
 
@@ -2377,6 +2398,17 @@ class PostCRMAllied {
                             }
 
                             $url_api .= "&service=$service&landing_page_url=https://thewindowsinstall.com/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
+                            break;
+                        case 58:
+                            //MILI Group LLC 1025
+                            if ($project_nature == "Repair") {
+                                $type_of_work = "Window Repair";
+                            } else {
+                                $type_of_work = ($number_of_windows == "1" ? "Window Install Single" : "Windows Install Multiple");
+                            }
+                            $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                            $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
                             break;
                         default:
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -2661,6 +2693,32 @@ class PostCRMAllied {
 
                             $url_api .= "&service=$service&landing_page_url=https://homeremodelingpro.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
+                        case 58:
+                            //MILI Group LLC 1025
+                            $homeowner = "YES";
+                            if($property_type == "Commercial"){
+                                $type_of_work = "Commercial Roofing";
+                            } else {
+                                switch ($roof_type){
+                                    case "Wood Shake/Composite Roofing":
+                                        $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Composition Shingle Repair" : "Roofing Composition Shingle Install");
+                                        break;
+                                    case "Metal Roofing":
+                                        $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Metal Repair" : "Roofing Metal Install");
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Slate Repair" : "Roofing Slate Install");
+                                        break;
+                                    case "Tile Roofing":
+                                        $type_of_work = ($project_nature == "Repair existing roof" ? "Roofing Tile Repair" : "Roofing Tile Install");
+                                        break;
+                                    default:
+                                        $type_of_work = ($project_nature == "Repair existing roof" ? "Roof Repair" : "New Roof");
+                                }
+                            }
+
+                            $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
+                            break;
                         default:
                             $owner = "yes";
                             $time_frame = ($start_time == 'Immediately' ? "immediate" : "over_2_weeks");
@@ -2815,6 +2873,13 @@ class PostCRMAllied {
 
                             $url_api .= "&service=$service&landing_page_url=https://homeremodelingpro.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
                             break;
+                        case 58:
+                            //MILI Group LLC 1025
+                            $type_of_work = ($project_nature != "Repair section(s) of siding" ? "Siding Install Replace" : "Siding Repair");
+                            $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                            $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
+                            break;
                     }
                     break;
                 case 8:
@@ -2858,6 +2923,13 @@ class PostCRMAllied {
                             $service = "Bath Remodel no walls added or removed";
 
                             $url_api .= "&service=$service&landing_page_url=https://thebathroomremodel.net/Quote?ts=thv$google_ts&lp_s2=thv$google_ts";
+                            break;
+                        case 58:
+                            //MILI Group LLC 1025
+                            $type_of_work = "Bathroom Remodel";
+                            $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+
+                            $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
                             break;
                     }
                     break;

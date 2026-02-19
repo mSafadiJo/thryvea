@@ -640,8 +640,10 @@ class WebSitesAPIController extends Controller
                 $response_code['price'] = $data_from_post_lead['price_exclusive'];
             }
             $finel_price = $response_code['price']/2;
-            if(strtolower(substr($request['tc'], 0, 2)) == 'sm' ){
+            if(strtolower(substr($request['tc'], 0, 2)) == 'mo' ){
                 $finel_price = $response_code['price']*0.7;
+            }else if(strtolower(substr($request['tc'], 0, 2)) == 'fn' ){
+                $finel_price = $response_code['price']*0.8;
             }
             $token_data_conv = $request['token'];
             $url_conv = "";
@@ -676,7 +678,13 @@ class WebSitesAPIController extends Controller
 
                     $r = array($url_conv);
                     Log::info('Mobidea', $r);
-                }
+                }else if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+                     //finnetpartners
+                     $url_conv = "https://finnetpartners.o18a.com/p?m=24464&tid=$token_data_conv&adv_sub1=".$data_msg['leadCustomer_id']."&payout=$finel_price";
+
+                     $r = array($url_conv);
+                     Log::info('Fin Net Partners', $r);
+                 }
                 $main_api_file->server_to_server_conv($url_conv);
             }
         }
