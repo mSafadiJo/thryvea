@@ -2355,7 +2355,7 @@ class PostCRMAllied {
                     $tcpa_compliant2 = strtoupper($tcpa_compliant2);
                     $tcpa_compliant2 = ($tcpa_compliant2 == "Yes" ? "YES" : "NO");
 
-                    $url_api .= "&universal_leadid=$LeadId&type=$type_data&pub_id=$pub_id&tcpa_language=$TCPAText&TCPA=$tcpa_compliant2&trusted_form=$trusted_form&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form_cert_id&landing_page=$OriginalURL2&user_agent=$UserAgent";
+                    $url_api .= "&universal_leadid=$LeadId&jornaya_lead_id=$LeadId&type=$type_data&pub_id=$pub_id&tcpa_language=$TCPAText&TCPA=$tcpa_compliant2&trusted_form=$trusted_form&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form_cert_id&landing_page=$OriginalURL2&user_agent=$UserAgent";
                     break;
 
             }
