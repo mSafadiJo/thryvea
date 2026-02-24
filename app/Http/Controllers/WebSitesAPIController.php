@@ -325,18 +325,18 @@ class WebSitesAPIController extends Controller
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
             //Server to server Conversion =================================================================
-            if(!empty($request['token'])){
-                $token_data_conv = $request['token'];
-                $url_conv = "";
-                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
-                    //For Roy (fn)
-                    $url_conv = "https://finnetpartners.o18a.com/p?m=24464&tid=$token_data_conv&adv_sub1=12345&payout=20";
-
-                    $r = array($url_conv);
-                    Log::info('Fin Net Partners', $r);
-                }
-                $main_api_file->server_to_server_conv($url_conv);
-            }
+//            if(!empty($request['token'])){
+//                $token_data_conv = $request['token'];
+//                $url_conv = "";
+//                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+//                    //For Roy (fn)
+//                    $url_conv = "https://finnetpartners.o18a.com/p?m=24464&tid=$token_data_conv&adv_sub1=12345&payout=20";
+//
+//                    $r = array($url_conv);
+//                    Log::info('Fin Net Partners', $r);
+//                }
+//                $main_api_file->server_to_server_conv($url_conv);
+//            }
 
             //Server to server Conversion =================================================================
         } catch (Exception $e) {
