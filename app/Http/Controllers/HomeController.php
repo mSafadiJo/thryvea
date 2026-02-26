@@ -634,14 +634,10 @@ class HomeController extends Controller
             ->where('leads_customers.is_test', 0);
 
         switch (Auth::user()->id){
-            case 1235:
-                // Turtle Leads TL: 1235
-            case 1268:
-                // One Pride: 1268
-            case 1305:
-                // DM: 1305
-            case 1342:
-                // scoremobi sm: 1342
+            case 55:
+                // Mobidea
+            case 56:
+                // finnetpartners
             $LeadsCount = $LeadsCount->where('is_sec_service', 0)
                     ->where('flag', null);
 
@@ -671,14 +667,10 @@ class HomeController extends Controller
             ->where('is_test', 0);
 
         switch (Auth::user()->id) {
-            case 1235:
-                // Turtle Leads TL: 1235
-            case 1268:
-                // One Pride: 1268
-            case 1305:
-                // DM: 1305
-            case 1342:
-                // scoremobi sm: 1342
+             case 55:
+                // Mobidea
+            case 56:
+                // finnetpartners
             $last_transaction = $last_transaction->where('is_sec_service', 0)
                     ->where('flag', null);
                 break;
