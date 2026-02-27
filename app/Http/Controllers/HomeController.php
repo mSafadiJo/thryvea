@@ -638,6 +638,8 @@ class HomeController extends Controller
                 // Mobidea
             case 56:
                 // finnetpartners
+            case 59:
+                // WedeBeek
             $LeadsCount = $LeadsCount->where('is_sec_service', 0)
                     ->where('flag', null);
 
@@ -671,6 +673,8 @@ class HomeController extends Controller
                 // Mobidea
             case 56:
                 // finnetpartners
+            case 59:
+                // WedeBeek 
             $last_transaction = $last_transaction->where('is_sec_service', 0)
                     ->where('flag', null);
                 break;

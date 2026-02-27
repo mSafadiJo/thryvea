@@ -7341,6 +7341,92 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 60:
+                    //National Bath
+                    $httpheader = array(
+                        "cache-control: no-cache",
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    $Lead_data_array = array(
+                        "trustedFormURL" => $trusted_form,
+                        "userIp" => $IPAddress,
+                        "source" => $lead_source_text,
+                        "webSiteUrl" => $OriginalURL2,
+                        "city" => $city,
+                        "state" => $statename_code,
+                        "firstName" => $first_name,
+                        "lastName" => $last_name,
+                        "address" => $street,
+                        "email" => $email,
+                        "phoneNumber" => $number1,
+                        "zipCode" => $zip,
+                        "price" => "60",
+                    );
+
+                    switch ($lead_type_service_id) {
+                        case 9:
+                            //Bathroom
+                            $bathroom_type_name = trim($crm_details['data']['services']);
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+
+                            $apiId = "D39C192BF4A94BA18E92DEDE793385FE";
+                            $apiPassword = "e55b34b5";
+                            $productId = "191";
+
+                            $homeowner = ($ownership == "Yes" ? "YES" : "NO");
+                            switch ($bathroom_type_name){
+                                case "Flooring":
+                                    $bathroomType = "FLOORING";
+                                    break;
+                                case "Shower / Bath":
+                                    $bathroomType = "SHOWER_BATH";
+                                    break;
+                                case "Sinks":
+                                    $bathroomType = "SINKS";
+                                    break;
+                                case "Toilet":
+                                    $bathroomType = "TOILET";
+                                    break;
+                                default:
+                                    $bathroomType = "FULL_REMODEL";
+                            }
+                            switch ($start_time) {
+                                case 'Immediately':
+                                    $Timeframe = "Immediately";
+                                    break;
+                                case "Within 6 months":
+                                    $Timeframe = "6 Months";
+                                    break;
+                                default:
+                                    $Timeframe = "Exploring";
+                            }
+
+
+                            $Lead_data_array["apiId"] = $apiId;
+                            $Lead_data_array["apiPassword"] = $apiPassword;
+                            $Lead_data_array["productId"] = $productId;
+                            $Lead_data_array["jobType"] = "Bath";
+                            break;
+                    }
+
+                    $url_api = "https://leads-inst590-client.phonexa.com/lead/";
+
+                    if (config('app.env', 'local') == "local") {
+                        //Test Mode
+                        $Lead_data_array['testMode'] = "1";
+                    }
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2['status'])) {
+                        if ($result2['status'] == 1) {
+                            return 1;
+                        }
+                    }
+                    break;
 
             }
             return 0;

@@ -654,9 +654,10 @@ class WebSitesAPIController extends Controller
                 $response_code['price'] = $data_from_post_lead['price_exclusive'];
             }
             $finel_price = $response_code['price']/2;
-            if(strtolower(substr($request['tc'], 0, 2)) == 'mo' ){
+            $ts = strtolower(substr($request['tc'], 0, 2));
+            if( $ts  == 'mo' || $ts  == 'wk' ){
                 $finel_price = $response_code['price']*0.7;
-            }else if(strtolower(substr($request['tc'], 0, 2)) == 'fn' ){
+            }else if($ts  == 'fn' ){
                 $finel_price = $response_code['price']*0.8;
             }
             $token_data_conv = $request['token'];
@@ -698,6 +699,12 @@ class WebSitesAPIController extends Controller
 
                      $r = array($url_conv);
                      Log::info('Fin Net Partners', $r);
+                 }else if( strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
+                     //wedebeek
+                     $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&commission=$finel_price";
+
+                     $r = array($url_conv);
+                     Log::info('wedebeek', $r);
                  }
                 $main_api_file->server_to_server_conv($url_conv);
             }
