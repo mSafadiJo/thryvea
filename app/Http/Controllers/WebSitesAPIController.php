@@ -325,20 +325,20 @@ class WebSitesAPIController extends Controller
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
             //Server to server Conversion =================================================================
-            if(!empty($request['token'])){
-                $token_data_conv = $request['token'];
-                $url_conv = "";
-                if( strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
-                    //Wedebeek
-                    $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&commission=20";
-
-
-
-                    $r = array($url_conv);
-                    Log::info('Wedebeek', $r);
-                }
-                $main_api_file->server_to_server_conv($url_conv);
-            }
+//            if(!empty($request['token'])){
+//                $token_data_conv = $request['token'];
+//                $url_conv = "";
+//                if( strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
+//                    //Wedebeek
+//                    $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&commission=20";
+//
+//
+//
+//                    $r = array($url_conv);
+//                    Log::info('Wedebeek', $r);
+//                }
+//                $main_api_file->server_to_server_conv($url_conv);
+//            }
 
             //Server to server Conversion =================================================================
         } catch (Exception $e) {
