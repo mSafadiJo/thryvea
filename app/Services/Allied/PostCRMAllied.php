@@ -7362,7 +7362,7 @@ class PostCRMAllied {
                         "email" => $email,
                         "phoneNumber" => $number1,
                         "zipCode" => $zip,
-                        "price" => "60",
+                        "price" => "0",
                     );
 
                     switch ($lead_type_service_id) {
