@@ -90,18 +90,6 @@ class WebSitesAPIController extends Controller
                     $query->where('lead_phone_number', $request['phone_number']);
                     $query->OrWhere('lead_email', $request->email);
                 })->update(['is_verified_phone' => 1]);
-
-            //Server to server Conversion =================================================================
-            //For Roy (Popunder)
-            if( strtolower(substr($request['tc'], 0, 2)) == 'vr' ){
-                if( !empty($request['k']) ){
-                    $token_data_conv = $request['k'];
-                    $url_conv = "http://ad.propellerads.com/conversion.php?aid=874155&pid=&tid=93273&visitor_id=$token_data_conv";
-
-                    $main_api_file = new ApiMain();
-                    $main_api_file->server_to_server_conv($url_conv);
-                }
-            }
             //=============================================================================================
         }
 
