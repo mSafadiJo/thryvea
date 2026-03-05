@@ -689,7 +689,7 @@ class WebSitesAPIController extends Controller
                      Log::info('Fin Net Partners', $r);
                  }else if( strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
                      //wedebeek
-                     $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&commission=$finel_price";
+                     $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&payout=$finel_price";
 
                      $r = array($url_conv);
                      Log::info('wedebeek', $r);
