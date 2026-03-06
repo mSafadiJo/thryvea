@@ -721,14 +721,12 @@ class HomeController extends Controller
                 ->where('leads_customers.is_test', 0);
 
             switch (Auth::user()->id) {
-                case 1235:
-                    // Turtle Leads TL: 1235
-                case 1268:
-                    // One Pride: 1268
-                case 1305:
-                    // DM: 1305
-                case 1342:
-                    // scoremobi sm: 1342
+                case 55:
+                    // Mobidea
+                case 56:
+                    // finnetpartners
+                case 59:
+                    // WedeBeek
                 $list_of_leads = $list_of_leads->where('leads_customers.is_sec_service', 0)
                         ->where('leads_customers.flag', null);
                     break;
