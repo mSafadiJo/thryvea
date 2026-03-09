@@ -3638,16 +3638,14 @@ class PingCRMAllied
                             "Content-Type: application/json"
                         );
 
-                        if ($TCPAText = "" || empty($TCPAText) ){
-                            $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
-                        }
+                        $TCPATextStitc = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
 
                         $Lead_data_array = array(
                             "external_id" => $leadCustomer_id,
                             "zip_code" => $zip,
                             "ip_address" => $IPAddress,
                             "user_agent" => $UserAgent,
-                            "leadid_tcpa_disclosure" => $TCPAText,
+                            "leadid_tcpa_disclosure" => $TCPATextStitc,
                             "trustedform_cert_url" => $trusted_form,
                             "seconds_on_landing" => $SessionLength ?? "40",
                             "source" => "thv".$google_ts,
