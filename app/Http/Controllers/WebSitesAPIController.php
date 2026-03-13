@@ -683,7 +683,7 @@ class WebSitesAPIController extends Controller
                     Log::info('Mobidea', $r);
                 }else if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
                      //finnetpartners
-                     $url_conv = "https://finnetpartners.o18a.com/p?m=24464&tid=$token_data_conv&adv_sub1=".$data_msg['leadCustomer_id']."&payout=$finel_price";
+                     $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=$finel_price";
 
                      $r = array($url_conv);
                      Log::info('Fin Net Partners', $r);

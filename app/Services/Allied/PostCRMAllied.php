@@ -1673,6 +1673,9 @@ class PostCRMAllied {
                     case "Roofing":
                         $service_name = "Roofing";
                         break;
+                    case "Window":
+                        $service_name = "Window Installation";
+                        break;
                 }
                 $Lead_data_array['service'] = $service_name;
                 $Lead_data_array['LeadID'] = $google_ts;
