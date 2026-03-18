@@ -313,18 +313,18 @@ class WebSitesAPIController extends Controller
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
             //Server to server Conversion =================================================================
-//            if(!empty($request['token'])){
-//                $token_data_conv = $request['token'];
-//                $url_conv = "";
-//                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
-//                    //Wedebeek
-//                    $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=90";
-//
-//                    $r = array($url_conv);
-//                    Log::info('fn', $r);
-//                }
-//                $main_api_file->server_to_server_conv($url_conv);
-//            }
+            if(!empty($request['token'])){
+                $token_data_conv = $request['token'];
+                $url_conv = "";
+                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+                    //Wedebeek
+                    $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=90";
+
+                    $r = array($url_conv);
+                    Log::info('fn', $r);
+                }
+                $main_api_file->server_to_server_conv($url_conv);
+            }
 
             //Server to server Conversion =================================================================
         } catch (Exception $e) {
