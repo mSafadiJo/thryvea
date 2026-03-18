@@ -3720,6 +3720,43 @@ class PingCRMAllied
 
                                 $httpheader[] = "X-API-Key: MTZfcm9vZl8xNzY0NzU5Nzg1XzY5MzAx";
                                 break;
+                            case 7:
+                                //siding
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $homeowner = ($ownership == "Yes" ? "yes" : "no");
+                                $projecttype = ($project_nature == "Repair section(s) of siding" ? "Siding Repair" : "Siding Install");
+
+                                switch ($type_of_siding) {
+                                    case "Vinyl Siding":
+                                        $SidingType = "Vinyl";
+                                        break;
+                                    case "Fiber Cement Siding":
+                                        $SidingType = "Cement";
+                                        break;
+                                    case "Composite wood Siding":
+                                        $SidingType = "Wood";
+                                        break;
+                                    case "Aluminium Siding":
+                                        $SidingType = "Aluminium";
+                                        break;
+                                    case "Brickface Siding":
+                                        $SidingType = "Brick";
+                                        break;
+                                    default:
+                                        $SidingType = "Stone";
+                                }
+
+                                $Lead_data_array['home_owner'] = $homeowner;
+                                $Lead_data_array['vertical'] = "siding";
+                                $Lead_data_array['project_type'] = $projecttype;
+                                $Lead_data_array['material_type'] = $SidingType;
+                                $Lead_data_array['landing_page_url'] = "thehomesidinginstall.com";
+                                $httpheader[] = "X-API-Key: 5d81535012a17716da1bbcef0d095cc4";
+
+                                break;
                             case 9:
                                 //Bathroom
                                 $bathroom_type_name = trim($Leaddatadetails['services']);
