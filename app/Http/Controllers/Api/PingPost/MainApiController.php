@@ -801,8 +801,8 @@ class MainApiController extends Controller
             $postLeads->response_data = 'Duplicated Lead';
         }
 
-        
-        
+
+
         $servcesFunct = new AllServicesQuestions();
 
         $postLeads = $servcesFunct->saveQuesAnswersInDb($postLeads, $questions, $service);
@@ -982,12 +982,16 @@ class MainApiController extends Controller
 //            }
         }
         //end content info ==========================================================================
-
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['before PingLeads::where' => $elapsed]);
         //Get Ping Lead data By Transaction ID ==================================================================
         $lead_details_ping = PingLeads::where('lead_id', $lead_details_ping_check_transaction_id->lead_id)
             ->where('lead_zipcode_id', $address['zipcode_id'])
             ->where('lead_type_service_id', $service)
             ->first();
+
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['after PingLeads::where' => $elapsed]);
 
         if(empty($lead_details_ping)){
             $response_code['error'] = "Not Match";
@@ -1007,6 +1011,9 @@ class MainApiController extends Controller
             "ping_lead_bid_type" => $lead_details_ping->lead_bid_type
         ]);
         //=================================================================
+
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['LeadsCustomer::where' => $elapsed]);
 
         //Lead Info =====================================================================================================================
         $city_arr = explode('=>', $address['city_name']);
@@ -1057,11 +1064,11 @@ class MainApiController extends Controller
             'seller_id' => $is_valid_vendor_id->user_id
         );
         //Lead Info =====================================================================================================================
-        
+
         // CHECKPOINT 1 — before check_post_if_sold_and_send
         $elapsed = microtime(true) - $startTime;
-        Log::info('time CHECKPOINT 1', ['elapsed' => $elapsed]);
-        
+        Log::info('time CHECKPOINT 1', ['before check_post_if_sold_and_send' => $elapsed]);
+
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
         return response()->json($response_code);
