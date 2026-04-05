@@ -801,7 +801,8 @@ class MainApiController extends Controller
             $postLeads->response_data = 'Duplicated Lead';
         }
 
-
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['before AllServicesQuestions()' => $elapsed]);
 
         $servcesFunct = new AllServicesQuestions();
 
