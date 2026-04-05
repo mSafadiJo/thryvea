@@ -812,6 +812,9 @@ class MainApiController extends Controller
         // $postLeads_id = DB::getPdo()->lastInsertId();
         $postLeads_id = $postLeads->lead_id;
 
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['after AllServicesQuestions()' => $elapsed]);
+
         //Check if Valid Transaction Id =================================================================
         $lead_details_ping_check_transaction_id = PingLeads::where('transaction_id', $request->transaction_id)
             ->where('created_at', '>=', Carbon::now()->subMinutes(15)->toDateTimeString())
