@@ -1060,7 +1060,7 @@ class MainApiController extends Controller
         
         // CHECKPOINT 1 — before check_post_if_sold_and_send
         $elapsed = microtime(true) - $startTime;
-        Log::info('time CHECKPOINT 1  ', $elapsed);
+        Log::info('time CHECKPOINT 1', ['elapsed' => $elapsed]);
         
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
