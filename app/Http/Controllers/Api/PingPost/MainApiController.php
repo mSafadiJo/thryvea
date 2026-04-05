@@ -819,6 +819,9 @@ class MainApiController extends Controller
         $lead_details_ping_check_transaction_id = PingLeads::where('transaction_id', $request->transaction_id)
             ->where('created_at', '>=', Carbon::now()->subMinutes(15)->toDateTimeString())
             ->first();
+
+        $elapsed = microtime(true) - $startTime;
+        Log::info('time CHECKPOINT 1', ['Carbon::now()->subMinutes' => $elapsed]);
         if( empty($lead_details_ping_check_transaction_id) ){
             LeadsCustomer::where('lead_id', $postLeads_id)->update([
                 "response_data" => 'Invalid transaction_id Or expired'
