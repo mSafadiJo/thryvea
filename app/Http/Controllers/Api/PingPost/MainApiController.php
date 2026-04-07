@@ -541,7 +541,6 @@ class MainApiController extends Controller
 
     //Post
     public function post(Request $request){
-        $startTime = microtime(true);
         $request->headers->set('Accept', 'application/json');
         $this->validate($request, [
             'campaign_id' => ['required', 'string', 'max:255'],
@@ -1057,15 +1056,15 @@ class MainApiController extends Controller
         );
         //Lead Info =====================================================================================================================
 
-        // CHECKPOINT 1 — before check_post_if_sold_and_send
-        $elapsed = microtime(true) - $startTime;
-        Log::info('time CHECKPOINT 1', ['before check_post_if_sold_and_send' => $elapsed]);
+//        // CHECKPOINT 1 — before check_post_if_sold_and_send
+//        $elapsed = microtime(true) - $startTime;
+//        Log::info('time CHECKPOINT 1', ['before check_post_if_sold_and_send' => $elapsed]);
 
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
 
-        $elapsed = microtime(true) - $startTime;
-        Log::info('time CHECKPOINT 1', ['after check_post_if_sold_and_send' => $elapsed]);
+//        $elapsed = microtime(true) - $startTime;
+//        Log::info('time CHECKPOINT 1', ['after check_post_if_sold_and_send' => $elapsed]);
 
         return response()->json($response_code);
     }

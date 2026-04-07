@@ -50,7 +50,7 @@ class CrmApi {
 
             $CrmResponse->save();
         }
-curl_close($curl);
+            curl_close($curl);
         if( $is_return != 0 ){
             return $response;
         }
