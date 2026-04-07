@@ -79,7 +79,7 @@ class CrmApi {
             curl_setopt($curl_arr[$key], CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl_arr[$key], CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl_arr[$key], CURLOPT_HEADER,0);
-            curl_setopt($curl_arr[$key], CURLOPT_TIMEOUT, 15);
+            curl_setopt($curl_arr[$key], CURLOPT_TIMEOUT, 20);
             curl_setopt($curl_arr[$key], CURLOPT_ENCODING, "");
             curl_setopt($curl_arr[$key], CURLOPT_MAXREDIRS, 10);
             curl_setopt($curl_arr[$key], CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);

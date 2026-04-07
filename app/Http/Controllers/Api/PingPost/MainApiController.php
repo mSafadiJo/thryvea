@@ -852,7 +852,8 @@ class MainApiController extends Controller
             $vendors_users_id = array(11);
             $vendors_users_id2_ip = array();
             $vendors_users_id3_tf = array();
-        } else {
+        }
+        else {
             $vendors_users_id = array(630);
             $vendors_users_id2_ip = array();
             $vendors_users_id3_tf = array(1131);
