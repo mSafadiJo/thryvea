@@ -522,7 +522,7 @@ class CrmApi {
                 //Check if success response (accepted ping leads)
                 if ($Result == 1) {
                     //Check if Payout grater $2
-                    if ( !($Payout < 2 || is_numeric($Payout) != 1) ) {
+                    if ( !($Payout < 0 || is_numeric($Payout) != 1) ) {
                         //Check Total amount vs lead price
                         $payment_type_method_status = $campaign_details->payment_type_method_status;
                         $payment_type_method_limit = filter_var($campaign_details->payment_type_method_limit, FILTER_SANITIZE_NUMBER_INT);
