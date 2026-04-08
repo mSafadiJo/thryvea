@@ -1674,7 +1674,7 @@ class PostCRMAllied {
                         $service_name = "Roofing";
                         break;
                     case "Window":
-                        $service_name = "Window Installation";
+                        $service_name = "Windows";
                         break;
                 }
                 $Lead_data_array['service'] = $service_name;
