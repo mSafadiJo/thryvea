@@ -410,7 +410,7 @@ class APIValidations extends Controller {
 
     public function lead_ip_validation_ipqs($ip_address){
         if(!empty($ip_address)){
-            $apiToken = "xvS204UnNAuBABLERblpdHHXEvx50t8X";
+            $apiToken = "7o0gGZ2efvcLQpe1aTq6d58ww8NvR8IQ";
             $user_language = "en-US";
             $strictness = "0";
 
@@ -426,16 +426,17 @@ class APIValidations extends Controller {
             curl_close($init);
 
             $result = json_decode($output, true);
-            if(!empty($result['success'])){
-                if($result['fraud_score'] >= 90 || $result['country_code'] != "US"){
+
+            $proxy = !empty($result['proxy']) ? $result['proxy'] : false;
+            $vpn = !empty($result['vpn']) ? $result['vpn'] : false;
+            $bot_status = !empty($result['bot_status']) ? $result['bot_status'] : false;
+
+            if(isset($result['success']) && $result['success'] === true){
+                if($proxy === true || $vpn === true|| $bot_status === true || $result['fraud_score'] >= 75 || $result['country_code'] != "US"){
                     return "Visitor is suspicious!";
                 }
             } else {
-                if(!empty($result['message'])){
-                    if(str_contains($result['message'], 'Invalid IPv4 address')){
-                        return "Invalid IP Address!";
-                    }
-                }
+                return "Invalid IP Address!";
             }
         }
         return "true";
