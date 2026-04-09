@@ -441,6 +441,56 @@ class APIValidations extends Controller {
         return "true";
     }
 
+public function lead_phone_validation_ipqs($phone_number){
+        if(!empty($phone_number)){
+            $key = '7o0gGZ2efvcLQpe1aTq6d58ww8NvR8IQ';
+            $phone = $phone_number;
+            // Retrieve additional (optional) data points which help us enhance fraud scores and ensure data is processed correctly.
+            $countries = array('US', 'CA');
+            // Create parameters array.
+            $parameters = array(
+                'country' => $countries
+            );
+
+            // Format Parameters
+            $formatted_parameters = http_build_query($parameters);
+
+            // Create API URL
+            $url = sprintf(
+                'https://www.ipqualityscore.com/api/json/phone/%s/%s?%s',
+                $key,
+                $phone,
+                $formatted_parameters
+            );
+
+            // Fetch The Result
+            $timeout = 5;
+
+            $init = curl_init();
+            curl_setopt($init, CURLOPT_URL, $url);
+            curl_setopt($init, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($init, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($init, CURLOPT_CONNECTTIMEOUT, $timeout);
+            $output = curl_exec($init);
+            curl_close($init);
+
+            $result = json_decode($output, true);
+
+
+            if(isset($result['success']) && $result['success'] === true){
+                if($result['valid'] === false || $result['active'] === false || $result['fraud_score'] >= 75)
+                {
+                    return "Phone Number is suspicious!";
+                }
+            } else {
+                if(!empty($result['message'])){
+                        return "Invalid Phone Number!";
+                }
+            }
+        }
+        return "true";
+    }
+    
     public function lead_details_validation_ipqs ($leadDataArray){
         $fname = $leadDataArray['first_name'];
         $lname = $leadDataArray['last_name'];
