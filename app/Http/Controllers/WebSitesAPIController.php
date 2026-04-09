@@ -312,6 +312,47 @@ class WebSitesAPIController extends Controller
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
+
+            if($is_lead_review != 1){
+                    //IPQS IP Validation
+                   $lead_ip_validation = $api_validations->lead_ip_validation_ipqs($request->ipaddress);
+                    if ($lead_ip_validation != "true") {
+                        LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+                            "response_data" => $lead_ip_validation,
+                            "status" => 4,
+                            "flag" => 1
+                        ]);
+
+                        $response_code = array(
+                            'response_code' => 'false',
+                            'message' => 'Reject',
+                            'error' => $lead_ip_validation,
+                            'responce_code' => 'false'
+                        );
+
+                        return json_encode($response_code);
+                    }else{
+                        $lead_phone_validation = $api_validations->lead_phone_validation_ipqs($request['phone_number']);
+                        if ($lead_phone_validation != "true") {
+                            LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+                                "response_data" => $lead_phone_validation,
+                                "status" => 4,
+                                "flag" => 1
+                            ]);
+
+                            $response_code = array(
+                                'response_code' => 'false',
+                                'message' => 'Reject',
+                                'error' => $lead_phone_validation,
+                                'responce_code' => 'false'
+                            );
+
+                            return json_encode($response_code);die();
+                        }
+
+                    }
+                }
+            
             //Server to server Conversion =================================================================
 //            if(!empty($request['token'])){
 //                $token_data_conv = $request['token'];
