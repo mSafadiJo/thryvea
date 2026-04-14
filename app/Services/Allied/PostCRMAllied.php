@@ -705,7 +705,7 @@ class PostCRMAllied {
                 "content-type: application/json"
             );
 
-            $subid = $lead_source_text;
+            $subid = $google_ts;
 
             $Lead_data_array = array(
                 "meta" => array(
@@ -779,7 +779,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "windows" => array(
                             "project_type" => $project_nature_data,
@@ -838,7 +838,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => "1-3 months",
                         "monthly_electric_bill" => $monthly_bill,
                         "utility_provider" => $utility_provider,
@@ -872,7 +872,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "home_security" => array(
                             "building_type" => "Other",
@@ -910,7 +910,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "flooring" => array(
                             "flooring_type" => $Type_OfFlooring_data,
@@ -992,7 +992,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "siding" => array(
                             "siding_type" => $type_of_siding_data,
@@ -1012,7 +1012,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "kitchen" => array(
                             "project_type" => $service_kitchen_data
@@ -1038,7 +1038,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "bathroom" => array(
                             "project_type" => $bathroom_type_name_data
@@ -1058,7 +1058,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "stair_lift" => array(
                             "stair_type" => $stairs_type_data,
@@ -1098,7 +1098,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "hvac" => array(
                             "project_type" => $project_nature_data,
@@ -1134,7 +1134,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "hvac" => array(
                             "project_type" => $project_nature_data,
@@ -1156,7 +1156,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "hvac" => array(
                             "project_type" => $project_nature_data,
@@ -1177,7 +1177,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "cabinets" => array(
                             "project_type" => $project_nature_data,
@@ -1218,7 +1218,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "plumbing" => array(
                             "project_type" => "Install",
@@ -1237,7 +1237,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "sunrooms" => array(
                             "num_rooms" => 3,
@@ -1257,7 +1257,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "handy_man" => array(
                             "service_type" => $handyman_ammount_name
@@ -1278,7 +1278,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "doors" => array(
                             "project_type" => $project_nature_data,
@@ -1299,7 +1299,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "gutters" => array(
                             "protection" => false
@@ -1331,7 +1331,7 @@ class PostCRMAllied {
 
                     $Lead_data_array['data'] = array(
                         "best_call_time" => $best_call_time,
-                        "own_property" => $SecurityUsage,
+                        "own_property" => true,
                         "purchase_time_frame" => $start_time_data,
                         "painting" => array(
                             "project_type" => $service_type_data
