@@ -279,7 +279,7 @@ class PingCRMAllied
                         $url_api = $JangleDetails->PingUrl;
                 }
 
-                $subid = $lead_source_text;
+                $subid = $google_ts;
                 $date = date('Y-m-d H:i:s');
 
                 $Lead_data_array_ping = array(
@@ -336,7 +336,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => "Any time",
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "windows" => array(
                                 "project_type" => $project_nature_data,
@@ -395,7 +395,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => "Any time",
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => "1-3 months",
                             "monthly_electric_bill" => $monthly_bill,
                             "utility_provider" => $utility_provider,
@@ -429,7 +429,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "home_security" => array(
                                 "building_type" => "Other",
@@ -467,7 +467,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "flooring" => array(
                                 "flooring_type" => $Type_OfFlooring_data,
@@ -549,7 +549,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "siding" => array(
                                 "siding_type" => $type_of_siding_data,
@@ -569,7 +569,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "kitchen" => array(
                                 "project_type" => $service_kitchen_data
@@ -595,7 +595,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "bathroom" => array(
                                 "project_type" => $bathroom_type_name_data
@@ -615,7 +615,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "stair_lift" => array(
                                 "stair_type" => $stairs_type_data,
@@ -655,7 +655,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "hvac" => array(
                                 "project_type" => $project_nature_data,
@@ -691,7 +691,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "hvac" => array(
                                 "project_type" => $project_nature_data,
@@ -713,7 +713,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "hvac" => array(
                                 "project_type" => $project_nature_data,
@@ -734,7 +734,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "cabinets" => array(
                                 "project_type" => $project_nature_data,
@@ -775,7 +775,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "plumbing" => array(
                                 "project_type" => "Install",
@@ -794,7 +794,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "sunrooms" => array(
                                 "num_rooms" => 3,
@@ -814,7 +814,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "handy_man" => array(
                                 "service_type" => $handyman_ammount_name
@@ -835,7 +835,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "doors" => array(
                                 "project_type" => $project_nature_data,
@@ -856,7 +856,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "gutters" => array(
                                 "protection" => false
@@ -888,7 +888,7 @@ class PingCRMAllied
 
                         $Lead_data_array_ping['data'] = array(
                             "best_call_time" => $best_call_time,
-                            "own_property" => $SecurityUsage,
+                            "own_property" => true,
                             "purchase_time_frame" => $start_time_data,
                             "painting" => array(
                                 "project_type" => $service_type_data
