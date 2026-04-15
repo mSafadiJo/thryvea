@@ -5296,6 +5296,180 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 67:
+                        // jobilo 660
+                        $url_api = "https://hs-leads.jobble.it/home-service/ping";
+                        $httpheader = array(
+                            "Accept: application/json",
+                            "Content-Type: application/json",
+                            "hs_api_key: hs_339aad365ffc490fa98fefde6c6af156",
+                            "hs_secret_key: 2f666f3e05fe4c558d5b07eaab632ac9",
+                        );
+
+                        $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
+
+                        $Lead_data_array_ping = array(
+                            'targetingAuditing' => array(
+                                'leadType' => 'Exclusive',
+                                'universalLeadId' => $LeadId,
+                                'tcpaOptIn' => 'Yes',
+                                'consentLanguage' => $TCPAText,
+                                'userAgent' => $UserAgent,
+                                'sellerCampaignSubSource' => $google_ts,
+                                'consumerSourceIp' => $IPAddress,
+                            ),
+                            'contact' => array(
+                                'state' => $state,
+                                'postalCode' => $zip,
+                            ),
+                            'home' => array(),
+                        );
+                        if (config('app.env', 'local') == "local") {
+                            //Test Mode
+                            $Lead_data_array_ping['targetingAuditing']['environment'] = "Staging";
+                        }else{
+                            $Lead_data_array_ping['targetingAuditing']['environment'] = "Production";
+                        }
+
+                        switch ($lead_type_service_id){
+                            case 6:
+                                //roofing
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $projectType = ($project_nature == "Repair existing roof" ? "Repair" : "New Roof for an Existing Home");
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "Within 1 week";
+                                        break;
+                                    case 'Within 6 months':
+                                        $timeframe = "More than 2 weeks";
+                                        break;
+                                    default:
+                                        $timeframe = "Time is flexible";
+                                }
+
+                                switch ($roof_type) {
+                                    case "Asphalt Roofing":
+                                        $Type_OfRoofing_data = "Asphalt Shingle";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Repair - Asphalt Shingle" : "Installation - Asphalt Shingle");
+                                        break;
+                                    case "Metal Roofing":
+                                        $Type_OfRoofing_data = "Metal";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Repair - Metal" : "Installation - Metal");
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $Type_OfRoofing_data = "Natural Slate";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Repair - Natural Slate" : "Installation - Natural Slate");
+                                        break;
+                                    case "Tile Roofing":
+                                        $Type_OfRoofing_data = "Tile";
+                                        $roof_task = ($project_nature == "Repair existing roof" ? "Repair - Tile" : "Installation - Tile");
+                                        break;
+                                    default:
+                                        $Type_OfRoofing_data = "Asphalt Shingle";
+                                        $roof_task = "Maintenance";
+                                }
+
+                                $Lead_data_array_ping['targetingAuditing']['submissionUrl'] = "theroofingreplacement.com";
+                                $Lead_data_array_ping['home']['category'] = "Roofing";
+                                $Lead_data_array_ping['home']['ownership'] = "Own";
+                                $Lead_data_array_ping['home']['roofing'] = array(
+                                    'subCategory' => $roof_task,
+                                    'projectType' => $projectType,
+                                    'propertyType' => 'Residential',
+                                    'authorizedForChanges' => 'Yes',
+                                    'requestTimeframe' => $timeframe,
+                                    'roofType' => $Type_OfRoofing_data,
+                                );
+                                break;
+                            case 9:
+                                //Bathroom
+                                $bathroom_type_name = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $SecurityUsage = ($ownership == "Yes" ? "Own" : "Rent");
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "Within 1 week";
+                                        break;
+                                    case 'Within 6 months':
+                                        $timeframe = "More than 2 weeks";
+                                        break;
+                                    default:
+                                        $timeframe = "Time is flexible";
+                                }
+
+                                $serviceBathroom_Floorplan = "No";
+                                $serviceBathroom_Shower_Bath = "No";
+                                $serviceBathroom_Toilet = "No";
+                                $serviceBathroom_Cabinets = "No";
+                                $serviceBathroom_Countertops = "No";
+                                $serviceBathroom_Sinks = "No";
+                                $serviceBathroom_Flooring = "No";
+                                switch ($bathroom_type_name){
+                                    case "Flooring":
+                                        $serviceBathroom_Floorplan = "Yes";
+                                        break;
+                                    case "Shower / Bath":
+                                        $serviceBathroom_Shower_Bath = "Yes";
+                                        break;
+                                    case "Sinks":
+                                        $serviceBathroom_Sinks = "Yes";
+                                        break;
+                                    case "Toilet":
+                                        $serviceBathroom_Toilet = "Yes";
+                                        break;
+                                }
+                                $Lead_data_array_ping['targetingAuditing']['submissionUrl'] = "thebathroomremodel.net";
+                                $Lead_data_array_ping['home']['category'] = "Bathroom Remodeling";
+                                $Lead_data_array_ping['home']['ownership'] = $SecurityUsage;
+                                $Lead_data_array_ping['home']['bathroomRemodeling'] = array(
+                                    "subCategory"=>"Bathroom Remodeling",
+                                    "projectType"=> "Repair",
+                                    "propertyType"=> "Residential",
+                                    "authorizedForChanges"=> "Yes",
+                                    "requestTimeframe"=> $timeframe,
+                                    "floorplan"=> $serviceBathroom_Floorplan,
+                                    "showerOrBath"=> $serviceBathroom_Shower_Bath,
+                                    "toilet"=> $serviceBathroom_Toilet,
+                                    "cabinets"=> $serviceBathroom_Cabinets,
+                                    "countertops"=> $serviceBathroom_Countertops,
+                                    "sinks"=> $serviceBathroom_Sinks,
+                                    "flooring"=> $serviceBathroom_Flooring
+                                );
+                                break;
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" =>  stripslashes(json_encode($Lead_data_array_ping)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id,  stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "SUCCESS") {
+                                    $TransactionId = $result2['pingId'] . "**" . $result2['buyers'][0]['bidId'];
+                                    $Payout = $result2['commission'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

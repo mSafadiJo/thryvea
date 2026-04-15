@@ -514,6 +514,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 67:
+                                    //jobilo
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "SUCCESS") {
+                                            $TransactionId = $result2['pingId'] . "**" . $result2['buyers'][0]['bidId'];
+                                            $Payout = $result2['commission'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }
