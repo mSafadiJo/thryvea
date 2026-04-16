@@ -7650,6 +7650,88 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 68:
+//                    champions
+                    $url = "http://bdmleadmanagement.valid1.net/Leads.aspx?";
+
+                    $body = [
+                        "first_name" => $first_name,
+                        "last_name" => $last_name,
+                        "address1" => $street,
+                        "city" => $city,
+                        "state" => $statename_code,
+                        "postal_code" => $zip,
+                        "email" => $email,
+                        "phone_primary" => $number1,
+                        "EBRDate" => date("m/d/Y G:i:s"),
+                        "ip" => $IPAddress,
+                        "cert" => $trusted_form,
+                        "alid" => "2928",
+                        "source" => "Thryvea"
+                    ];
+
+                    $httpheader = array(
+                        "cache-control: no-cache",
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    if (config('app.env', 'local') == "local") {
+                        $body['BDMLeadType'] = 'test';
+                        $body['postal_code'] = '87017';
+                        $body['state'] = 'NM';
+                    } else {
+                        $body['BDMLeadType'] = 'live';
+                    }
+
+                    switch ($lead_type_service_id) {
+                        case 1:
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $number_of_windows = trim($crm_details['data']['number_of_window']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            $windows_product = array(
+                                "Install" => [
+                                    '1' => '1-Install',
+                                    '2' => '2-Install',
+                                    '3-5' => '3-5-Install',
+                                    '6-9' => '6-9-Install',
+                                    '10+' => "Windows - New Windows - 10+"
+                                ],
+
+                                "Replace" => [
+                                    '1' => '1-Replace',
+                                    '2' => '2-Replace',
+                                    '3-5' => '3-5-Replace',
+                                    '6-9' => '6-9-Replace',
+                                    '10+' => "replace windows - number of windows 10"
+                                ],
+
+                                "Repair" => [
+                                    '1' => '1-Repair',
+                                    '2' => '2-Repair',
+                                    '3-5' => '6-9-Repair',
+                                    '6-9' => '6-9-Repair',
+                                    '10+' => "6-9-Repair"
+                                ]
+                            );
+
+                            $body["taskName"] = $windows_product["$project_nature"]["$number_of_windows"];
+                            $body['oid'] = "10599";
+
+                            $url .= http_build_query($body);
+
+                            $response = $crm_api_file->api_send_data($url, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
+
+                            if (str_contains(strtolower($response), 'success -')) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                            break;
+                    }
+                    break;
 
             }
             return 0;
