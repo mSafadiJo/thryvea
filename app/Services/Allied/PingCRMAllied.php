@@ -5470,6 +5470,267 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 69:
+                        //Alpine Digital Group, Inc. 844
+                        if ($trusted_form == "NA" || $trusted_form == "N/A"
+                            || $trusted_form == "https://cert.trustedform.com/Will_Provide_on_Post"
+                            || $trusted_form == "https://cert.trustedform.com/will_send_on_post"
+                            || $trusted_form == "https://cert.trustedform.com"
+                            || empty($LeadId) || empty($OriginalURL2) || empty($TCPAText) || empty($trusted_form) ) {
+                            if($is_multi_api == 0) {
+                                $data_response = array(
+                                    'TransactionId' => $TransactionId,
+                                    'Payout' => $Payout,
+                                    'Result' => $Result,
+                                    'multi_type' => $multi_type,
+                                    'campaign_id' => $campaign->campaign_id
+                                );
+
+                                return json_encode($data_response);
+                            } else {
+                                return $ping_crm_apis;
+                            }
+                        }
+
+                        $url_api = "https://adgtrax.com/submit/home-improvement";
+                        $httpheader = array(
+                            "cache-control: no-cache",
+                            "Accept: application/json",
+                            "content-type: application/json"
+                        );
+
+                        $UserAgent = (!empty($UserAgent) ? $UserAgent : "Mozilla/5.0 (iPhone; CPU iPhone OS 15_6_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6.1 Mobile/15E148 Safari/604.1");
+                        $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
+
+                        $Lead_data = array(
+                            "product" => "Home Improvement",
+                            "method" => "ping",
+                            "campaignId" => "69e64795fa7769dd40355cac",
+                            "key" => "69e6473cfa7769dd40355c92",
+                            "city" => $city,
+                            "state" => $statename_code,
+                            "zipCode" => $zip,
+                            "leadId" => $LeadId,
+                            "xxTrustedFormCertUrl" => $trusted_form,
+                            "consentLang" => $TCPAText,
+                            "sourceIP" => $IPAddress,
+                            "userAgent" => $UserAgent,
+                            "leadBornOnDateTime" => date("c"),
+                            "s1" => "THY",
+                            "s2" => "thv$google_ts",
+                            "mobile" => false,
+                            "test" => false,
+                            "firstName" => "pingFirst",
+                            "lastName" => "pingLast"
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //windows
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+
+                                $homeowner = ($ownership == "Yes" ? true : false);
+                                $replace_repair = ($project_nature == "Repair" ? 12 : 4);
+                                switch ($number_of_windows){
+                                    case "3-5":
+                                        $number_of_windows_data = 4;
+                                        break;
+                                    case "6-9":
+                                        $number_of_windows_data = 7;
+                                        break;
+                                    case "10+":
+                                        $number_of_windows_data = 10;
+                                        break;
+                                    default:
+                                        $number_of_windows_data = $number_of_windows;
+                                }
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $project_timeframe = 1;//1 - Emergency Service
+                                        break;
+                                    case "Within 6 months":
+                                        $project_timeframe = 4;//4 - 1 or 2 Weeks
+                                        break;
+                                    default:
+                                        $project_timeframe = 2;//2 - Timing Flexible
+                                }
+
+                                $Lead_data['submissionURL'] = "https://thewindowsinstall.com";
+                                $Lead_data['projectType'] = $replace_repair;
+                                $Lead_data['timeframe'] = $project_timeframe;
+                                $Lead_data['windows'] = $number_of_windows_data;
+                                $Lead_data['residential'] = true;
+                                $Lead_data['homeowner'] = $homeowner;
+                                break;
+                            case 2:
+                                //Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $homeowner = ($property_type == 'Rented' ? false : true);
+                                $residential = ($property_type == 'Business' ? false : true);
+                                switch ($roof_shade){
+                                    case "Full Sun":
+                                        $roof_shade_data = 1;//1 - No Shade
+                                        break;
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = 3;//3 - Majority Shade
+                                        break;
+                                    case "Partial Sun":
+                                    default:
+                                        $roof_shade_data = 2;//2 - Some Shade
+                                }
+                                switch ($monthly_electric_bill) {
+                                    case '$0 - $50':
+                                        $monthly_bill = 50;
+                                        break;
+                                    case '$51 - $100':
+                                        $monthly_bill = 100;
+                                        break;
+                                    case '$101 - $150':
+                                        $monthly_bill = 150;
+                                        break;
+                                    case '$151 - $200':
+                                        $monthly_bill = 200;
+                                        break;
+                                    case '$201 - $300':
+                                        $monthly_bill = 300;
+                                        break;
+                                    case '$301 - $400':
+                                        $monthly_bill = 400;
+                                        break;
+                                    case '$401 - $500':
+                                        $monthly_bill = 500;
+                                        break;
+                                    default:
+                                        $monthly_bill = 600;
+                                }
+
+                                $Lead_data['submissionURL'] = "https://thesolarinstall.com";
+                                $Lead_data['projectType'] = 9;
+                                $Lead_data['timeframe'] = 2;
+                                $Lead_data['solar'] = array(
+                                    "electricProvider" => $utility_provider,
+                                    "avgElectricBill" => $monthly_bill,
+                                    "shade" => $roof_shade_data
+                                );
+                                $Lead_data['residential'] = $residential;
+                                $Lead_data['homeowner'] = $homeowner;
+                                break;
+                            case 6:
+                                //Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $residential = ($property_type == 'Commercial' ? false : true);
+                                $replace_repair = ($project_nature == "Repair existing roof" ? 6 : 14);
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $project_timeframe = 1;//1 - Emergency Service
+                                        break;
+                                    case "Within 6 months":
+                                        $project_timeframe = 4;//4 - 1 or 2 Weeks
+                                        break;
+                                    default:
+                                        $project_timeframe = 2;//2 - Timing Flexible
+                                }
+
+                                $Lead_data['submissionURL'] = "https://theroofingreplacement.com";
+                                $Lead_data['projectType'] = $replace_repair;
+                                $Lead_data['timeframe'] = $project_timeframe;
+                                $Lead_data['residential'] = $residential;
+                                $Lead_data['homeowner'] = true;
+                                break;
+                            case 7:
+                                //Home Siding
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $homeowner = ($ownership == "Yes" ? true : false);
+                                $replace_repair = ($project_nature == "Repair section(s) of siding" ? 7 : 15);
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $project_timeframe = 1;//1 - Emergency Service
+                                        break;
+                                    case "Within 6 months":
+                                        $project_timeframe = 4;//4 - 1 or 2 Weeks
+                                        break;
+                                    default:
+                                        $project_timeframe = 2;//2 - Timing Flexible
+                                }
+
+                                $Lead_data['submissionURL'] = "https://thehomesidinginstall.com";
+                                $Lead_data['projectType'] = $replace_repair;
+                                $Lead_data['timeframe'] = $project_timeframe;
+                                $Lead_data['residential'] = true;
+                                $Lead_data['homeowner'] = $homeowner;
+                                break;
+                            case 9:
+                                //Bathroom
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $homeowner = ($ownership == "Yes" ? true : false);
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $project_timeframe = 1;//1 - Emergency Service
+                                        break;
+                                    case "Within 6 months":
+                                        $project_timeframe = 4;//4 - 1 or 2 Weeks
+                                        break;
+                                    default:
+                                        $project_timeframe = 2;//2 - Timing Flexible
+                                }
+
+                                $Lead_data['submissionURL'] = "https://thebathroomremodel.net";
+                                $Lead_data['projectType'] = 11;//11 - Bathroom Remodel
+                                $Lead_data['timeframe'] = $project_timeframe;
+                                $Lead_data['residential'] = true;
+                                $Lead_data['homeowner'] = $homeowner;
+                                break;
+                        }
+
+                        if (config('app.env', 'local') == "local") {
+                            //Test Mode
+                            $Lead_data['test'] = true;
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => json_encode($Lead_data),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, json_encode($Lead_data), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2)) {
+                                if ($result2['success'] == "true") {
+                                    $TransactionId = $result2['pingId'];
+                                    $Payout = $result2['payout'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

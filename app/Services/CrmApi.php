@@ -526,6 +526,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 69:
+                                    //Alpine Digital Group, Inc. 844
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2)) {
+                                        if ($result2['success'] == "true") {
+                                            $TransactionId = $result2['pingId'];
+                                            $Payout = $result2['payout'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }
