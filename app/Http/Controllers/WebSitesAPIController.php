@@ -153,7 +153,7 @@ class WebSitesAPIController extends Controller
 
         try {
             //Lead Address ==================================================================
-            if(empty($request['county_id'])){
+            if (empty($request['county_id'])) {
                 $county_id_list = DB::table('zip_codes_lists')
                     ->join('counties', 'counties.county_id', '=', 'zip_codes_lists.county_id')
                     ->where('zip_codes_lists.zip_code_list_id', $request['zipcode_id'])
@@ -176,12 +176,12 @@ class WebSitesAPIController extends Controller
             //Lead Address ==================================================================
 
             //Update Questions =======================================================================================
-            if( $request['ownership'] == 2 ){
+            if ($request['ownership'] == 2) {
                 $request['ownership'] = 0;
             }
 
             //Kitchen
-            if( $request['removing_adding_walls'] == 2 ){
+            if ($request['removing_adding_walls'] == 2) {
                 $request['removing_adding_walls'] = 0;
             }
 
@@ -215,27 +215,27 @@ class WebSitesAPIController extends Controller
             $lead_source_api = "ADMS20";
             $lead_source_id = 1;
             $is_lead_review = 0;
-            if( !empty($request['tc']) ){
-                $ts_data_arr = explode("-",$request['tc']);
+            if (!empty($request['tc'])) {
+                $ts_data_arr = explode("-", $request['tc']);
                 $marketing_ts = DB::table('lead_traffic_sources')->where('name', strtolower($ts_data_arr[0]))->first(['marketing_platform_id']);
-                if( !empty($marketing_ts) ){
-                    $marketing_platform = DB::table('marketing_platforms')->select('id','lead_source', 'name')
+                if (!empty($marketing_ts)) {
+                    $marketing_platform = DB::table('marketing_platforms')->select('id', 'lead_source', 'name')
                         ->where('id', $marketing_ts->marketing_platform_id)->first();
-                    if( !empty($marketing_platform) ){
+                    if (!empty($marketing_platform)) {
                         $lead_source = $marketing_platform->name;
                         $lead_source2 = $marketing_platform->name;
                         $lead_source_id = $marketing_platform->id;
                         $lead_source_api = $marketing_platform->lead_source;
-                        if($lead_source2 == "ReAffiliate"){
+                        if ($lead_source2 == "ReAffiliate") {
                             $request['traffic_source'] = "ReAffiliate";
                         }
                     }
                 }
 
-                if( !empty($ts_data_arr[1]) ){
+                if (!empty($ts_data_arr[1])) {
                     $ts_data_arr1_data = str_split($ts_data_arr[1]);
-                    if( !empty($ts_data_arr1_data[0])){
-                        if( strtolower($ts_data_arr1_data[0]) == "r" ){
+                    if (!empty($ts_data_arr1_data[0])) {
+                        if (strtolower($ts_data_arr1_data[0]) == "r") {
                             $lead_source2 .= " > R";
                             $is_lead_review = 1;
                         }
@@ -251,7 +251,7 @@ class WebSitesAPIController extends Controller
             //To check If Duplicated Lead =================================================================
             $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
                 ->where('status', 0)
-                ->where(function ($query) use($request) {
+                ->where(function ($query) use ($request) {
                     $query->where('lead_phone_number', $request['phone_number']);
                     $query->OrWhere('lead_email', $request->email);
                 })
@@ -262,7 +262,7 @@ class WebSitesAPIController extends Controller
             $is_sold_duplicate = LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
                 ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
                 ->where('leads_customers.status', 0)
-                ->where(function ($query) use($request) {
+                ->where(function ($query) use ($request) {
                     $query->where('leads_customers.lead_phone_number', $request['phone_number']);
                     $query->OrWhere('leads_customers.lead_email', $request->email);
                 })
@@ -279,15 +279,15 @@ class WebSitesAPIController extends Controller
             $is_blocked_last_name = DB::table('block_last_name_lists')->where('value', $request['lname'])->first();
 
             $is_blocked_lead_info = 0;
-            if( !empty($is_blocked_phone_number) || !empty($is_blocked_email) || !empty($is_blocked_ip_address)
-                || !empty($is_blocked_first_name) || !empty($is_blocked_last_name) ){
+            if (!empty($is_blocked_phone_number) || !empty($is_blocked_email) || !empty($is_blocked_ip_address)
+                || !empty($is_blocked_first_name) || !empty($is_blocked_last_name)) {
                 $is_blocked_lead_info = 1;
             }
             //Checked Blocked Info =================================================================
 
             //TCPA ==============================================================================================
             $tcpa_compliant = 1;
-            if( !empty($request->tcpa_consent_text) ){
+            if (!empty($request->tcpa_consent_text)) {
                 $tcpa_consent_text = $request->tcpa_consent_text;
             } else {
                 $tcpa_consent_text = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and marketing partners at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
@@ -305,14 +305,15 @@ class WebSitesAPIController extends Controller
             $leadCustomerStore = $allservicesQues->websitesAPIControllerAddLeadCustomer($leadCustomerStore, $request, $lead_source_id, $lead_source2, $dataMassageForDB, $tcpa_compliant, $tcpa_consent_text, $is_blocked_lead_info);
 
             $leadCustomerStore->save();
-           // $leadCustomer_id = DB::getPdo()->lastInsertId();
+            // $leadCustomer_id = DB::getPdo()->lastInsertId();
             $leadCustomer_id = $leadCustomerStore->lead_id;
             //Add LeadsCustomer ==============================================================================================
 
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
-            if(empty($request['is_sec_service'])) {
+          if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk') {
+            if (empty($request['is_sec_service'])) {
                 if ($is_lead_review != 1) {
                     //IPQS IP Validation
                     $lead_ip_validation = $api_validations->lead_ip_validation_ipqs($request->ipaddress);
@@ -354,6 +355,7 @@ class WebSitesAPIController extends Controller
                     }
                 }
             }
+        }
 
             //Server to server Conversion =================================================================
 //            if(!empty($request['token'])){
