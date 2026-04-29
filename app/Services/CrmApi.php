@@ -538,6 +538,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 70:
+                                    //Adventum LLC 583
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "success") {
+                                            $TransactionId = $result2['bid']['bid_id'];
+                                            $Payout = $result2['bid']['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }

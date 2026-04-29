@@ -5731,6 +5731,300 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 70:
+                        //Adventum LLC 583
+                        //https://api.adventum.co/doc/
+                        if (empty($LeadId) || empty($OriginalURL2)) {
+                            if($is_multi_api == 0) {
+                                $data_response = array(
+                                    'TransactionId' => $TransactionId,
+                                    'Payout' => $Payout,
+                                    'Result' => $Result,
+                                    'multi_type' => $multi_type,
+                                    'campaign_id' => $campaign->campaign_id
+                                );
+
+                                return json_encode($data_response);
+                            } else {
+                                return $ping_crm_apis;
+                            }
+                        }
+
+                        $httpheader = array(
+                            "Accept: application/json",
+                            "content-type: application/json"
+                        );
+
+                        $url_api = "https://api.adventum.co/ping/";
+
+                        if (config('app.env', 'local') == "local") {
+                            //Test Mode
+                            $test = "1";
+                        } else {
+                            //Live Mode
+                            $test = "0";
+                        }
+
+                        $type = "json";
+                        $api_key = "7A9440F5-726F-9A7E-0850-4F65F0081947";
+                        $affiliate_id = "957076";
+
+                        $Lead_data1 = array(
+                            "type" => $type,
+                            "test" => $test,
+                            "api_key" => $api_key,
+                            "affiliate_id" => $affiliate_id,
+                            "sourceurl" => $OriginalURL2,
+                            "campaign_id" => $lead_source_text,
+                            "sub_id" => "thv1$google_ts",
+                            "request" => array(
+                                "trustedform" => $trusted_form,
+                                "leadid" => $LeadId,
+                                "date" => trim(date('Y-m-d H:i:s')),
+                                "ip" => $IPAddress,
+                                "zip" => $zip,
+                                "useragent" => $UserAgent,
+                                "tcpa" => $TCPAText
+                            ),
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //Windows
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $quantity = trim($Leaddatadetails['number_of_window']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+
+                                $besttimecall = "any time";
+                                $homeowner = ($ownership == 'Yes' ? "yes" : "no");
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "immediately";
+                                        break;
+                                    case 'Within 6 months':
+                                        $timeframe = "3-6 months";
+                                        break;
+                                    default:
+                                        $timeframe = "not sure";
+                                }
+
+                                switch ($project_nature){
+                                    case "Install":
+                                        $project_type = "new";
+                                        break;
+                                    case "Replace":
+                                        $project_type = "replace";
+                                        break;
+                                    default:
+                                        $project_type = "repair";
+                                }
+
+                                $Lead_data2 = array(
+                                    "vertical" => "windows",
+                                    "attributes" => array(
+                                        "project_type" => $project_type,
+                                        "quantity" => $quantity,
+                                        "timeframe" => $timeframe,
+                                        "besttimecall" => $besttimecall,
+                                        "homeowner" => $homeowner,
+                                    ),
+                                );
+                                break;
+                            case 2:
+                                //Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $project_type_new = "new";
+
+                                switch ($property_type){
+                                    case "Owned":
+                                        $homeowner = "yes";
+                                        $property_type_data = "residential";
+                                        break;
+                                    case "Business":
+                                        $homeowner = "no";
+                                        $property_type_data = "commercial";
+                                        break;
+                                    default:
+                                        $homeowner = "no";
+                                        $property_type_data = "residential";
+                                }
+
+                                switch ($power_solution){
+                                    case "Solar Water Heating for my Home":
+                                        $power_solution_data = "hotwater";
+                                        break;
+                                    case "Solar Electricity & Water Heating for my Home":
+                                        $power_solution_data = "both";
+                                        break;
+                                    default:
+                                        $power_solution_data = "electricity";
+                                }
+
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                        $electricity_bill = "0-49";
+                                        break;
+                                    case '$51 - $100':
+                                        $electricity_bill = "50-99";
+                                        break;
+                                    case '$101 - $150':
+                                        $electricity_bill = "100-149";
+                                        break;
+                                    case '$151 - $200':
+                                        $electricity_bill = "150-199";
+                                        break;
+                                    case '$201 - $300':
+                                        $electricity_bill = "250-299";
+                                        break;
+                                    case '$301 - $400':
+                                        $electricity_bill = "350-399";
+                                        break;
+                                    default:
+                                        $electricity_bill = "400+";
+                                }
+
+                                $Lead_data2 = array(
+                                    "vertical" => "solar",
+                                    "attributes" => array(
+                                        "project_type" => $project_type_new,
+                                        "roof_shade" => strtolower($roof_shade),
+                                        "solar_system_type" => $power_solution_data,
+                                        "install_location" => "roof",
+                                        "current_provider" => $utility_provider,
+                                        "electricity_bill" => $electricity_bill,
+                                        "timeframe" => "not sure",
+                                        "besttimecall" => "any time",
+                                        "homeowner" => $homeowner,
+                                        "property_type" => $property_type_data
+                                    ),
+                                );
+                                break;
+                            case 6:
+                                //Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                switch ($project_nature){
+                                    case "Install roof on new construction":
+                                        $project_nature_text = "new";
+                                        break;
+                                    case "Completely replace roof":
+                                        $project_nature_text = "replace";
+                                        break;
+                                    default:
+                                        $project_nature_text = "repair";
+                                }
+
+                                switch ($roof_type){
+                                    case "Wood Shake/Composite Roofing":
+                                        $roof_type_text = "cedar";
+                                        break;
+                                    case "Metal Roofing":
+                                        $roof_type_text = "metal";
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $roof_type_text = "natural";
+                                        break;
+                                    case "Tile Roofing":
+                                        $roof_type_text = "tile";
+                                        break;
+                                    default:
+                                        $roof_type_text = "asphalt";
+                                }
+
+                                switch ($start_time){
+                                    case 'Immediately':
+                                        $timeframe = "immediately";
+                                        break;
+                                    case 'Within 6 months':
+                                        $timeframe = "3-6 months";
+                                        break;
+                                    default:
+                                        $timeframe = "not sure";
+                                }
+
+                                $Lead_data2 = array(
+                                    "vertical" => "roofing",
+                                    "attributes" => array(
+                                        "project_type" => $project_nature_text,
+                                        "roof_material" => $roof_type_text,
+                                        "timeframe" => $timeframe,
+                                        "besttimecall" => "any time",
+                                        "homeowner" => "yes",
+                                        "property_type" => strtolower($property_type)
+                                    ),
+                                );
+                                break;
+                            case 9:
+                                //Bathroom
+                                $bathroom_type_name = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                switch ($bathroom_type_name){
+                                    case "Flooring":
+                                        $remodel_type = "tile";
+                                        break;
+                                    case "Shower / Bath" || "Sinks" || "Toilet":
+                                        $remodel_type = "bath or sink";
+                                        break;
+                                    default:
+                                        $remodel_type = "full bathroom";
+                                }
+
+                                $timeframe = ($start_time == 'Immediately' ? 'immediately' : 'not sure');
+                                $homeowner = ($ownership == 'Yes' ? "yes" : "no");
+
+                                $Lead_data2 = array(
+                                    "vertical" => "bathroom",
+                                    "attributes" => array(
+                                        "project_type" => "new",
+                                        "remodel_type" => $remodel_type,
+                                        "timeframe" => $timeframe,
+                                        "besttimecall" => "any time",
+                                        "homeowner" => $homeowner
+                                    ),
+                                );
+                                break;
+                        }
+
+                        $Lead_data_array_ping = array_merge($Lead_data1, $Lead_data2);
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array_ping)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array_ping)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "success") {
+                                    $TransactionId = $result2['bid']['bid_id'];
+                                    $Payout = $result2['bid']['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

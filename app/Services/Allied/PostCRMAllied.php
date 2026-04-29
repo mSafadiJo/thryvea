@@ -7964,6 +7964,278 @@ class PostCRMAllied {
                         }
                     }
                     break;
+                case 70:
+                    //Adventum LLC 583
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $bid_id = $data_msg['ping_post_data']['TransactionId'];
+                    } else {
+                        return 0;
+                    }
+
+                    $httpheader = array(
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    $url_api = "https://api.adventum.co/post/";
+
+                    if (config('app.env', 'local') == "local") {
+                        //Test Mode
+                        $test = "1";
+                    } else {
+                        //Live Mode
+                        $test = "0";
+                    }
+
+                    $type = "json";
+                    $api_key = "38CB63DC-DCF1-0BA9-346D-5E1EAC08D971";
+                    $affiliate_id = "788308";
+
+                    $Lead_data1 = array(
+                        "type" => $type,
+                        "test" => $test,
+                        "api_key" => $api_key,
+                        "bid_id" => $bid_id,
+                        "affiliate_id" => $affiliate_id,
+                        "sourceurl" => $OriginalURL2,
+                        "campaign_id" => $lead_source_text,
+                        "sub_id" => "thv1$google_ts",
+                        "request" => array(
+                            "trustedform" => $trusted_form,
+                            "leadid" => $LeadId,
+                            "date" => trim(date('Y-m-d H:i:s')),
+                            "ip" => $IPAddress,
+                            "useragent" => $UserAgent,
+                            "tcpa" => $TCPAText,
+                            "zip" => $zip,
+                            "firstname" => $first_name,
+                            "lastname" => $last_name,
+                            "address" => $street,
+                            "email" => $email,
+                            "phone" => $number1
+                        ),
+                    );
+
+                    switch ($crm_details['service_id']) {
+                        case 1:
+                            //Windows
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $quantity = trim($crm_details['data']['number_of_window']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            $besttimecall = "any time";
+                            $homeowner = ($ownership == 'Yes' ? "yes" : "no");
+
+                            switch ($start_time) {
+                                case 'Immediately':
+                                    $timeframe = "immediately";
+                                    break;
+                                case 'Within 6 months':
+                                    $timeframe = "3-6 months";
+                                    break;
+                                default:
+                                    $timeframe = "not sure";
+                            }
+
+                            switch ($project_nature) {
+                                case "Install":
+                                    $project_type = "new";
+                                    break;
+                                case "Replace":
+                                    $project_type = "replace";
+                                    break;
+                                default:
+                                    $project_type = "repair";
+                            }
+
+                            $Lead_data2 = array(
+                                "vertical" => "windows",
+                                "attributes" => array(
+                                    "project_type" => $project_type,
+                                    "quantity" => $quantity,
+                                    "timeframe" => $timeframe,
+                                    "besttimecall" => $besttimecall,
+                                    "homeowner" => $homeowner,
+                                ),
+                            );
+                            break;
+                        case 2:
+                            //Solar
+                            $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                            $utility_provider = trim($crm_details['data']['utility_provider']);
+                            $roof_shade = trim($crm_details['data']['roof_shade']);
+                            $property_type = trim($crm_details['data']['property_type']);
+                            $power_solution = trim($crm_details['data']['power_solution']);
+
+                            $project_type_new = "new";
+
+                            switch ($property_type) {
+                                case "Owned":
+                                    $homeowner = "yes";
+                                    $property_type_data = "residential";
+                                    break;
+                                case "Business":
+                                    $homeowner = "no";
+                                    $property_type_data = "commercial";
+                                    break;
+                                default:
+                                    $homeowner = "no";
+                                    $property_type_data = "residential";
+                            }
+
+                            switch ($power_solution) {
+                                case "Solar Water Heating for my Home":
+                                    $power_solution_data = "hotwater";
+                                    break;
+                                case "Solar Electricity & Water Heating for my Home":
+                                    $power_solution_data = "both";
+                                    break;
+                                default:
+                                    $power_solution_data = "electricity";
+                            }
+
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $electricity_bill = "0-49";
+                                    break;
+                                case '$51 - $100':
+                                    $electricity_bill = "50-99";
+                                    break;
+                                case '$101 - $150':
+                                    $electricity_bill = "100-149";
+                                    break;
+                                case '$151 - $200':
+                                    $electricity_bill = "150-199";
+                                    break;
+                                case '$201 - $300':
+                                    $electricity_bill = "250-299";
+                                    break;
+                                case '$301 - $400':
+                                    $electricity_bill = "350-399";
+                                    break;
+                                default:
+                                    $electricity_bill = "400+";
+                            }
+
+                            $Lead_data2 = array(
+                                "vertical" => "solar",
+                                "attributes" => array(
+                                    "project_type" => $project_type_new,
+                                    "roof_shade" => strtolower($roof_shade),
+                                    "solar_system_type" => $power_solution_data,
+                                    "install_location" => "roof",
+                                    "current_provider" => $utility_provider,
+                                    "electricity_bill" => $electricity_bill,
+                                    "timeframe" => "not sure",
+                                    "besttimecall" => "any time",
+                                    "homeowner" => $homeowner,
+                                    "property_type" => $property_type_data
+                                ),
+                            );
+                            break;
+                        case 6:
+                            //Roofing
+                            $roof_type = trim($crm_details['data']['roof_type']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $property_type = trim($crm_details['data']['property_type']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            switch ($project_nature) {
+                                case "Install roof on new construction":
+                                    $project_nature_text = "new";
+                                    break;
+                                case "Completely replace roof":
+                                    $project_nature_text = "replace";
+                                    break;
+                                default:
+                                    $project_nature_text = "repair";
+                            }
+
+                            switch ($roof_type) {
+                                case "Wood Shake/Composite Roofing":
+                                    $roof_type_text = "cedar";
+                                    break;
+                                case "Metal Roofing":
+                                    $roof_type_text = "metal";
+                                    break;
+                                case "Natural Slate Roofing":
+                                    $roof_type_text = "natural";
+                                    break;
+                                case "Tile Roofing":
+                                    $roof_type_text = "tile";
+                                    break;
+                                default:
+                                    $roof_type_text = "asphalt";
+                            }
+
+                            switch ($start_time) {
+                                case 'Immediately':
+                                    $timeframe = "immediately";
+                                    break;
+                                case 'Within 6 months':
+                                    $timeframe = "3-6 months";
+                                    break;
+                                default:
+                                    $timeframe = "not sure";
+                            }
+
+                            $Lead_data2 = array(
+                                "vertical" => "roofing",
+                                "attributes" => array(
+                                    "project_type" => $project_nature_text,
+                                    "roof_material" => $roof_type_text,
+                                    "timeframe" => $timeframe,
+                                    "besttimecall" => "any time",
+                                    "homeowner" => "yes",
+                                    "property_type" => strtolower($property_type)
+                                ),
+                            );
+                            break;
+                        case 9:
+                            //Bathroom
+                            $bathroom_type_name = trim($crm_details['data']['services']);
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+
+                            switch ($bathroom_type_name) {
+                                case "Flooring":
+                                    $remodel_type = "tile";
+                                    break;
+                                case "Shower / Bath" || "Sinks" || "Toilet":
+                                    $remodel_type = "bath or sink";
+                                    break;
+                                default:
+                                    $remodel_type = "full bathroom";
+                            }
+
+                            $timeframe = ($start_time == 'Immediately' ? 'immediately' : 'not sure');
+                            $homeowner = ($ownership == 'Yes' ? "yes" : "no");
+
+                            $Lead_data2 = array(
+                                "vertical" => "bathroom",
+                                "attributes" => array(
+                                    "project_type" => "new",
+                                    "remodel_type" => $remodel_type,
+                                    "timeframe" => $timeframe,
+                                    "besttimecall" => "any time",
+                                    "homeowner" => $homeowner
+                                ),
+                            );
+                            break;
+                    }
+
+                    $Lead_data_array = array_merge($Lead_data1, $Lead_data2);
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2['status'])) {
+                        if ($result2['status'] == "success") {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                    break;
 
             }
             return 0;
