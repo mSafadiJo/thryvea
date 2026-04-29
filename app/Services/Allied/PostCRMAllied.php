@@ -6910,7 +6910,7 @@ class PostCRMAllied {
 
                     $Lead_data_array = array(
                         'email' => $email,
-                        'SRC' => 'THV1',
+                        'SRC' => "THV1$google_ts",
                         'zip' => $zip,
                         'ipAddress' => $IPAddress,
                         'TCPAConsent' => $tcpa_compliant,
