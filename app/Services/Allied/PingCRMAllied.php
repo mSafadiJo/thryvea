@@ -4820,7 +4820,7 @@ class PingCRMAllied
                             "Content-Type: application/x-www-form-urlencoded"
                         );
                         $Lead_data_array_ping = array(
-                            'SRC' => 'THV1',
+                            'SRC' => "THV1$google_ts",
                             'zip' => $zip,
                             'TCPAConsent' => $tcpa_compliant,
                             'TCPAConsentLanguage' => $TCPAText,
