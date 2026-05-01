@@ -16,7 +16,7 @@ class CrmApi {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 20,
+            CURLOPT_TIMEOUT => 15,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $method,
@@ -79,7 +79,7 @@ class CrmApi {
             curl_setopt($curl_arr[$key], CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl_arr[$key], CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl_arr[$key], CURLOPT_HEADER,0);
-            curl_setopt($curl_arr[$key], CURLOPT_TIMEOUT, 20);
+            curl_setopt($curl_arr[$key], CURLOPT_TIMEOUT, 15);
             curl_setopt($curl_arr[$key], CURLOPT_ENCODING, "");
             curl_setopt($curl_arr[$key], CURLOPT_MAXREDIRS, 10);
             curl_setopt($curl_arr[$key], CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
