@@ -548,11 +548,11 @@ class MainApiController extends Controller
             "1747692143",
             "1747692083",
         ];
-        //$start_time_value = false;
-        //if(in_array((string) $request->vendor_id , $vendor_id_array)){
+        $start_time_value = false;
+        if(in_array((string) $request->vendor_id , $vendor_id_array)){
             $start_time = microtime(true);
             $start_time_value = true;
-        //}
+        }
 
         $request->headers->set('Accept', 'application/json');
         $this->validate($request, [
