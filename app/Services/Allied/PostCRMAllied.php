@@ -5661,7 +5661,6 @@ class PostCRMAllied {
 
                     $TCPATextStitc = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
 
-
                     $Lead_data_array = array(
                         "lp_ping_id" => $TransactionId,
                         "external_id" => $leadsCustomerCampaign_id,
@@ -5681,6 +5680,7 @@ class PostCRMAllied {
                         "street" => $street,
                         "city" => $city,
                         "state" => $statename_code,
+                        "landing_page_url" => $OriginalURL2,
                     );
 
                     switch ($lead_type_service_id) {
@@ -5714,8 +5714,6 @@ class PostCRMAllied {
                             $Lead_data_array['vertical'] = "window";
                             $Lead_data_array['home_owner'] = $homeowner;
                             $Lead_data_array['number_of_windows'] = $number_of_windows_data;
-                            $Lead_data_array['landing_page_url'] = "https://thewindowsinstall.com/Quote?ts=thv$google_ts";
-
                             $httpheader[] = "X-API-Key: MTZfd2luZG93XzE3NjQ3NTk3MjlfNjkz";
                             break;
                         case 6:
@@ -5747,8 +5745,6 @@ class PostCRMAllied {
                             $Lead_data_array['vertical'] = "roof";
                             $Lead_data_array['home_owner'] = "yes";
                             $Lead_data_array['roofing_type'] = $roofmaterial;
-                            $Lead_data_array['landing_page_url'] = "https://homeremodelingpro.net/Quote?ts=thv$google_ts";
-
                             $httpheader[] = "X-API-Key: MTZfcm9vZl8xNzY0NzU5Nzg1XzY5MzAx";
                             break;
                         case 7:
@@ -5756,7 +5752,6 @@ class PostCRMAllied {
                             $project_nature = trim($crm_details['data']['project_nature']);
                             $type_of_siding = trim($crm_details['data']['type_of_siding']);
                             $ownership = trim($crm_details['data']['homeOwn']);
-
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
                             $projecttype = ($project_nature == "Repair section(s) of siding" ? "Siding Repair" : "Siding Install");
 
@@ -5784,21 +5779,16 @@ class PostCRMAllied {
                             $Lead_data_array['vertical'] = "siding";
                             $Lead_data_array['project_type'] = $projecttype;
                             $Lead_data_array['material_type'] = $SidingType;
-                            $Lead_data_array['landing_page_url'] = "thehomesidinginstall.com";
                             $httpheader[] = "X-API-Key: 5d81535012a17716da1bbcef0d095cc4";
-
                             break;
                         case 9:
                             //Bathroom
                             $bathroom_type_name = trim($crm_details['data']['services']);
                             $ownership = trim($crm_details['data']['homeOwn']);
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
-
                             $Lead_data_array['home_owner'] = $homeowner;
                             $Lead_data_array['remodel_walls'] = "yes";
                             $Lead_data_array['vertical'] = "bath-remodel";
-                            $Lead_data_array['landing_page_url'] = "https://thebathroomremodel.net/Quote?ts=thv$google_ts";
-
                             $httpheader[] = "X-API-Key: MTZfYmF0aC1yZW1vZGVsXzE3NjQ3NTk2";
                             break;
                     }

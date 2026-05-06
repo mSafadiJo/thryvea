@@ -3650,6 +3650,7 @@ class PingCRMAllied
                             "trustedform_cert_url" => $trusted_form,
                             "seconds_on_landing" => $SessionLength ?? "40",
                             "source" => "thv".$google_ts,
+                            "landing_page_url" => $OriginalURL2,
                         );
 
                         switch ($lead_type_service_id){
@@ -3683,8 +3684,6 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "window";
                                 $Lead_data_array['home_owner'] = $homeowner;
                                 $Lead_data_array['number_of_windows'] = $number_of_windows_data;
-                                $Lead_data_array['landing_page_url'] = "https://thewindowsinstall.com/Quote?ts=thv$google_ts";
-
                                 $httpheader[] = "X-API-Key: MTZfd2luZG93XzE3NjQ3NTk3MjlfNjkz";
                                 break;
                             case 6:
@@ -3716,8 +3715,6 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "roof";
                                 $Lead_data_array['home_owner'] = "yes";
                                 $Lead_data_array['roofing_type'] = $roofmaterial;
-                                $Lead_data_array['landing_page_url'] = "https://homeremodelingpro.net/Quote?ts=thv$google_ts";
-
                                 $httpheader[] = "X-API-Key: MTZfcm9vZl8xNzY0NzU5Nzg1XzY5MzAx";
                                 break;
                             case 7:
@@ -3753,9 +3750,7 @@ class PingCRMAllied
                                 $Lead_data_array['vertical'] = "siding";
                                 $Lead_data_array['project_type'] = $projecttype;
                                 $Lead_data_array['material_type'] = $SidingType;
-                                $Lead_data_array['landing_page_url'] = "thehomesidinginstall.com";
                                 $httpheader[] = "X-API-Key: 5d81535012a17716da1bbcef0d095cc4";
-
                                 break;
                             case 9:
                                 //Bathroom
@@ -3766,7 +3761,6 @@ class PingCRMAllied
                                 $Lead_data_array['home_owner'] = $homeowner;
                                 $Lead_data_array['vertical'] = "bath-remodel";
                                 $Lead_data_array['remodel_walls'] = "yes";
-                                $Lead_data_array['landing_page_url'] = "https://thebathroomremodel.net/Quote?ts=thv$google_ts";
                                 $httpheader[] = "X-API-Key: MTZfYmF0aC1yZW1vZGVsXzE3NjQ3NTk2";
                                 break;
                         }
