@@ -5510,7 +5510,7 @@ class PingCRMAllied
                             "sourceIP" => $IPAddress,
                             "userAgent" => $UserAgent,
                             "leadBornOnDateTime" => date("c"),
-                            "s1" => "THY",
+                            "s1" => "thv$google_ts",
                             "s2" => "thv$google_ts",
                             "mobile" => false,
                             "test" => false,

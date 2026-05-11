@@ -541,18 +541,6 @@ class MainApiController extends Controller
 
     //Post
     public function post(Request $request){
-        $vendor_id_array = [
-            "1748572026",
-            "1747692321",
-            "1747692249",
-            "1747692143",
-            "1747692083",
-        ];
-        $start_time_value = false;
-        if(in_array((string) $request->vendor_id , $vendor_id_array)){
-            $start_time = microtime(true);
-            $start_time_value = true;
-        }
 
         $request->headers->set('Accept', 'application/json');
         $this->validate($request, [
@@ -1056,18 +1044,7 @@ class MainApiController extends Controller
         );
         //Lead Info =====================================================================================================================
 
-        // CHECKPOINT 1 — before check_post_if_sold_and_send
-        if($start_time_value){
-            $elapsed = microtime(true) - $start_time;
-            Log::info('time CHECKPOINT 1 vendor = '.$request->vendor_id, ['before check_post_if_sold_and_send' => $elapsed]);
-        }
-
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
-
-        if($start_time_value) {
-            $elapsed = microtime(true) - $start_time;
-            Log::info('time CHECKPOINT 2 vendor = '.$request->vendor_id, ['after check_post_if_sold_and_send' => $elapsed]);
-        }
 
         return response()->json($response_code);
     }
