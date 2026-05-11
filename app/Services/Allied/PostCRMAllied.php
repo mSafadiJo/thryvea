@@ -7499,7 +7499,7 @@ class PostCRMAllied {
                             'consumerSourceIp' => $IPAddress,
                         ),
                         'contact' => array(
-                            'state' => $state,
+                            'state' => $statename_code,
                             'postalCode' => $zip,
                             "city"=>$city,
                             "firstName"=>$first_name,

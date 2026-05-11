@@ -5313,7 +5313,7 @@ class PingCRMAllied
                                 'consumerSourceIp' => $IPAddress,
                             ),
                             'contact' => array(
-                                'state' => $state,
+                                'state' => $statename_code,
                                 'postalCode' => $zip,
                             ),
                             'home' => array(),
