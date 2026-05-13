@@ -312,7 +312,7 @@ class WebSitesAPIController extends Controller
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
-          if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk') {
+          if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk' || strtolower(substr($request['tc'], 0, 1)) == 'Y') {
             if (empty($request['is_sec_service'])) {
                 if ($is_lead_review != 1) {
                     //IPQS IP Validation
