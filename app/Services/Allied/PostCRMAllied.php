@@ -5396,6 +5396,11 @@ class PostCRMAllied {
                             "contact" => $base_contact
                         ];
 
+                        if (str_contains($campaign_name, '(O&O)')) {
+                            $authToken = "041d16cb-77f2-44f9-b0da-ada6700888d3";
+                        }
+
+                        
                         $httpheader = [
                             "Authorization: Token $authToken",
                             'Content-Type: application/json',

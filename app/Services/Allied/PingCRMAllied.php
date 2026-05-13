@@ -3376,12 +3376,17 @@ class PingCRMAllied
                             "contact" => $base_contact
                         ];
 
+                        if (str_contains($campaign_name, '(O&O)')) {
+                            $authToken = "041d16cb-77f2-44f9-b0da-ada6700888d3";
+                        }
+
                         // 6) Headers
                         $httpHeader = [
                             "Authorization: Token $authToken",
                             "Content-Type: application/json",
                             "Accept: application/json",
                         ];
+
 
                         $ping_crm_apis = array(
                             "url" => $url_api_ping,
