@@ -1138,7 +1138,7 @@ class ApiMain {
 
                     if ($ping_approved_arr['Result'] == 1) {
                         $completeStatus3 = 1;
-                        if ( $ping_approved_arr['Payout'] < 2 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
+                        if ( $ping_approved_arr['Payout'] < 0 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
                             $completeStatus3 = 0;
                         }
 
@@ -1858,7 +1858,7 @@ class ApiMain {
 
                     if ($ping_approved_arr['Result'] == 1) {
                         $completeStatus3 = 1;
-                        if ( $ping_approved_arr['Payout'] < 2 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
+                        if ( $ping_approved_arr['Payout'] < 0 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
                             $completeStatus3 = 0;
                         }
 
@@ -2845,13 +2845,13 @@ class ApiMain {
                 'ping_post_arr' => $ping_post_arr
             );
 
-            $TestLeadsCustomer = TestLeadsCustomer::find($TestLeadsCustomer_id);
-
-            $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_array);
-            $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_array);
-            $TestLeadsCustomer->listOFCampainDB = json_encode($listOFCampainDB_array);
-
-            $TestLeadsCustomer->save();
+//            $TestLeadsCustomer = TestLeadsCustomer::find($TestLeadsCustomer_id);
+//
+//            $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_array);
+//            $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_array);
+//            $TestLeadsCustomer->listOFCampainDB = json_encode($listOFCampainDB_array);
+//
+//            $TestLeadsCustomer->save();
         }
 
         //Bayment And Send Msg/email/crm
