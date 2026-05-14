@@ -5400,7 +5400,7 @@ class PostCRMAllied {
                             $authToken = "041d16cb-77f2-44f9-b0da-ada6700888d3";
                         }
 
-                        
+
                         $httpheader = [
                             "Authorization: Token $authToken",
                             'Content-Type: application/json',
@@ -7483,9 +7483,6 @@ class PostCRMAllied {
                     $TransactionIdping = $parts[0] ?? '';
                     $bidId             = $parts[1] ?? '';
 
-                    $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
-
-
                     $Lead_data_array = array(
                         'pingId'=> $TransactionIdping,
                         'bids' => array(
@@ -7566,7 +7563,7 @@ class PostCRMAllied {
                                     $roof_task = "Maintenance";
                             }
 
-                            $Lead_data_array['targetingAuditing']['submissionUrl'] = "theroofingreplacement.com";
+                            $Lead_data_array['targetingAuditing']['submissionUrl'] = $OriginalURL2;
                             $Lead_data_array['home']['category'] = "Roofing";
                             $Lead_data_array['home']['ownership'] = "Own";
                             $Lead_data_array['home']['roofing'] = array(
@@ -7618,7 +7615,7 @@ class PostCRMAllied {
                                     break;
                             }
 
-                            $Lead_data_array['targetingAuditing']['submissionUrl'] = "thebathroomremodel.net";
+                            $Lead_data_array['targetingAuditing']['submissionUrl'] = $OriginalURL2;
                             $Lead_data_array['home']['category'] = "Bathroom Remodeling";
                             $Lead_data_array['home']['ownership'] = $SecurityUsage;
                             $Lead_data_array['home']['bathroomRemodeling'] = array(
@@ -7742,7 +7739,6 @@ class PostCRMAllied {
                         "Accept: application/json",
                         "content-type: application/json"
                     );
-                    $TCPAText = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and up to four home improvement companies , at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
 
                     $Lead_data = array(
                         "product" => "Home Improvement",
@@ -7804,7 +7800,7 @@ class PostCRMAllied {
                                     $project_timeframe = 2;//2 - Timing Flexible
                             }
 
-                            $Lead_data['submissionURL'] = "https://thewindowsinstall.com";
+                            $Lead_data['submissionURL'] = $OriginalURL2;
                             $Lead_data['projectType'] = $replace_repair;
                             $Lead_data['timeframe'] = $project_timeframe;
                             $Lead_data['windows'] = $number_of_windows_data;
@@ -7858,7 +7854,7 @@ class PostCRMAllied {
                                     $monthly_bill = 600;
                             }
 
-                            $Lead_data['submissionURL'] = "https://thesolarinstall.com";
+                            $Lead_data['submissionURL'] = $OriginalURL2;
                             $Lead_data['projectType'] = 9;
                             $Lead_data['timeframe'] = 2;
                             $Lead_data['solar'] = array(
@@ -7889,7 +7885,7 @@ class PostCRMAllied {
                                     $project_timeframe = 2;//2 - Timing Flexible
                             }
 
-                            $Lead_data['submissionURL'] = "https://theroofingreplacement.com";
+                            $Lead_data['submissionURL'] = $OriginalURL2;
                             $Lead_data['projectType'] = $replace_repair;
                             $Lead_data['timeframe'] = $project_timeframe;
                             $Lead_data['residential'] = $residential;
@@ -7915,7 +7911,7 @@ class PostCRMAllied {
                                     $project_timeframe = 2;//2 - Timing Flexible
                             }
 
-                            $Lead_data['submissionURL'] = "https://thehomesidinginstall.com";
+                            $Lead_data['submissionURL'] = $OriginalURL2;
                             $Lead_data['projectType'] = $replace_repair;
                             $Lead_data['timeframe'] = $project_timeframe;
                             $Lead_data['residential'] = true;
@@ -7939,7 +7935,7 @@ class PostCRMAllied {
                                     $project_timeframe = 2;//2 - Timing Flexible
                             }
 
-                            $Lead_data['submissionURL'] = "https://thebathroomremodel.net";
+                            $Lead_data['submissionURL'] = $OriginalURL2;
                             $Lead_data['projectType'] = 11;//11 - Bathroom Remodel
                             $Lead_data['timeframe'] = $project_timeframe;
                             $Lead_data['residential'] = true;
