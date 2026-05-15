@@ -1684,14 +1684,14 @@
                         </div>
                     </div>
                     @php
-//                        $response_ping_arr = \App\Models\CrmResponsePing::where('ping_id', $campaignLeads->lead_ping_id)->get();
-//                        if($response_ping_arr->isEmpty()){
-//                          $response_ping_arr = \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get();
-//                        }
-$response_ping_arr = \App\Models\CrmResponsePing::where('ping_id', $campaignLeads->lead_ping_id)->get()
-    ->merge(
-        \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get()
-    );
+                        $response_ping_arr = \App\Models\CrmResponsePing::where('ping_id', $campaignLeads->lead_ping_id)->get();
+                        if($response_ping_arr->isEmpty()){
+                          $response_ping_arr = \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get();
+                        }
+//$response_ping_arr = \App\Models\CrmResponsePing::where('ping_id', $campaignLeads->lead_ping_id)->get()
+//    ->merge(
+//        \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get()
+//    );
                         $response_ping = "";
                         $url_input_ping = "";
                         if( !empty($response_ping_arr) ){
