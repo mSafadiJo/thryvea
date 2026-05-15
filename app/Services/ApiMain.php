@@ -2845,13 +2845,13 @@ class ApiMain {
                 'ping_post_arr' => $ping_post_arr
             );
 
-//            $TestLeadsCustomer = TestLeadsCustomer::find($TestLeadsCustomer_id);
-//
-//            $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_array);
-//            $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_array);
-//            $TestLeadsCustomer->listOFCampainDB = json_encode($listOFCampainDB_array);
-//
-//            $TestLeadsCustomer->save();
+            $TestLeadsCustomer = TestLeadsCustomer::find($TestLeadsCustomer_id);
+
+            $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_array);
+            $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_array);
+            $TestLeadsCustomer->listOFCampainDB = json_encode($listOFCampainDB_array);
+
+            $TestLeadsCustomer->save();
         }
 
         //Bayment And Send Msg/email/crm

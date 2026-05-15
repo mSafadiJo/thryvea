@@ -637,27 +637,27 @@ class WebSitesAPIController extends Controller
         $campaigns_ex_sorted = $campaigns_ex->sortByDesc('campaign_budget_bid_exclusive');
 
         //Add Response To Test =========================================================================================
-//        $TestLeadsCustomer = new TestLeadsCustomer();
-//
-//        $TestLeadsCustomer->lead_id = $leadCustomer_id;
-//
-//        $TestLeadsCustomer->lastCampainInArea = json_encode(array());
-//
-//        $TestLeadsCustomer->listOFCampain_exclusiveDB = json_encode($listOFCampain_exclusiveDB);
-//        $TestLeadsCustomer->listOFCampain_sharedDB = json_encode($listOFCampain_sharedDB);
-//        $TestLeadsCustomer->listOFCampain_pingDB = json_encode($listOFCampain_pingDB_ex);
-//        $TestLeadsCustomer->listOFCampainDB_array_ping = json_encode($listOFCampain_pingDB_sh);
-//
-//        $TestLeadsCustomer->listOFCampainDB_array_shared = json_encode($listOFCampainDB_array_shared);
-//        $TestLeadsCustomer->listOFCampainDB_array_exclusive = json_encode($listOFCampainDB_array_exclusive);
-//        $TestLeadsCustomer->campaigns_sh_col = json_encode($listOFCampainDB_array_ping_ex);
-//        $TestLeadsCustomer->campaigns_ex_col = json_encode($listOFCampainDB_array_ping_sh);
-//
-//        $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_sorted);
-//        $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_sorted);
-//
-//        $TestLeadsCustomer->save();
-//        $TestLeadsCustomer_id = DB::getPdo()->lastInsertId();
+        $TestLeadsCustomer = new TestLeadsCustomer();
+
+        $TestLeadsCustomer->lead_id = $leadCustomer_id;
+
+        $TestLeadsCustomer->lastCampainInArea = json_encode(array());
+
+        $TestLeadsCustomer->listOFCampain_exclusiveDB = json_encode($listOFCampain_exclusiveDB);
+        $TestLeadsCustomer->listOFCampain_sharedDB = json_encode($listOFCampain_sharedDB);
+        $TestLeadsCustomer->listOFCampain_pingDB = json_encode($listOFCampain_pingDB_ex);
+        $TestLeadsCustomer->listOFCampainDB_array_ping = json_encode($listOFCampain_pingDB_sh);
+
+        $TestLeadsCustomer->listOFCampainDB_array_shared = json_encode($listOFCampainDB_array_shared);
+        $TestLeadsCustomer->listOFCampainDB_array_exclusive = json_encode($listOFCampainDB_array_exclusive);
+        $TestLeadsCustomer->campaigns_sh_col = json_encode($listOFCampainDB_array_ping_ex);
+        $TestLeadsCustomer->campaigns_ex_col = json_encode($listOFCampainDB_array_ping_sh);
+
+        $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_sorted);
+        $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_sorted);
+
+        $TestLeadsCustomer->save();
+        $TestLeadsCustomer_id = DB::getPdo()->lastInsertId();
         //==============================================================================================================
 
         $first_one = 1;
