@@ -3262,7 +3262,7 @@ class PingCRMAllied
                         }
                         break;
                     case 34:
-
+                        //blueink
                         // 1) Determine Ping URL once
                         $url_api_ping = (config('app.env') == "local")
                             ? "https://exchange.standardinformation.io/ping_test?legacy=J"
