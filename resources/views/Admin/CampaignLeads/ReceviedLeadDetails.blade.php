@@ -1684,11 +1684,11 @@
                         </div>
                     </div>
                     @php
+                    if(empty($campaignLeads->lead_ping_id)){
+                        $response_ping_arr = \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get();
+                    }else{
                         $response_ping_arr = \App\Models\CrmResponsePing::where('ping_id', $campaignLeads->lead_ping_id)->get();
-                        echo "<pre>"; print_r($response_ping_arr);
-                        if($response_ping_arr->isEmpty()){
-                          $response_ping_arr = \App\Models\CrmResponsePing::where('lead_id', $campaignLeads->lead_id)->get();
-                        }
+                    }
                         $response_ping = "";
                         $url_input_ping = "";
                         if( !empty($response_ping_arr) ){
