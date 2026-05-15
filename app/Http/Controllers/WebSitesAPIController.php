@@ -142,13 +142,13 @@ class WebSitesAPIController extends Controller
         $response_code = array();
         if( !($request->campaign_id == config('services.ApiLead.API_Campaign_ID', '') &&
             $request->campaign_key == config('services.ApiLead.API_Campaign_Key', '')) ){
-//            $response_code = array(
-//                'response_code' => 'false',
-//                'message' => 'Reject',
-//                'error' => 'Invalid campaign_id or campaign_key value'
-//            );
-//
-//            return json_encode($response_code);die();
+            $response_code = array(
+                'response_code' => 'false',
+                'message' => 'Reject',
+                'error' => 'Invalid campaign_id or campaign_key value'
+            );
+
+            return json_encode($response_code);die();
         }
 
         try {
@@ -161,7 +161,8 @@ class WebSitesAPIController extends Controller
 
                 $address['county_id'] = $county_id_list->county_id;
                 $address['county_name'] = $county_id_list->county_name;
-            } else {
+            }
+            else {
                 $address['county_id'] = $request['county_id'];
                 $address['county_name'] = $request['county_name'];
             }
@@ -187,9 +188,11 @@ class WebSitesAPIController extends Controller
 
             if ($request['service_id'] == 4) {
                 $request['projectnature'] = $request['nature_flooring_project'];
-            } else if ($request['service_id'] == 6) {
+            }
+            else if ($request['service_id'] == 6) {
                 $request['projectnature'] = $request['nature_of_roofing'];
-            } else if ($request['service_id'] == 7) {
+            }
+            else if ($request['service_id'] == 7) {
                 if ($request['nature_of_siding'] == 1 || $request['nature_of_siding'] == 2) {
                     $request['projectnature'] = 1;
                 } else if ($request['nature_of_siding'] == 3) {
@@ -212,7 +215,7 @@ class WebSitesAPIController extends Controller
             //To Get Lead Source ===========================================================================
             $lead_source = "SEO";
             $lead_source2 = "SEO";
-            $lead_source_api = "ADMS20";
+            $lead_source_api = "THV1";
             $lead_source_id = 1;
             $is_lead_review = 0;
             if (!empty($request['tc'])) {
@@ -312,7 +315,8 @@ class WebSitesAPIController extends Controller
             //Delete Lead from Lead Review =================================================================
             LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
             //Delete Lead from Lead Review =================================================================
-          if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk' || strtolower(substr($request['tc'], 0, 1)) == 'y') {
+            //|| strtolower(substr($request['tc'], 0, 1)) == 'y'
+          if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
             if (empty($request['is_sec_service'])) {
                 if ($is_lead_review != 1) {
                     //IPQS IP Validation
@@ -441,8 +445,8 @@ class WebSitesAPIController extends Controller
             if (strtolower($request['tc']) == 'push1') {
                 return json_encode($response_code);die();
             }
-        } else {
-
+        }
+        else {
             $response_code = array(
                 'response_code' => 'false',
                 'message' => 'Reject',
