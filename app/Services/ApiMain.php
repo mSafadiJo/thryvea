@@ -1138,7 +1138,7 @@ class ApiMain {
 
                     if ($ping_approved_arr['Result'] == 1) {
                         $completeStatus3 = 1;
-                        if ( $ping_approved_arr['Payout'] < 0 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
+                        if ( $ping_approved_arr['Payout'] < 2 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
                             $completeStatus3 = 0;
                         }
 
@@ -1858,7 +1858,7 @@ class ApiMain {
 
                     if ($ping_approved_arr['Result'] == 1) {
                         $completeStatus3 = 1;
-                        if ( $ping_approved_arr['Payout'] < 0 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
+                        if ( $ping_approved_arr['Payout'] < 2 || is_numeric($ping_approved_arr['Payout']) != 1 ) {
                             $completeStatus3 = 0;
                         }
 
