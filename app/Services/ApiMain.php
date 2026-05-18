@@ -2544,6 +2544,82 @@ class ApiMain {
         //End Claim Jornaya LeadId
     }
 
+    public function facebook_capi_purchase($pixel_id, $access_token, $fbc, $value, $email = null, $phone = null , $ip_address = null , $user_agent = null , $event_id = null)
+    {
+        try {
+
+            $url = "https://graph.facebook.com/v23.0/{$pixel_id}/events?access_token={$access_token}";
+
+            $user_data = [
+                "fbc" => $fbc,
+            ];
+
+            // optional but highly recommended
+            if(!empty($email)){
+                $user_data['em'] = hash('sha256', strtolower(trim($email)));
+            }
+
+            if(!empty($phone)){
+                $user_data['ph'] = hash('sha256', preg_replace('/\D/', '', $phone));
+            }
+
+            if(!empty($user_agent)){
+                $user_data['client_user_agent'] = $user_agent;
+            }
+
+            if(!empty($ip_address)){
+                $user_data['client_ip_address'] = $ip_address;
+            }
+
+            $payload = [
+                "data" => [
+                    [
+                        "event_name" => "Lead",
+                        "event_time" => time(),
+                        "event_id" => $event_id,
+                        "action_source" => "website",
+                        "user_data" => $user_data,
+                        "custom_data" => [
+                            "currency" => "USD",
+                            "value" => (float)$value
+                        ]
+                    ]
+                ]
+            ];
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($payload),
+                CURLOPT_HTTPHEADER => [
+                    "Content-Type: application/json"
+                ],
+            ]);
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            Log::info('facebook_capi_response', [
+                'payload' => $payload,
+                'response' => $response
+            ]);
+
+            return $response;
+
+        } catch (Exception $e) {
+
+            Log::error('facebook_capi_error', [
+                'message' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+    }
+
     public function server_to_server_conv($url_conv){
         try {
             if(empty($url_conv)){
