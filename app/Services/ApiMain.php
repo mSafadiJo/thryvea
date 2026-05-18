@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Mail;
 use Slack;
 use Twilio\Rest\Client;
 use App\Http\Controllers\BandWidth\BandWidthController;
+use Illuminate\Support\Facades\Log;
 
 class ApiMain {
 
