@@ -2547,7 +2547,7 @@ class ApiMain {
     public function facebook_capi_purchase($pixel_id, $access_token, $fbc, $value, $email = null, $phone = null , $ip_address = null , $user_agent = null , $event_id = null)
     {
         try {
-
+            Log::info('fn', ['message' => 'inside facebook_capi_purchase']);
             $url = "https://graph.facebook.com/v23.0/{$pixel_id}/events?access_token={$access_token}";
 
             $user_data = [
@@ -2609,7 +2609,7 @@ class ApiMain {
             ]);
 
             return $response;
-
+Log::info('fn', ['message' => 'inside facebook_capi_purchase after spmit']);
         } catch (Exception $e) {
 
             Log::error('facebook_capi_error', [
