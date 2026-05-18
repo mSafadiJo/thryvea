@@ -1726,6 +1726,29 @@ class PostCRMAllied {
                 $Lead_data_array['notes'] = $leadsCustomerCampaign_id;
                 $Lead_data_array['comments'] = $leadsCustomerCampaign_id;
                 break;
+            case 71:
+                //Ion Solar
+                $Lead_data_array['lead_source_ion'] = "thv$google_ts";
+                $Lead_data_array['original_source'] = "thv$google_ts";
+                $Lead_data_array['price'] = 50;
+                $Lead_data_array['state_ion'] = $statename_code;
+
+                switch ($crm_details['service_id']){
+                    case 2:
+                        //Solar
+                        $monthly_electric_bill = $crm_details['data']['monthly_electric_bill'];
+                        $property_type = $crm_details['data']['property_type'];
+                        $utility_provider = $crm_details['data']['utility_provider'];
+                        $roof_shade = trim($crm_details['data']['roof_shade']);
+
+                        $Lead_data_array['utility_company_text_ion'] = $utility_provider;
+                        $Lead_data_array['utility_provider_ion'] = $utility_provider;
+                        $Lead_data_array['roof_shade'] = $roof_shade;
+                        $Lead_data_array['avg_mo_electric_bill_ion'] = $monthly_electric_bill;
+                        $Lead_data_array['utility_bill_ion'] = $monthly_electric_bill;
+                        break;
+                }
+                break;
         }
 
         if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
