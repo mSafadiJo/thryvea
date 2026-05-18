@@ -719,6 +719,29 @@ class WebSitesAPIController extends Controller
             }
         }
 
+        // // send s2s to facebook
+            if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
+                Log::info('facbook', ['message' => 'step1']);
+                $pixel_id = '745435376655904';
+                $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
+                Log::info('facbook', ['message' => 'step2']);
+                $fbclid = $request['fbclid'];
+                $fbc = 'fb.1.' . time() . '.' . $fbclid;
+                $finel_price = 10;
+                $finel_price = $response_code['price'] ?: 0;
+                $result = $main_api_file->facebook_capi_purchase(
+                    $pixel_id,
+                    $access_token,
+                    $fbc,
+                    $finel_price,
+                    $request['email'],
+                    $request['phone_number'],
+                    $request['ipaddress'],
+                    $request['aboutUserBrowser'],
+                    $request['event_id'],
+                );    
+            }
+
         if(!empty($request['token']) && $request['is_sec_service'] != 1){
             if ($data_from_post_lead['price_shared'] > $data_from_post_lead['price_exclusive']){
                 $response_code['price'] = $data_from_post_lead['price_shared'];
