@@ -1730,7 +1730,7 @@ class PostCRMAllied {
                 //Ion Solar
                 $Lead_data_array['lead_source_ion'] = "thv$google_ts";
                 $Lead_data_array['original_source'] = "thv$google_ts";
-                $Lead_data_array['price'] = 50;
+                $Lead_data_array['price'] = $Lead_Cost;
                 $Lead_data_array['state_ion'] = $statename_code;
 
                 switch ($crm_details['service_id']){
