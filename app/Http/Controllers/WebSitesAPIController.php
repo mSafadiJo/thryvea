@@ -364,52 +364,52 @@ class WebSitesAPIController extends Controller
             //Server to server Conversion =================================================================
 
 // // send s2s to facebook
-//             if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
-//                 Log::info('facbook', ['message' => 'step1']);
-//                 $pixel_id = '745435376655904';
-//                 $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
-//                 Log::info('facbook', ['message' => 'step2']);
-//                 $fbclid = $request['fbclid'];
-//                 $fbc = 'fb.1.' . time() . '.' . $fbclid;
-//                 $finel_price = 10;
-//                // $finel_price = $finel_price ?: 0;
-//                 $data = [
-//     'pixel_id' => $pixel_id,
-//     'access_token' => $access_token,
-//     'fbc' => $fbc,
-//     'finel_price' => $finel_price,
-//     'email' => $request['email'],
-//     'phone_number' => $request['phone_number'],
-//     'ipaddress' => $request['ipaddress'],
-//     'aboutUserBrowser' => $request['aboutUserBrowser'],
-//     'event_id' => $request['event_id'],
-// ];
-//                 Log::info('facbook step3', $data);
-//                 $result = $main_api_file->facebook_capi_purchase(
-//                     $pixel_id,
-//                     $access_token,
-//                     $fbc,
-//                     $finel_price,
-//                     $request['email'],
-//                     $request['phone_number'],
-//                     $request['ipaddress'],
-//                     $request['aboutUserBrowser'],
-//                     $request['event_id'],
-//                 );    
-//             }
+            if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
+                Log::info('facbook', ['message' => 'step1']);
+                $pixel_id = '745435376655904';
+                $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
+                Log::info('facbook', ['message' => 'step2']);
+                $fbclid = $request['fbclid'];
+                $fbc = 'fb.1.' . time() . '.' . $fbclid;
+                $finel_price = 10;
+               // $finel_price = $finel_price ?: 0;
+                $data = [
+    'pixel_id' => $pixel_id,
+    'access_token' => $access_token,
+    'fbc' => $fbc,
+    'finel_price' => $finel_price,
+    'email' => $request['email'],
+    'phone_number' => $request['phone_number'],
+    'ipaddress' => $request['ipaddress'],
+    'aboutUserBrowser' => $request['aboutUserBrowser'],
+    'event_id' => $request['event_id'],
+];
+                Log::info('facbook step3', $data);
+                $result = $main_api_file->facebook_capi_purchase(
+                    $pixel_id,
+                    $access_token,
+                    $fbc,
+                    $finel_price,
+                    $request['email'],
+                    $request['phone_number'],
+                    $request['ipaddress'],
+                    $request['aboutUserBrowser'],
+                    $request['event_id'],
+                );    
+            }
             
-//            if(!empty($request['token'])){
-//                $token_data_conv = $request['token'];
-//                $url_conv = "";
-//                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
-//                    //Wedebeek
-//                    $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=90";
-//
-//                    $r = array($url_conv);
-//                    Log::info('fn', $r);
-//                }
-//                $main_api_file->server_to_server_conv($url_conv);
-//            }
+           if(!empty($request['token'])){
+               $token_data_conv = $request['token'];
+               $url_conv = "";
+               if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+                   //Wedebeek
+                   $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=90";
+
+                   $r = array($url_conv);
+                   Log::info('fn', $r);
+               }
+               $main_api_file->server_to_server_conv($url_conv);
+           }
 
             //Server to server Conversion =================================================================
         } catch (Exception $e) {
