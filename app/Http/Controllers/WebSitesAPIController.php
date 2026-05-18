@@ -721,10 +721,8 @@ class WebSitesAPIController extends Controller
 
         // // send s2s to facebook
             if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
-                Log::info('facbook', ['message' => 'step1']);
                 $pixel_id = '745435376655904';
                 $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
-                Log::info('facbook', ['message' => 'step2']);
                 $fbclid = $request['fbclid'];
                 $fbc = 'fb.1.' . time() . '.' . $fbclid;
                 $finel_price = 10;
