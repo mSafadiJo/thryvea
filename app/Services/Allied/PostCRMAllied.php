@@ -1375,6 +1375,8 @@ class PostCRMAllied {
         $state = trim($data_msg['State']);
         $statename_code = trim($data_msg['state_code']);
         $leadsCustomerCampaign_id = $crm_details['leadsCustomerCampaign_id'];
+        $trusted_form = $data_msg['trusted_form'];
+        $google_ts = $data_msg['google_ts'];
 
         $phone1type = 1;
         $phone2type = 0;
@@ -1393,6 +1395,13 @@ class PostCRMAllied {
         }
 
         $url_api = "$url_link?firstname=$first_name&lastname=$last_name&address1=$street&city=$city&state=$statename_code&zip=$zip&phone1type=$phone1type&phone1=$number1&phone2type=$phone2type&phone3type=$phone3type&email=$email&LogNumber=$LogNumber&sender=$sender&sentto=$sentto&srs_id=$srs_id";
+        switch ($crm_details['buyer_id']){
+            case 72:
+                //Direct Remodels
+                $url_api = "$url_link?first_name=$first_name&last_name=$last_name&address_1=$street&city=$city&state=$statename_code&postal_code=$zip&phone1type=$phone1type&phone_1=$number1&email=$email&original_source=thv$google_ts&sender=$sender&sentto=$sentto&srs_id=$srs_id&trustedform_cert_url=$trusted_form";
+                break;
+        }
+
         if( !empty($pro_id) ){
             $url_api .= "&pro_id=$pro_id&productid=$pro_id";
         }
@@ -1405,7 +1414,7 @@ class PostCRMAllied {
         );
         $url_api = str_replace(" ","%20",$url_api);
         $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
-        if (strpos("-" . strtolower($result), 'ok') == true) {
+        if (strpos("-" . strtolower($result), 'ok') == true || strpos("-" . $result, 'success') == true) {
             return 1;
         }
         return 0;
