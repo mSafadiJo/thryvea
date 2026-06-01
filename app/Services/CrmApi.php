@@ -570,6 +570,21 @@ class CrmApi {
 
                                     }
                                     break;
+                                case 74:
+                                    //HomeAppointments 1135
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['response'])) {
+                                        $result3 = $result2['response'];
+                                        if (!empty($result3['status'])) {
+                                            if ($result3['status'] == "Matched") {
+                                                $TransactionId = $result3['lead_id'];
+                                                $Payout = $result3['price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
+                                    }
+                                    break;
 
                             }
                     }

@@ -8499,6 +8499,285 @@ class PostCRMAllied {
 
                     }
                     break;
+                case 74:
+                    //HomeAppointments 1135
+                    if (!empty($data_msg['ping_post_data']['TransactionId'])) {
+                        $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+                    } else {
+                        return 0;
+                    }
+
+                    $url_api = "https://homeappointments.leadportal.com/apiJSON.php";
+                    $httpheader = array(
+                        "cache-control: no-cache",
+                        "Accept: application/json",
+                        "content-type: application/json"
+                    );
+
+                    if (!empty($crm_details['data']['homeOwn'])) {
+                        $ownership = ($crm_details['data']['homeOwn'] != "Yes" ? "No" : "Yes");
+                    } else {
+                        if (!empty($crm_details['data']['property_type'])) {
+                            $ownership = ($crm_details['data']['property_type'] == "Rented" ? "No" : "Yes");
+                        } else {
+                            $ownership = "Yes";
+                        }
+                    }
+
+                    $Lead_data_array = array(
+                        "Request" => array(
+                            "Format" => "JSON",
+                            "Key" => "b2c32db077833d863d31f8b4829e290d3dbf8242d4336c782b50013696b64a7b",
+                            "API_Action" => "pingPostLead",
+                            "Mode" => "post",
+                            "Return_Best_Price" => "1",
+                            "SRC_ID" => $google_ts,
+                            "TYPE" => 38,
+                            "IP_Address" => $IPAddress,
+                            "SRC" => "Thryvea",
+                            "Landing_Page" => $OriginalURL2,
+                            "Sub_ID" => $google_ts,
+                            "Pub_ID" => $lead_source_text,
+                            "User_Agent" => $UserAgent,
+                            "TCPA_Consent" => $tcpa_compliant2,
+                            "TCPA_Language" => $TCPAText,
+                            "Trusted_Form_URL" => $trusted_form,
+                            "LeadiD_Token" => $LeadId,
+                            "City" => $city,
+                            "State" => $statename_code,
+                            "Zip" => $zip,
+                            "Homeowner" => $ownership,
+
+                            "First_Name" => $first_name,
+                            "Last_Name" => $last_name,
+                            "Address" => $street,
+                            "Lead_ID" => $TransactionId,
+                            "Email" => $email,
+                            "Primary_Phone" => $number1
+                        )
+                    );
+
+                    switch ($lead_type_service_id) {
+                        case 1:
+                            //windows
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $number_of_windows = trim($crm_details['data']['number_of_window']);
+
+                            $Lead_data_array['Request']['Trade'] = "Windows";
+                            $Lead_data_array['Request']['Number_Of_Windows'] = $number_of_windows;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair" ? "Repair" : "Replacement");
+                            break;
+                        case 2:
+                            //Solar
+                            $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                            $utility_provider = trim($crm_details['data']['utility_provider']);
+                            $roof_shade = trim($crm_details['data']['roof_shade']);
+
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $average_bill = 50;
+                                    break;
+                                case '$51 - $100':
+                                    $average_bill = 100;
+                                    break;
+                                case '$101 - $150':
+                                    $average_bill = 150;
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = 200;
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = 300;
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = 400;
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = 500;
+                                    break;
+                                default:
+                                    $average_bill = 600;
+                            }
+
+                            switch ($roof_shade) {
+                                case "Full Sun":
+                                    $roof_shade_data = "No Shade";
+                                    break;
+                                case "Mostly Shaded":
+                                    $roof_shade_data = "A Lot Of Shade";
+                                    break;
+                                case "Partial Sun":
+                                    $roof_shade_data = "A Little Shade";
+                                    break;
+                                default:
+                                    $roof_shade_data = "Unknown";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "Solar";
+                            $Lead_data_array['Request']['Utility_Provider'] = $utility_provider;
+                            $Lead_data_array['Request']['Average_Monthly_Utility_Bill'] = $average_bill;
+                            $Lead_data_array['Request']['Shade'] = $roof_shade_data;
+                            break;
+                        case 4:
+                            //Flooring
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $Type_OfFlooring = trim($crm_details['data']['flooring_type']);
+
+                            switch ($Type_OfFlooring) {
+                                case "Vinyl Linoleum Flooring":
+                                    $typeOfFlooring = "Vinyl/Linoleum";
+                                    break;
+                                case "Tile Flooring":
+                                    $typeOfFlooring = "Tile";
+                                    break;
+                                case "Hardwood Flooring":
+                                    $typeOfFlooring = "Hardwood";
+                                    break;
+                                case "Laminate Flooring":
+                                    $typeOfFlooring = "Laminate";
+                                    break;
+                                default:
+                                    $typeOfFlooring = "Carpet";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "Flooring";
+                            $Lead_data_array['Request']['Flooring_Type'] = $typeOfFlooring;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair Existing Flooring" ? "Repair" : "Replacement");
+                            break;
+                        case 5:
+                            //WALK-IN TUBS
+                            $Lead_data_array['Request']['Trade'] = "Walk-in Tub";
+                            break;
+                        case 6:
+                            //Roofing
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $roof_type = trim($crm_details['data']['roof_type']);
+
+                            switch ($roof_type) {
+                                case "Asphalt Roofing":
+                                    $Project = "Shingle";
+                                    break;
+                                case "Metal Roofing":
+                                    $Project = "Metal";
+                                    break;
+                                case "Natural Slate Roofing":
+                                    $Project = "Slate";
+                                    break;
+                                case "Tile Roofing":
+                                    $Project = "Tile";
+                                    break;
+                                default:
+                                    $Project = "Other";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "Roofing";
+                            $Lead_data_array['Request']['Roofing_Type'] = $Project;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair existing roof" ? "Repair" : "Replacement");
+                            break;
+                        case 7:
+                            //Home Siding
+                            $project_nature = trim($crm_details['data']['project_nature']);
+                            $type_of_siding = trim($crm_details['data']['type_of_siding']);
+
+                            switch ($type_of_siding) {
+                                case "Vinyl Siding":
+                                    $type_of_siding_data = "Vinyl";
+                                    break;
+                                case "Composite wood Siding":
+                                    $type_of_siding_data = "Wood";
+                                    break;
+                                case "Fiber Cement Siding":
+                                    $type_of_siding_data = "Cement";
+                                    break;
+                                default:
+                                    $type_of_siding_data = "Other";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "Siding";
+                            $Lead_data_array['Request']['Siding_Type'] = $type_of_siding_data;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair section(s) of siding" ? "Repair" : "Replacement");
+                            break;
+                        case 8:
+                            //Kitchen
+                            $Lead_data_array['Request']['Trade'] = "Kitchen";
+                            break;
+                        case 9:
+                            //Bathroom
+                            $Lead_data_array['Request']['Trade'] = "Bathroom Remodel";
+                            break;
+                        case 11:
+                            //Furnace
+                            $type_of_heating = trim($crm_details['data']['type_of_heating']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            switch ($type_of_heating) {
+                                case "Electric":
+                                    $type_of_heating_data = "Electric Heat";
+                                    break;
+                                case "Oil":
+                                    $type_of_heating_data = "Oil Heat";
+                                    break;
+                                default:
+                                    $type_of_heating_data = "Gas Heat";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "HVAC";
+                            $Lead_data_array['Request']['Heating_Type'] = $type_of_heating_data;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair" ? "Repair" : "Replacement");
+                            break;
+                        case 12:
+                            //Boiler
+                            $type_of_heating = trim($crm_details['data']['type_of_heating']);
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            switch ($type_of_heating) {
+                                case "Electric":
+                                    $type_of_heating_data = "Electric Heat";
+                                    break;
+                                case "Oil":
+                                    $type_of_heating_data = "Oil Heat";
+                                    break;
+                                default:
+                                    $type_of_heating_data = "Gas Heat";
+                            }
+
+                            $Lead_data_array['Request']['Trade'] = "HVAC";
+                            $Lead_data_array['Request']['Heating_Type'] = $type_of_heating_data;
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair" ? "Repair" : "Replacement");
+                            break;
+                        case 13:
+                            //Central A/C
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            $Lead_data_array['Request']['Trade'] = "HVAC";
+                            $Lead_data_array['Request']['AC_Type'] = "Central Air";
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair" ? "Repair" : "Replacement");
+                            break;
+                        case 21:
+                            //Gutter
+                            $project_nature = trim($crm_details['data']['project_nature']);
+
+                            $Lead_data_array['Request']['Trade'] = ($project_nature == "Repair" ? "Gutter Repair" : "Gutter Replacement");
+                            $Lead_data_array['Request']['Project_Type'] = ($project_nature == "Repair" ? "Repair" : "Replacement");
+                            break;
+                    }
+
+                    if (config('app.env', 'local') == "local" || !empty($data_msg['is_test'])) {
+                        //Test Mode
+                        $Lead_data_array['Request']['State'] = "AK";
+                        $Lead_data_array['Request']['Zip'] = "99999";
+                        $Lead_data_array['Request']['Test_Lead'] = "1";
+                    }
+
+                    $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadsCustomerCampaign_id, stripslashes(json_encode($Lead_data_array)), "POST", 1, $crm_details['campaign_id']);
+                    $result2 = json_decode($result, true);
+                    if (!empty($result2['response']['status'])) {
+                        if ($result2['response']['status'] == "Matched") {
+                            $TransactionId = $result2['response']['lead_id'];
+                            return $TransactionId;
+                        }
+                    }
+                    return 0;
 
             }
             return 0;
