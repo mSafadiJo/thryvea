@@ -8260,6 +8260,245 @@ class PostCRMAllied {
                     }
                     return 0;
                     break;
+                case 73:
+                    //1300 iRadius Group
+                    $url_api_post = "https://prodhimprove.iradiusleads.com/post.aspx";
+
+                    $httpheader = array(
+                        "content-type: text/xml"
+                    );
+
+                    $TransactionId = $data_msg['ping_post_data']['TransactionId'];
+
+                    $Lead_data_post = '<Request>
+                            <Vendor>';
+
+                    if (config('app.env', 'local') == "local" || !empty($data_msg['is_test'])) {
+                        //Test Mode
+                        $Lead_data_post .= '<IsTest>1</IsTest>';
+                    } else {
+                        $Lead_data_post .= '<IsTest>0</IsTest>';
+                    }
+
+                    $Lead_data_post .= '<VendorId>10144</VendorId>
+                                       <SubVendorId>THV1</SubVendorId>';
+
+                    switch ($lead_type_service_id) {
+                        case 2:
+                            // Solar
+                            $Lead_data_post .= '<LeadTypeId>19</LeadTypeId>';
+                            break;
+                        default:
+                            $Lead_data_post .= '<LeadTypeId>20</LeadTypeId>';
+                    }
+
+                    $Lead_data_post .= '
+                        <IPAddress>' . $IPAddress . '</IPAddress>
+                        <UniqueId>' . $leadsCustomerCampaign_id . '</UniqueId>
+                        <LeadId>' . $TransactionId . '</LeadId>
+                        <LeadMetaData>
+                            <ULeadId>' . $LeadId . '</ULeadId>
+                            <ULeadIdTCPA>True</ULeadIdTCPA>
+                            <NonLeadIdTCPA>False</NonLeadIdTCPA>
+                            <ClientUserAgent>' . $UserAgent . '</ClientUserAgent>
+                            <TCPAInfo>
+                                <LeadCreationDate>' . date("Y-m-d\TH:i:s", time()) . '</LeadCreationDate>
+                                <ConsentInfo ConsentType="Active" ConsumerConsented="True">' . $TCPAText . '</ConsentInfo>
+                                <LeadIdTCPADisclosure>True</LeadIdTCPADisclosure>
+                                <xxTrustedFormCertUrl>' . $trusted_form . '</xxTrustedFormCertUrl>
+                                <LandingPageUrl>' . $OriginalURL2 . '</LandingPageUrl>
+                            </TCPAInfo>
+                        </LeadMetaData>
+                    </Vendor>
+                    <Contact>
+                        <City>' . $city . '</City>
+                        <State>' . $statename_code . '</State>
+                        <ZIPCode>' . $zip . '</ZIPCode>
+                        <FirstName>' . $first_name . '</FirstName>
+                        <LastName>' . $last_name . '</LastName>
+                        <Address>' . $street . '</Address>
+                        <EmailAddress>' . $email . '</EmailAddress>
+                        <HomePhoneNumber>' . $number1 . '</HomePhoneNumber>
+                        <WorkPhoneNumber>' . $number1 . '</WorkPhoneNumber>
+                        <WhenToContact>Anytime</WhenToContact>';
+
+                    switch ($lead_type_service_id) {
+                        case 1:
+                            //windows
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                            $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Windows</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                        case 2:
+                            // Solar
+                            $url_api_post = "https://prodsolar.iradiusleads.com/post.aspx";
+
+                            $monthly_electric_bill = trim($crm_details['data']['monthly_electric_bill']);
+                            $utility_provider = trim($crm_details['data']['utility_provider']);
+                            $roof_shade = trim($crm_details['data']['roof_shade']);
+                            $property_type = trim($crm_details['data']['property_type']);
+
+                            $homeowner = ($property_type == "Rented" ? "No" : "Yes");
+                            switch ($monthly_electric_bill) {
+                                case '$0 - $50':
+                                    $average_bill = "$0-50";
+                                    break;
+                                case '$51 - $100':
+                                    $average_bill = "$51-100";
+                                    break;
+                                case '$101 - $150':
+                                    $average_bill = "$101-150";
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = "$151-200";
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = "$201-300";
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = "$301-400";
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = "$401-500";
+                                    break;
+                                default:
+                                    $average_bill = "$501-600";
+                            }
+                            switch ($roof_shade) {
+                                case "Full Sun":
+                                    $roof_shade_data = "No Shade";
+                                    break;
+                                case "Mostly Shaded":
+                                    $roof_shade_data = "A Lot Of Shade";
+                                    break;
+                                case "Partial Sun":
+                                    $roof_shade_data = "A Little Shade";
+                                    break;
+                                default:
+                                    $roof_shade_data = "Unknown";
+                            }
+
+                            $Lead_data_post .= '
+                                <DOB>1990-05-15</DOB>
+                            </Contact>
+                            <Solar>
+                                <RoofShade>' . $roof_shade_data . '</RoofShade>
+                                <MonthlyBill>' . $average_bill . '</MonthlyBill>
+                                <HomeOwner>' . $homeowner . '</HomeOwner>
+                                <TimeFrame>Timing is Flexible</TimeFrame>
+                                <CurrentProvider>Unsure/Not Listed</CurrentProvider>
+                                <CreditScore>Good</CreditScore>
+                                <RoofType>Unsure/Other</RoofType>
+                                <PropertyType>Single Family</PropertyType>
+                            </Solar>';
+                            break;
+                        case 4:
+                            //Flooring
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $ownership = trim($crm_details['data']['homeOwn']);
+
+                            $SecurityUsage = ($ownership == "Yes" ? "Own" : "Rent");
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Flooring</ProjectType>
+                                     <ResidenceType>' . $SecurityUsage . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                        case 6:
+                            //Roofing
+                            $start_time = trim($crm_details['data']['start_time']);
+                            $property_type = trim($crm_details['data']['property_type']);
+
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                            $residential = ($property_type == "Residential" ? "Own" : "Rent");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Roofing</ProjectType>
+                                     <ResidenceType>' . $residential . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                        case 7:
+                            // Home Siding
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                            $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Siding</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                        case 8:
+                            // Kitchen
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                            $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Kitchen Remodeling</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                        case 9:
+                            // Bathroom
+                            $ownership = trim($crm_details['data']['homeOwn']);
+                            $start_time = trim($crm_details['data']['start_time']);
+
+                            $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                            $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                            $Lead_data_post .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Bathroom Remodeling</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                            break;
+                    }
+
+                    $Lead_data_post .= '</Request>';
+
+                    $result = $crm_api_file->api_send_data($url_api_post, $httpheader, $leadsCustomerCampaign_id, $Lead_data_post, "POST", 1, $crm_details['campaign_id']);
+
+                    try {
+                        libxml_use_internal_errors(true);
+                        $result2 = simplexml_load_string($result);
+                        $result3 = json_encode($result2);
+                        $result4 = json_decode($result3, TRUE);
+
+                        if (!empty($result4)) {
+                            if (!empty($result4['Status'])) {
+                                if ($result4['Status'] == "Accepted") {
+                                    return 1;
+                                }
+                            }
+                        }
+                    } catch (Exception $e) {
+
+                    }
+                    break;
 
             }
             return 0;

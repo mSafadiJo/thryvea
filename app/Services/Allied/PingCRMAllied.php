@@ -6020,6 +6020,261 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 73:
+                        // 1300	iRadius Group
+                        $url_api = "https://prodhimprove.iradiusleads.com/ping.aspx";
+
+                        $httpheader = array(
+                            "content-type: text/xml"
+                        );
+
+                        $Lead_data_ping = '
+                        <Request>
+                            <Vendor>';
+
+                        if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
+                            //Test Mode
+                            $Lead_data_ping .= '<IsTest>1</IsTest>';
+                        } else {
+                            $Lead_data_ping .= '<IsTest>0</IsTest>';
+                        }
+
+                        $Lead_data_ping.= '<VendorId>10144</VendorId>
+                                           <SubVendorId>THV1</SubVendorId>';
+
+                        switch ($lead_type_service_id){
+                            case 2:
+                                // Solar
+                                $Lead_data_ping .= '<LeadTypeId>19</LeadTypeId>';
+                                break;
+                            default:
+                                // rest of the services
+                                $Lead_data_ping .= '<LeadTypeId>20</LeadTypeId>';
+                        }
+
+                        $Lead_data_ping .= '
+                            <IPAddress>' . $IPAddress . '</IPAddress>
+                            <UniqueId>' . $leadCustomer_id . '</UniqueId>
+                            <LeadId>' . $leadCustomer_id . '</LeadId>
+                            <LeadMetaData>
+                                <ULeadId>' . $LeadId . '</ULeadId>
+                                <ULeadIdTCPA>True</ULeadIdTCPA>
+                                <NonLeadIdTCPA>False</NonLeadIdTCPA>
+                                <ClientUserAgent>' . $UserAgent . '</ClientUserAgent>
+                                <TCPAInfo>
+                                    <LeadCreationDate>' . date("Y-m-d\TH:i:s", time()) . '</LeadCreationDate>
+                                    <ConsentInfo ConsentType="Active" ConsumerConsented="True">' . $TCPAText . '</ConsentInfo>
+                                    <LeadIdTCPADisclosure>True</LeadIdTCPADisclosure>
+                                    <xxTrustedFormCertUrl>' . $trusted_form . '</xxTrustedFormCertUrl>
+                                    <LandingPageUrl>' . $OriginalURL . '</LandingPageUrl>
+                                </TCPAInfo>
+                            </LeadMetaData>
+                        </Vendor>
+                        <Contact>
+                            <City>' . $city . '</City>
+                            <State>' . $statename_code . '</State>
+                            <ZIPCode>' . $zip . '</ZIPCode>
+                            <Address>' . $street . '</Address>
+                            <FirstName></FirstName>
+                            <LastName></LastName>
+                            <EmailAddress></EmailAddress>
+                            <HomePhoneNumber></HomePhoneNumber>
+                            <WorkPhoneNumber></WorkPhoneNumber>
+                            <WhenToContact></WhenToContact>';
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //windows
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                                $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Windows</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                            case 2:
+                                // Solar
+                                $url_api = "https://prodsolar.iradiusleads.com/ping.aspx";
+
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $homeowner = ($property_type == "Rented" ? "No" : "Yes");
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                        $average_bill = "$0-50";
+                                        break;
+                                    case '$51 - $100':
+                                        $average_bill = "$51-100";
+                                        break;
+                                    case '$101 - $150':
+                                        $average_bill = "$101-150";
+                                        break;
+                                    case '$151 - $200':
+                                        $average_bill = "$151-200";
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = "$201-300";
+                                        break;
+                                    case '$301 - $400':
+                                        $average_bill = "$301-400";
+                                        break;
+                                    case '$401 - $500':
+                                        $average_bill = "$401-500";
+                                        break;
+                                    default:
+                                        $average_bill = "$501-600";
+                                }
+                                switch ($roof_shade){
+                                    case "Full Sun":
+                                        $roof_shade_data = "No Shade";
+                                        break;
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = "A Lot Of Shade";
+                                        break;
+                                    case "Partial Sun":
+                                        $roof_shade_data = "A Little Shade";
+                                        break;
+                                    default:
+                                        $roof_shade_data = "Unknown";
+                                }
+
+                                $Lead_data_ping .= '
+                                    <DOB>1990-05-15</DOB>
+                                </Contact>
+                                <Solar>
+                                    <RoofShade>'. $roof_shade_data .'</RoofShade>
+                                    <MonthlyBill>'. $average_bill .'</MonthlyBill>
+                                    <HomeOwner>'. $homeowner .'</HomeOwner>
+                                    <TimeFrame>Timing is Flexible</TimeFrame>
+                                    <CurrentProvider>Unsure/Not Listed</CurrentProvider>
+                                    <CreditScore>Good</CreditScore>
+                                    <RoofType>Unsure/Other</RoofType>
+                                    <PropertyType>Single Family</PropertyType>
+                                </Solar>';
+                                break;
+                            case 6:
+                                //Roofing
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                                $residential = ($property_type == "Residential" ? "Own" : "Rent");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Roofing</ProjectType>
+                                     <ResidenceType>' . $residential . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                            case 4:
+                                //Flooring
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $SecurityUsage = ($ownership == "Yes" ? "Own" : "Rent");
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Flooring</ProjectType>
+                                     <ResidenceType>' . $SecurityUsage . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                            case 7:
+                                // Home Siding
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                                $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Siding</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                            case 8:
+                                // Kitchen
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                                $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Kitchen Remodeling</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                            case 9:
+                                // Bathroom
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $start_time_data = ($start_time == "Immediately" ? "Ready Now" : "1 to 3 Months");
+                                $homeowner = ($ownership == "Yes" ? "Own" : "Rent");
+
+                                $Lead_data_ping .= '</Contact>
+                                <HomeImprove>
+                                     <TimeFrame>' . $start_time_data . '</TimeFrame>
+                                     <ProjectType>Bathroom Remodeling</ProjectType>
+                                     <ResidenceType>' . $homeowner . '</ResidenceType>
+                                </HomeImprove>';
+                                break;
+                        }
+
+
+                        $Lead_data_ping .= '</Request>';
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => $Lead_data_ping,
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, $Lead_data_ping, "POST", $returns_data, $campaign_id);
+                            try {
+                                libxml_use_internal_errors(true);
+                                $result2 = simplexml_load_string($result);
+                                $result3 = json_encode($result2);
+                                $result4 = json_decode($result3, TRUE);
+
+                                if (!empty($result4)) {
+                                    if ($result4['Status'] == "Accepted") {
+                                        $TransactionId = $result4['LeadId'];
+                                        $Payout = $result4['Price'];
+                                        $multi_type = 0;
+                                        $Result = 1;
+                                    }
+                                }
+                            } catch (Exception $e) {
+
+                            }
+                        }
+                        break;
                 }
             }
 

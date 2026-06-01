@@ -550,6 +550,26 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 73:
+                                    // 1300	iRadius Group
+                                    try {
+                                        libxml_use_internal_errors(true);
+                                        $result2 = simplexml_load_string($result);
+                                        $result3 = json_encode($result2);
+                                        $result4 = json_decode($result3, TRUE);
+
+                                        if (!empty($result4)) {
+                                            if ($result4['Status'] == "Accepted") {
+                                                $TransactionId = $result4['LeadId'];
+                                                $Payout = $result4['Price'];
+                                                $multi_type = 0;
+                                                $Result = 1;
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+
+                                    }
+                                    break;
 
                             }
                     }
