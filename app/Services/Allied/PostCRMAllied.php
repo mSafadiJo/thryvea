@@ -1741,6 +1741,7 @@ class PostCRMAllied {
                 $Lead_data_array['original_source'] = "thv$google_ts";
                 $Lead_data_array['price'] = 50;
                 $Lead_data_array['state_ion'] = $statename_code;
+                $Lead_data_array['company.name'] = "Null";
 
                 switch ($crm_details['service_id']){
                     case 2:
