@@ -6755,6 +6755,335 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 77:
+                        //winter company 1273
+                        $url_api = "https://api.leadprosper.io/ping";
+                        $httpheader = array(
+                            "Accept: application/json",
+                            "Content-Type: application/json",
+                        );
+
+                        $Lead_data_array = array(
+                            "zip_code" => $zip,
+                            "state" => $statename_code,
+                            "ip_address" => $IPAddress,
+                            "user_agent" => $UserAgent,
+                            "landing_page_url" => $OriginalURL2,
+                            "city" => $city,
+                            "s1" => $google_ts,
+                            "tcpa_text" => $TCPAText,
+                            "session_length" => $SessionLength,
+                            "jornaya_leadid" => $LeadId,
+                            "trustedform_cert_url" => $trusted_form,
+                        );
+
+                        switch ($lead_type_service_id){
+                            case 1:
+                                //windows
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+                                $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+                                $project_nature_data = ($project_nature == "Repair" ? "Repair" : "Install");
+
+                                $Lead_data_array['lp_campaign_id'] = "33094";
+
+                                $Lead_data_array['lp_supplier_id'] = "115851";
+                                $Lead_data_array['lp_key'] = "y2ydflw0jte5oo";
+
+
+                                $Lead_data_array['number_of_windows'] = $number_of_windows;
+                                $Lead_data_array['time_frame'] = $start_time;
+                                $Lead_data_array['project_type'] = $project_nature_data;
+                                $Lead_data_array['home_owner'] = $homeowner;
+                                break;
+                            case 2:
+                                //Solar
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+                                $homeowner = ($property_type == "Rented" ? "No" : "Yes");
+                                switch ($monthly_electric_bill){
+                                    case '$0 - $50':
+                                        $average_bill = 50;
+                                        break;
+                                    case '$51 - $100':
+                                        $average_bill = 100;
+                                        break;
+                                    case '$101 - $150':
+                                        $average_bill = 150;
+                                        break;
+                                    case '$151 - $200':
+                                        $average_bill = 200;
+                                        break;
+                                    case '$201 - $300':
+                                        $average_bill = 300;
+                                        break;
+                                    case '$301 - $400':
+                                        $average_bill = 400;
+                                        break;
+                                    case '$401 - $500':
+                                        $average_bill = 500;
+                                        break;
+                                    default:
+                                        $average_bill = 600;
+                                }
+
+                                switch ($roof_shade){
+                                    case "Full Sun":
+                                        $roof_shade_data = "No Shade";
+                                        break;
+                                    case "Mostly Shaded":
+                                        $roof_shade_data = "Full Shade";
+                                        break;
+                                    case "Partial Sun":
+                                        $roof_shade_data = "Partial";
+                                        break;
+                                    default:
+                                        $roof_shade_data = "Partial";
+                                }
+
+                                $Lead_data_array['lp_campaign_id'] = "19754";
+
+                                if (strpos("-" . strtolower($campaign_name), 'affiliate') == true) {
+                                    $Lead_data_array['lp_supplier_id'] = "47885";
+                                    $Lead_data_array['lp_key'] = "0enof1qrmtozor";
+                                } else {
+                                    $Lead_data_array['lp_supplier_id'] = "48535";
+                                    $Lead_data_array['lp_key'] = "w3z7beyk3i0edp";
+                                }
+
+                                $Lead_data_array['electric_provider'] = $utility_provider;
+                                $Lead_data_array['homeowner'] = $homeowner;
+                                $Lead_data_array['shade'] = $roof_shade_data;
+                                $Lead_data_array['electric_bill_monthly'] = $average_bill;
+                                break;
+                            case 4:
+                                //Flooring
+                                $Type_OfFlooring = trim($Leaddatadetails['flooring_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $SecurityUsage = ($ownership == "Yes" ? "Yes" : "No");
+                                $project_nature_data = ($project_nature == "Repair Existing Flooring" ? "Repair" : "Replace");
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "1-3 months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Within 1 month";
+                                }
+
+
+                                switch ($Type_OfFlooring){
+                                    case "Vinyl Linoleum Flooring":
+                                        $flooring_type = "Vinyl";
+                                        break;
+                                    case "Tile Flooring":
+                                        $flooring_type = "Tile";
+                                        break;
+                                    case "Hardwood Flooring":
+                                        $flooring_type = "Hardwood";
+                                        break;
+                                    default:
+                                        $flooring_type = "Other";
+                                }
+
+                                $Lead_data_array['lp_campaign_id'] = "34998";
+                                $Lead_data_array['lp_supplier_id'] = "115856";
+                                $Lead_data_array['lp_key'] = "ggq5c5r07som5o";
+                                $Lead_data_array['home_owner'] = $SecurityUsage;
+                                $Lead_data_array['time_frame'] = $Timeframe;
+                                $Lead_data_array['project_type'] = $project_nature_data;
+                                $Lead_data_array['flooring_type'] = $flooring_type;
+                                break;
+                            case 6:
+                                //Roofing
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+
+
+                                switch ($project_nature){
+                                    case "Install roof on new construction":
+                                        $project_nature_data = "New roof for new home";
+                                        break;
+                                    case "Completely replace roof":
+                                        $project_nature_data = "New roof for an existing home";
+                                        break;
+                                    default:
+                                        $project_nature_data = "Repair";
+                                }
+
+                                switch ($roof_type){
+                                    case "Asphalt Roofing":
+                                        $roofing_type = 'Asphalt shingle';
+                                        break;
+                                    case "Wood Shake/Composite Roofing":
+                                        $roofing_type = 'Cedar shake';
+                                        break;
+                                    case  "Metal Roofing":
+                                        $roofing_type = 'Metal';
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $roofing_type = 'Natural slate';
+                                        break;
+                                    case "Tile Roofing":
+                                        $roofing_type = 'Tile';
+                                        break;
+                                    default:
+                                        $roofing_type = 'Asphalt shingle';
+                                }
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "1-3 months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Within 1 month";
+                                }
+
+                                $Lead_data_array['lp_campaign_id'] = "32714";
+                                $Lead_data_array['lp_supplier_id'] = "115850";
+                                $Lead_data_array['lp_key'] = "2e3nsml6mbovxd";
+                                $Lead_data_array['home_owner'] = "Yes";
+                                $Lead_data_array['time_frame'] = $Timeframe;
+                                $Lead_data_array['project_type'] = $project_nature_data;
+                                $Lead_data_array['roofing_type'] = $roofing_type;
+
+                                break;
+                            case 7:
+                                //Home Siding
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+
+
+                                $SecurityUsage = ($ownership != "Yes" ? "Yes" : "No");
+                                $project_sub_type = ($project_nature == "Repair section(s) of siding" ? "Siding repair" : "Replace siding");
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $Timeframe = "Immediately";
+                                        break;
+                                    case "Within 6 months":
+                                        $Timeframe = "1-3 months";
+                                        break;
+                                    default:
+                                        $Timeframe = "Within 1 month";
+                                }
+
+                                switch($type_of_siding){
+                                    case "Vinyl Siding":
+                                        $siding_type = "Vinyl";
+                                        break;
+                                    case "Composite wood Siding":
+                                        $siding_type = "Wood";
+                                        break;
+                                    case "Fiber Cement Siding":
+                                        $siding_type = "Cement";
+                                        break;
+                                    case "Brickface Siding":
+                                    case "Stoneface Siding":
+                                        $siding_type = "Brick or stone";
+                                        break;
+                                    default:
+                                        $siding_type = "Other";
+                                }
+
+                                $Lead_data_array['lp_campaign_id'] = "34996";
+                                $Lead_data_array['lp_supplier_id'] = "115855";
+                                $Lead_data_array['lp_key'] = "0ed6smydpaylo0";
+                                $Lead_data_array['home_owner'] = $SecurityUsage;
+                                $Lead_data_array['time_frame'] = $Timeframe;
+                                $Lead_data_array['project_type'] = $project_sub_type;
+                                $Lead_data_array['siding_type'] = $siding_type;
+                                break;
+                            case 9:
+                                //Bathroom
+                                $bathroom_type_name = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $homeowner = ($ownership == "Yes" ? "Yes" : "No");
+
+                                switch ($bathroom_type_name) {
+                                    case "Shower / Bath":
+                                        $bathroom_type_name_data = "bath_to_shower";
+                                        break;
+                                    default:
+                                        $bathroom_type_name_data = "complete_remodel";
+                                }
+
+                                switch ($start_time) {
+                                    case 'Immediately':
+                                        $start_time_data = "Immediately";
+                                        break;
+                                    case 'Within 6 months':
+                                        $start_time_data = "1-3 months";
+                                        break;
+                                    default:
+                                        $start_time_data = "Within 1 month";
+                                }
+
+                                $Lead_data_array['lp_campaign_id'] = "33670";
+                                $Lead_data_array['lp_supplier_id'] = "115852";
+                                $Lead_data_array['lp_key'] = "oj17fzppxh017g";
+
+
+                                $Lead_data_array['remodel_type'] = $bathroom_type_name_data;
+                                $Lead_data_array['home_owner'] = $homeowner;
+                                $Lead_data_array['property_type'] = "Single Family";
+                                $Lead_data_array['time_frame'] = $start_time_data;
+
+                                break;
+                        }
+
+                        if( config('app.env', 'local') == "local" || !empty($data_msg['is_test']) ) {
+                            //Test Mode
+                            $Lead_data_array['lp_action'] = "test";
+                        }
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => stripslashes(json_encode($Lead_data_array)),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api, $httpheader, $leadCustomer_id, stripslashes(json_encode($Lead_data_array)), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2['status'])) {
+                                if ($result2['status'] == "ACCEPTED") {
+                                    $TransactionId = $result2['ping_id'];
+                                    $Payout = $result2['bids'][0]['payout'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

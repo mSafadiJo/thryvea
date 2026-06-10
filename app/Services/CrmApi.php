@@ -597,6 +597,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 77:
+                                    //winter company 1273
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2['status'])) {
+                                        if ($result2['status'] == "ACCEPTED") {
+                                            $TransactionId = $result2['ping_id'];
+                                            $Payout = $result2['bids'][0]['payout'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }
