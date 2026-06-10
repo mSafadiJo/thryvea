@@ -6561,6 +6561,200 @@ class PingCRMAllied
                             }
                         }
                         break;
+                    case 76:
+                        //Lead Vision 454
+
+                        switch ($lead_type_service_id) {
+                            case 2:
+                                $url_api_ping = "https://www.greenlifesolar.com/ping/";
+                                break;
+                            default:
+                                $url_api_ping = "https://www.quickquotefinder.com/ping/";
+                        }
+
+
+
+                        $httpheader = array(
+                            'Accept: application/json'
+                        );
+
+                        $lead_type = '1';//Regular Lead
+                        if ($campaign_type == 4) {
+                            $lead_type = '2';//Appointment Lead
+                        }
+
+                        $test_lead = 0;
+                        if (config('app.env', 'local') == "local") {
+                            //Test Mode
+                            $test_lead = 1;
+                            $zip = "99505";
+                        }
+
+                        $affiliate_key = "06409663226af2f3114485aa4e0a23b4";
+
+                        switch ($lead_type_service_id) {
+                            case 1:
+                                //Windows
+                                $number_of_windows = trim($Leaddatadetails['number_of_window']);
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $home_type = "Single-Family";
+                                $ProjectType = ($project_nature == "Repair" ? 312 : 311);
+                                $project_type = "Windows";
+                                switch ($number_of_windows) {
+                                    case "1":
+                                    case "2":
+                                        $NumWindows = "1-2";
+                                        break;
+                                    case "3-5":
+                                        $NumWindows = "3-5";
+                                        break;
+                                    case "6-9":
+                                        $NumWindows = "6-9";
+                                        break;
+                                    default:
+                                        $NumWindows = "10+";
+                                }
+
+                                $ownership = ($ownership != "Yes" ? "Rent" : "Own");
+
+                                $url_api_ping .= "?window_quantity=$NumWindows&project_sub_type=$ProjectType&project_type=$project_type&home_type=$home_type&home_owner=$ownership";
+                                break;
+                            case 2:
+                                //solar service
+                                $monthly_electric_bill = trim($Leaddatadetails['monthly_electric_bill']);
+                                $utility_provider = trim($Leaddatadetails['utility_provider']);
+                                $roof_shade = trim($Leaddatadetails['roof_shade']);
+                                $property_type = trim($Leaddatadetails['property_type']);
+                                $power_solution = trim($Leaddatadetails['power_solution']);
+
+                                $affiliate_key = "d1f255a373a3cef72e03aa9d980c7eca";
+
+                                $affiliate_key = "d1f255a373a3cef72e03aa9d980c7eca";
+                                $ownership = ($property_type == "Rented" ? "Rent" : "Own");
+                                switch ($monthly_electric_bill) {
+                                    case '$0 - $50' || '$51 - $100':
+                                        $monthly_bill = "1";//Less than $100
+                                        break;
+                                    case '$101 - $150' || '$151 - $200':
+                                        $monthly_bill = "2";//From $100 to $200
+                                        break;
+                                    case '$201 - $300':
+                                        $monthly_bill = "3";//From $200 to $300
+                                        break;
+                                    default:
+                                        $monthly_bill = "4";//More than $300
+                                }
+
+                                $url_api_ping .= "?electric_bill=$monthly_bill&utility_provider_name=$utility_provider&rent_own=$ownership";
+                                break;
+                            case 6:
+                                //Roofing
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $roof_type = trim($Leaddatadetails['roof_type']);
+
+                                $project_sub_type = ($project_nature == "Repair existing roof" ? "402" : "401");
+                                $project_type = "Roofing";
+                                $home_type = "Single-Family";
+                                switch ($roof_type){
+
+                                    case "Metal Roofing":
+                                        $material = "metal";
+                                        break;
+                                    case "Natural Slate Roofing":
+                                        $material = "slate";
+                                        break;
+                                    default:
+                                        $material = "Other";
+                                }
+
+                                $url_api_ping .= "?material=$material&project_sub_type=$project_sub_type&project_type=$project_type&home_type=$home_type&home_owner=Own";
+                                break;
+                            case 7:
+                                //Home Siding
+                                $project_nature = trim($Leaddatadetails['project_nature']);
+                                $type_of_siding = trim($Leaddatadetails['type_of_siding']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $SecurityUsage = ($ownership != "Yes" ? "Rent" : "Own");
+                                $home_type = "Single-Family";
+                                $project_sub_type = ($project_nature == "Repair section(s) of siding" ? "402" : "401");
+                                $project_type = "Siding";
+
+                                switch($type_of_siding){
+                                    case "Vinyl Siding":
+                                        $material = "vinyl";
+                                        break;
+                                    case "Composite wood Siding":
+                                        $material = "wood";
+                                        break;
+                                    case "Fiber Cement Siding":
+                                        $material = "Cement";
+                                        break;
+                                    case "Brickface Siding":
+                                    case "Stoneface Siding":
+                                        $material = "brick-stone";
+                                        break;
+                                    default:
+                                        $material = "Other";
+                                }
+
+                                $url_api_ping .= "?material=$material&project_sub_type=$project_sub_type&project_type=$project_type&home_type=$home_type&home_owner=$SecurityUsage";
+                                break;
+                            case 9:
+                                //Bathroom service
+                                $bathroom_type_name = trim($Leaddatadetails['services']);
+                                $start_time = trim($Leaddatadetails['start_time']);
+                                $ownership = trim($Leaddatadetails['homeOwn']);
+
+                                $home_type = "Single-Family";
+                                $project_type = "Bathroom Remodeling";
+                                switch ($bathroom_type_name) {
+                                    case "Shower / Bath":
+                                        $ProjectType = "304";
+                                        break;
+                                    default:
+                                        $ProjectType = "301";
+                                }
+                                $ownership = ($ownership != "Yes" ? "Rent" : "Own");
+
+                                $url_api_ping .= "?project_sub_type=$ProjectType&project_type=$project_type&home_type=$home_type&home_owner=$ownership";
+                                break;
+                        }
+
+
+                        $url_api_ping .= "&test_lead=$test_lead&affiliate_key=$affiliate_key&lead_type=$lead_type&zip=$zip&city=$city&state=$statename_code&lead_ip=$IPAddress&transaction_id=$leadCustomer_id&sub_id=$google_ts";
+                        $url_api_ping = str_replace(" ", "%20", $url_api_ping);
+
+                        $Lead_data_array_ping = array();
+
+                        $ping_crm_apis = array(
+                            "url" => $url_api_ping,
+                            "header" => $httpheader,
+                            "lead_id" => $leadCustomer_id,
+                            "inputs" => json_encode($Lead_data_array_ping),
+                            "method" => "POST",
+                            "campaign_id" => $campaign_id,
+                            "service_id" => $lead_type_service_id,
+                            "user_id" => $user_id,
+                            "returns_data" => $returns_data,
+                            "crm_type" => 0
+                        );
+
+                        if ($is_multi_api == 0) {
+                            $result = $crm_api_file->api_send_data($url_api_ping, $httpheader, $leadCustomer_id, json_encode($Lead_data_array_ping), "POST", $returns_data, $campaign_id);
+                            $result2 = json_decode($result, true);
+                            if (!empty($result2)) {
+                                if ($result2['status'] == "success") {
+                                    $TransactionId = $result2['ping_key'];
+                                    $Payout = $result2['price'];
+                                    $multi_type = 0;
+                                    $Result = 1;
+                                }
+                            }
+                        }
+                        break;
                 }
             }
 

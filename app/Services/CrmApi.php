@@ -585,6 +585,18 @@ class CrmApi {
                                         }
                                     }
                                     break;
+                                case 76:
+                                    //Solar Lead Vision	454
+                                    $result2 = json_decode($result, true);
+                                    if (!empty($result2)) {
+                                        if ($result2['status'] == "success") {
+                                            $TransactionId = $result2['ping_key'];
+                                            $Payout = $result2['price'];
+                                            $multi_type = 0;
+                                            $Result = 1;
+                                        }
+                                    }
+                                    break;
 
                             }
                     }
