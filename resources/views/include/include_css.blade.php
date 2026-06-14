@@ -5,17 +5,17 @@
 <!-- App css -->
 <link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('css/icons.css') }}" rel="stylesheet" type="text/css" />
-<link href="{{ URL::asset('css/metismenu.min.css') }}" rel="stylesheet" type="text/css" />
+{{--<link href="{{ URL::asset('css/metismenu.min.css') }}" rel="stylesheet" type="text/css" />--}}
 <link href="{{ URL::asset('css/style.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('css/custom-style.css') }}" rel="stylesheet" type="text/css" />
 
-@if(Config::get('app.name') == 'Zone1Remodeling')
-    <link rel="shortcut icon" href="{{ asset('images/iconBlack.png') }}">
-    <link href="{{ URL::asset('css/zoneLogin.css') }}" rel="stylesheet" type="text/css" />
-@else
-    <link rel="shortcut icon" href="{{ asset('images/Allied/iconBlack.png') }}">
-    <link href="{{ URL::asset('css/zoneLogin.css') }}" rel="stylesheet" type="text/css" />
-@endif
+{{--@if(Config::get('app.name') == 'Zone1Remodeling')--}}
+{{--    <link rel="shortcut icon" href="{{ asset('images/iconBlack.png') }}">--}}
+{{--    <link href="{{ URL::asset('css/zoneLogin.css') }}" rel="stylesheet" type="text/css" />--}}
+{{--@else--}}
+<link rel="shortcut icon" href="{{ asset('images/Allied/iconBlack.png') }}">
+<link href="{{ URL::asset('css/zoneLogin.css') }}" rel="stylesheet" type="text/css" />
+{{--@endif--}}
 {{--<link rel="stylesheet" href="{{ asset('css/style.default.css')}}" id="theme-stylesheet">--}}
 
 
@@ -38,19 +38,19 @@
 <link href="{{ URL::asset('plugins/magnific-popup/css/magnific-popup.css') }}" rel="stylesheet" type="text/css">
 <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet" type="text/css" />
 
-@if(Config::get('app.name') == 'Zone1Remodeling')
-    @if( !empty(Auth::user()->role_id) )
-        @if( Auth::user()->role_id != 1 && Auth::user()->role_id != 2 )
-            <link href="{{ asset('css/zoneBuyersDashbord.css') }}" rel="stylesheet" type="text/css" />
-        @endif
-    @endif
-@else
-    @if( !empty(Auth::user()->role_id) )
-        @if( Auth::user()->role_id != 1 && Auth::user()->role_id != 2 )
-            <link href="{{ asset('css/buyersDashbord.css') }}" rel="stylesheet" type="text/css" />
-        @endif
+{{--@if(Config::get('app.name') == 'Zone1Remodeling')--}}
+{{--    @if( !empty(Auth::user()->role_id) )--}}
+{{--        @if( Auth::user()->role_id != 1 && Auth::user()->role_id != 2 )--}}
+{{--            <link href="{{ asset('css/zoneBuyersDashbord.css') }}" rel="stylesheet" type="text/css" />--}}
+{{--        @endif--}}
+{{--    @endif--}}
+{{--@else--}}
+@if( !empty(Auth::user()->role_id) )
+    @if( Auth::user()->role_id != 1 && Auth::user()->role_id != 2 )
+        <link href="{{ asset('css/buyersDashbord.css') }}" rel="stylesheet" type="text/css" />
     @endif
 @endif
+{{--@endif--}}
 
 @if( !empty(Auth::user()->role_id) )
     @if( Auth::user()->role_id == 1 || Auth::user()->role_id == 2 )

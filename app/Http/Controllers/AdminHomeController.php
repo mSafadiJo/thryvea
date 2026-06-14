@@ -8,6 +8,7 @@ use App\Services\Location\LocationService;
 use App\Services\User\UserUpdateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -28,7 +29,49 @@ class AdminHomeController extends Controller
     }
 
     public function index(){
-        return view('Admin.home');
+        $todayStart = date('Y-m-d') . ' 00:00:00';
+        $todayEnd = date('Y-m-d') . ' 23:59:59';
+
+// Common filters
+        $baseConditions = function ($query) use ($todayStart, $todayEnd) {
+            $query->where('is_duplicate_lead', "<>", 1)
+                ->where('lead_fname', '!=', "test")
+                ->where('lead_lname', '!=', "test")
+                ->where('lead_fname', '!=', "testing")
+                ->where('lead_lname', '!=', "testing")
+                ->where('lead_fname', '!=', "Test")
+                ->where('lead_lname', '!=', "Test")
+                ->where('is_test', 0)
+                ->whereBetween('created_at', [$todayStart, $todayEnd]);
+        };
+
+// 1. Total leads (simplest, uses index on created_at)
+        $totalLeads = DB::table('leads_customers')
+            ->where($baseConditions)
+            ->count();
+
+// 2. Sold leads (EXISTS is efficient with proper indexes)
+        $soldLeads = DB::table('leads_customers')
+            ->where($baseConditions)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
+                    ->where('is_returned', 0);
+            })
+            ->count();
+
+// 3. Unsold leads
+        $unsoldLeads = DB::table('leads_customers')
+            ->where($baseConditions)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
+            })
+            ->count();
+
+        return view('Admin.home', compact('totalLeads', 'soldLeads', 'unsoldLeads'));
     }
 
     public function AdminProfileShow(){
