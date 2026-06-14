@@ -400,7 +400,7 @@ body {
 
 /* User dropdown */
 .navbar-custom {
-    margin-left: auto !important;
+    margin-left: auto;
     background-color: #64c5b100;
 }
 
@@ -525,9 +525,11 @@ body {
         display: none;
     }
 
-    .navbar-custom .dropdown-toggle {
-        padding: 8px 12px;
+    .dripicons-chevron-down:before {
+        font-size: 25px !important;
     }
+
+
 }
 
 @media (max-width: 575.98px) {
@@ -555,4 +557,9 @@ body {
 .charts-home{
     border-radius: 15px;
     padding: 21px;
+}
+@media (max-width: 480px) {
+    .navbar-custom {
+        margin-left: auto !important;
+    }
 }
