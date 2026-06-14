@@ -400,7 +400,7 @@ body {
 
 /* User dropdown */
 .navbar-custom {
-    margin-left: auto;
+    margin-left: auto !important;
     background-color: #64c5b100;
 }
 
