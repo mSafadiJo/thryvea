@@ -1,6 +1,8 @@
 @extends('layouts.adminapp')
 
 @section('content')
+
+    {{--charts--}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <div class="row">
@@ -21,7 +23,72 @@
                 </div>
             </div>
         </div>
+        <div class=" col-md-8 grid-margin stretch-card ">
+            <div class="card charts-home">
+                <div class="card-body">
+                    <h6 class="card-title" style="text-align: center;">Profit this month</h6>
+
+                    <!-- Circular Rings -->
+                    <div class="rings-container">
+                        <!-- Profit Ring -->
+                        <div class="ring-wrapper">
+                            <svg class="ring-svg" viewBox="0 0 140 140">
+                                <circle class="ring-bg" cx="70" cy="70" r="58"/>
+                                <circle class="ring-progress" cx="70" cy="70" r="58"
+                                        stroke="#00d4d4"
+                                        stroke-dasharray="364.4"
+                                        stroke-dashoffset="{{ $profitOffset }}"/>
+                            </svg>
+                            <div class="ring-content">
+                                <div class="ring-value">${{ number_format($profit) }}</div>
+                                <div class="ring-label">Profit</div>
+                            </div>
+                        </div>
+
+                        <!-- Margin Ring -->
+                        <div class="ring-wrapper">
+                            <svg class="ring-svg" viewBox="0 0 140 140">
+                                <circle class="ring-bg" cx="70" cy="70" r="58"/>
+                                <circle class="ring-progress" cx="70" cy="70" r="58"
+                                        stroke="#a855f7"
+                                        stroke-dasharray="364.4"
+                                        stroke-dashoffset="{{ 364.4 - (364.4 * $marginPercent / 100) }}"/>
+                            </svg>
+                            <div class="ring-content">
+                                <div class="ring-value">{{ number_format($marginPercent) }}%</div>
+                                <div class="ring-label">Margin</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats List -->
+                    <ul class="stats-list">
+                        <li class="stats-item">
+                            <div class="stats-icon blue">
+                                <!-- Wallet SVG -->
+                                <i class="fa fa-money" aria-hidden="true"></i>
+                            </div>
+                            <div class="stats-info">
+                                <div class="stats-title">Total Purchasing price</div>
+                                <div class="stats-value">${{ number_format($totalPurchasingPrice) }}</div>
+                            </div>
+                        </li>
+                        <li class="stats-item">
+                            <div class="stats-icon gray">
+                                <!-- Cart SVG -->
+                                <i class="fa fa-line-chart" aria-hidden="true"></i>
+                            </div>
+                            <div class="stats-info">
+                                <div class="stats-title">Total Selling price</div>
+                                <div class="stats-value">${{ number_format($totalSellingPrice) }}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

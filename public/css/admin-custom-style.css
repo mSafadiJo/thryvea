@@ -557,9 +557,124 @@ body {
 .charts-home{
     border-radius: 15px;
     padding: 21px;
+    height: -webkit-fill-available;
 }
 @media (max-width: 480px) {
     .navbar-custom {
         margin-left: auto !important;
     }
+}
+
+
+.quick-status-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    max-width: 400px;
+}
+.quick-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+.quick-status-header h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+.rings-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.ring-wrapper {
+    text-align: center;
+    position: relative;
+}
+.ring-svg {
+    width: 140px;
+    height: 140px;
+    transform: rotate(-90deg);
+}
+.ring-bg {
+    fill: none;
+    stroke: #e9ecef;
+    stroke-width: 12;
+    stroke-linecap: round;
+}
+.ring-progress {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease;
+}
+.ring-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.ring-value {
+    font-size: 21px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1;
+}
+.ring-label {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+}
+.stats-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.stats-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.stats-item:last-child {
+    border-bottom: none;
+}
+.stats-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+.stats-icon.blue {background: #dc3545;}
+.stats-icon.gray {background: #28a745;}
+.stats-icon i {
+    font-size: 20px;
+}
+.stats-icon.gray i {color: #ffffff;}
+.stats-info {
+    flex: 1;
+}
+.stats-title {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 2px;
+}
+.stats-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+.stats-icon i{
+    color: #fff;
+}
+.nav-second-level li a:focus, .nav-thrid-level li a:focus
+{
+    background-color: #9315f5;
 }

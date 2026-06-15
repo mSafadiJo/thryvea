@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CampaignsLeadsUsers;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Services\AccessLog\AccessLogService;
 use App\Services\Location\LocationService;
@@ -28,50 +29,70 @@ class AdminHomeController extends Controller
         $this->AccessLogService = $AccessLogService;
     }
 
-    public function index(){
-        $todayStart = date('Y-m-d') . ' 00:00:00';
-        $todayEnd = date('Y-m-d') . ' 23:59:59';
+    public function index()
+    {
+        $todayStart = now()->startOfDay()->format('Y-m-d H:i:s');
+        $todayEnd = now()->endOfDay()->format('Y-m-d H:i:s');
 
-// Common filters
-        $baseConditions = function ($query) use ($todayStart, $todayEnd) {
-            $query->where('is_duplicate_lead', "<>", 1)
-                ->where('lead_fname', '!=', "test")
-                ->where('lead_lname', '!=', "test")
-                ->where('lead_fname', '!=', "testing")
-                ->where('lead_lname', '!=', "testing")
-                ->where('lead_fname', '!=', "Test")
-                ->where('lead_lname', '!=', "Test")
-                ->where('is_test', 0)
-                ->whereBetween('created_at', [$todayStart, $todayEnd]);
-        };
+        $monthStart = now()->startOfMonth()->format('Y-m-d H:i:s');
+        $monthEnd = now()->endOfMonth()->format('Y-m-d H:i:s');
 
-// 1. Total leads (simplest, uses index on created_at)
-        $totalLeads = DB::table('leads_customers')
-            ->where($baseConditions)
-            ->count();
-
-// 2. Sold leads (EXISTS is efficient with proper indexes)
-        $soldLeads = DB::table('leads_customers')
-            ->where($baseConditions)
-            ->whereExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('campaigns_leads_users')
-                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
-                    ->where('is_returned', 0);
+        // Lead counts with single query - FIX: use lc.created_at
+        $leadStats = DB::table('leads_customers as lc')
+            ->selectRaw('
+            COUNT(*) as total,
+            COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold,
+            COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold
+        ')
+            ->leftJoin('campaigns_leads_users as clu', function ($join) {
+                $join->on('clu.lead_id', '=', 'lc.lead_id')
+                    ->where('clu.is_returned', 0);
             })
-            ->count();
+            ->where('lc.is_duplicate_lead', '<>', 1)
+            ->whereNotIn('lc.lead_fname', ['test', 'testing', 'Test'])
+            ->whereNotIn('lc.lead_lname', ['test', 'testing', 'Test'])
+            ->where('lc.is_test', 0)
+            ->whereBetween('lc.created_at', [$todayStart, $todayEnd])  // <-- FIX: lc.created_at
+            ->first();
 
-// 3. Unsold leads
-        $unsoldLeads = DB::table('leads_customers')
-            ->where($baseConditions)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('campaigns_leads_users')
-                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
-            })
-            ->count();
+        $totalLeads = $leadStats->total;
+        $soldLeads = $leadStats->sold;
+        $unsoldLeads = $leadStats->unsold;
 
-        return view('Admin.home', compact('totalLeads', 'soldLeads', 'unsoldLeads'));
+        // Financial data - FIX: use lc.created_at
+        $totalPurchasingPrice = DB::table('leads_customers as lc')  // <-- FIX: add alias
+        ->join('campaigns AS camp_seller', 'camp_seller.vendor_id', '=', 'lc.vendor_id')
+            ->join('users AS Seller', 'Seller.id', '=', 'camp_seller.user_id')
+            ->where('lc.response_data', "Lead Accepted")  // <-- FIX: lc.response_data
+            ->whereBetween('lc.created_at', [$monthStart, $monthEnd])  // <-- FIX: lc.created_at
+            ->where('lc.is_duplicate_lead', '<>', 1)  // <-- FIX: lc.is_duplicate_lead
+            ->whereNotIn('lc.lead_fname', ['test', 'testing', 'Test'])  // <-- FIX: lc.lead_fname
+            ->whereNotIn('lc.lead_lname', ['test', 'testing', 'Test'])  // <-- FIX: lc.lead_lname
+            ->where('lc.is_test', 0)  // <-- FIX: lc.is_test
+            ->sum('lc.ping_price');  // <-- FIX: lc.ping_price
+
+        $totalSellingPrice = CampaignsLeadsUsers::whereIn('campaigns_leads_users_type_bid', ['Exclusive', 'Shared'])
+            ->whereBetween('date', [$monthStart, $monthEnd])  // This is 'date' not 'created_at', so no conflict
+            ->where('is_returned', 0)
+            ->sum('campaigns_leads_users_bid');
+
+        // Calculations
+        $profit = $totalSellingPrice - $totalPurchasingPrice;
+        $marginPercent = $totalSellingPrice > 0 ? (($profit / $totalSellingPrice) * 100) : 0;
+        $marginRingPercent = min($marginPercent, 100);
+
+        $maxProfitValue = 50000;
+        $profitPercent = $maxProfitValue > 0 ? min(($profit / $maxProfitValue) * 100, 100) : 0;
+
+        $circumference = 364.4;
+        $profitOffset = $circumference - ($circumference * $profitPercent / 100);
+
+        return view('Admin.home', compact(
+            'totalLeads', 'soldLeads', 'unsoldLeads',
+            'totalSellingPrice', 'totalPurchasingPrice',
+            'marginPercent', 'marginRingPercent',
+            'profit', 'profitOffset', 'circumference', 'maxProfitValue'
+        ));
     }
 
     public function AdminProfileShow(){
