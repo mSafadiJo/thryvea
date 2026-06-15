@@ -678,3 +678,77 @@ body {
 {
     background-color: #9315f5;
 }
+.charts-line{
+    padding: 7px;
+    border-radius: 10px;
+}
+
+.report-inner-cards-wrapper .report-inner-card .inner-card-icon {
+    width: 62px;
+    height: 62px;
+    font-size: 25px;
+    color: #ffffff;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.report-inner-cards-wrapper .report-inner-card .report-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111111;
+}
+
+.report-inner-cards-wrapper .report-inner-card .inner-card-text
+{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.report-inner-cards-wrapper .report-inner-card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    border-right: solid 1px #e8ecf1;
+    padding: 0 40px;
+}
+
+.report-inner-cards-wrapper .report-inner-card h4, .report-inner-cards-wrapper .report-inner-card .h4
+{
+    font-weight: bold;
+    font-size: 1.13rem;
+}
+
+.report-summary-header {
+    border-bottom: solid 1px #e8ecf1;
+    margin-bottom: 0.5rem;
+}
+
+.font-weight-semibold{
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.report-daily{
+    padding: 1.875rem 1.875rem;
+}
+
+.report-inner-cards-wrapper {
+    padding-top: 25px;
+}

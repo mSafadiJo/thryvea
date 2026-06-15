@@ -8298,7 +8298,7 @@ class PostCRMAllied {
                         <UniqueId>' . $leadsCustomerCampaign_id . '</UniqueId>
                         <LeadId>' . $TransactionId . '</LeadId>
                         <LeadMetaData>
-                            <ULeadId>' . $LeadId . '</ULeadId>
+                            <ULeadId> </ULeadId>
                             <ULeadIdTCPA>True</ULeadIdTCPA>
                             <NonLeadIdTCPA>False</NonLeadIdTCPA>
                             <ClientUserAgent>' . $UserAgent . '</ClientUserAgent>

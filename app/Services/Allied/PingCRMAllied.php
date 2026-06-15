@@ -6057,7 +6057,7 @@ class PingCRMAllied
                             <UniqueId>' . $leadCustomer_id . '</UniqueId>
                             <LeadId>' . $leadCustomer_id . '</LeadId>
                             <LeadMetaData>
-                                <ULeadId>' . $LeadId . '</ULeadId>
+                                <ULeadId> </ULeadId>
                                 <ULeadIdTCPA>True</ULeadIdTCPA>
                                 <NonLeadIdTCPA>False</NonLeadIdTCPA>
                                 <ClientUserAgent>' . $UserAgent . '</ClientUserAgent>
