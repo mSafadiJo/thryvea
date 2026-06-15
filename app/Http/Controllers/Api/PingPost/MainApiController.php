@@ -728,10 +728,11 @@ class MainApiController extends Controller
         //end window questions ==========================================================================
 
         //Check If duplicate Leads
-        $is_set_lead = LeadsCustomer::where(function ($query) use($request) {
-            $query->where('lead_phone_number', $request['phone_number']);
-            $query->OrWhere('lead_email', $request->email);
-        })->first();
+        $is_set_lead = LeadsCustomer::where('lead_phone_number', $request['phone_number'])
+            ->union(
+                LeadsCustomer::where('lead_email', $request->email)
+            )
+            ->first();
 
         //Add POST Lead
         $postLeads = new LeadsCustomer();

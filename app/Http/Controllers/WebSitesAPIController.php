@@ -252,25 +252,35 @@ class WebSitesAPIController extends Controller
             //Change Phone Structure ====================================================
 
             //To check If Duplicated Lead =================================================================
+            $today_start = date('Y-m-d') . ' 00:00:00';
+            $today_end   = date('Y-m-d') . ' 23:59:59';
+
             $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
                 ->where('status', 0)
-                ->where(function ($query) use ($request) {
-                    $query->where('lead_phone_number', $request['phone_number']);
-                    $query->OrWhere('lead_email', $request->email);
-                })
-                ->where('created_at', '>=', date('Y-m-d') . ' 00:00:00')
-                ->where('created_at', '<=', date('Y-m-d') . ' 23:59:59')
+                ->where('lead_phone_number', $request['phone_number'])
+                ->whereBetween('created_at', [$today_start, $today_end])
+                ->union(
+                    LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                        ->where('status', 0)
+                        ->where('lead_email', $request->email)
+                        ->whereBetween('created_at', [$today_start, $today_end])
+                )
                 ->first();
+
+            $thirty_days_start = date('Y-m-d', strtotime('-30 day')) . ' 00:00:00';
 
             $is_sold_duplicate = LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
                 ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
                 ->where('leads_customers.status', 0)
-                ->where(function ($query) use ($request) {
-                    $query->where('leads_customers.lead_phone_number', $request['phone_number']);
-                    $query->OrWhere('leads_customers.lead_email', $request->email);
-                })
-                ->where('leads_customers.created_at', '>=', date('Y-m-d', strtotime("-30 day")) . ' 00:00:00')
-                ->where('leads_customers.created_at', '<=', date('Y-m-d') . ' 23:59:59')
+                ->where('leads_customers.lead_phone_number', $request['phone_number'])
+                ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                ->union(
+                    LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
+                        ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                        ->where('leads_customers.status', 0)
+                        ->where('leads_customers.lead_email', $request->email)
+                        ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                )
                 ->first();
             //To check If Duplicated Lead =================================================================
 
