@@ -388,18 +388,50 @@ class CampaignLeadsAdminController extends Controller
         $query_search = str_replace(" ", "%", $request->get('query'));
 
         // ============================================================
-        // STEP 1: Get IDs from campaigns_leads_users
+        // STEP 1: Get raw IDs from campaigns_leads_users ONLY
+        // This uses the covering index and is extremely fast
+        // ============================================================
+        $rawIdQuery = DB::table('campaigns_leads_users')
+            ->select('campaigns_leads_users_id', 'lead_id', 'campaign_id', 'user_id')
+            ->where('is_returned', 0);
+
+        if (!empty($start_date) && !empty($end_date)) {
+            $rawIdQuery->whereBetween('date', [$start_date, $end_date]);
+        }
+
+        if (!empty($buyer_id)) {
+            $rawIdQuery->whereIn('user_id', $buyer_id);
+        }
+
+        // Order and paginate on the raw table first
+        $rawIdQuery->orderBy($sort_by, $sort_type);
+
+        // We fetch more than 10 to account for filtering in step 2
+        $rawIds = $rawIdQuery->limit(200)->get();
+
+        if ($rawIds->isEmpty()) {
+            $campaignSoldLeads = new \Illuminate\Pagination\Paginator(
+                collect(), 10, 1
+            );
+            return view('Render.Lead_Received_Render', compact('campaignSoldLeads'))->render();
+        }
+
+        $leadIds = $rawIds->pluck('lead_id')->toArray();
+        $campaignUserIds = $rawIds->pluck('campaigns_leads_users_id')->toArray();
+
+        // ============================================================
+        // STEP 2: Apply remaining filters on the small candidate set
         // ============================================================
         $idQuery = DB::table('campaigns_leads_users')
             ->select('campaigns_leads_users.campaigns_leads_users_id')
             ->join('campaigns', 'campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
-            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'campaigns.service_campaign_id')  // <-- FIXED: added this join
+            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'campaigns.service_campaign_id')
             ->join('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
             ->join('users', 'users.id', '=', 'campaigns_leads_users.user_id')
-            ->where('campaigns_leads_users.is_returned', 0)
+            ->whereIn('campaigns_leads_users.campaigns_leads_users_id', $campaignUserIds)
             ->where('service__campaigns.service_is_active', 1);
 
-        // Search on leads_customers + users + campaigns
+        // Search filter (only on the 200 candidates)
         if (!empty($query_search)) {
             $idQuery->where(function ($query) use ($query_search) {
                 $query->where('leads_customers.lead_id', 'like', '%' . $query_search . '%')
@@ -412,10 +444,6 @@ class CampaignLeadsAdminController extends Controller
                     ->orWhere('users.user_business_name', 'like', '%' . $query_search . '%')
                     ->orWhere('campaigns.campaign_name', 'like', '%' . $query_search . '%');
             });
-        }
-
-        if (!empty($buyer_id)) {
-            $idQuery->whereIn('campaigns_leads_users.user_id', $buyer_id);
         }
 
         if (!empty($seller_id)) {
@@ -431,22 +459,20 @@ class CampaignLeadsAdminController extends Controller
             $idQuery->whereIn('leads_customers.lead_state_id', $states);
         }
 
-        if (!empty($start_date) && !empty($end_date)) {
-            $idQuery->whereBetween('campaigns_leads_users.date', [$start_date, $end_date]);
-        }
+        $filteredIds = $idQuery->orderBy($sort_by, $sort_type)
+            ->limit(10)
+            ->get()
+            ->pluck('campaigns_leads_users_id')
+            ->toArray();
 
-        $paginatedIds = $idQuery->orderBy($sort_by, $sort_type)
-            ->simplePaginate(10);
-
-        $ids = collect($paginatedIds->items())->pluck('campaigns_leads_users_id')->toArray();
-
-        if (empty($ids)) {
-            $campaignSoldLeads = $paginatedIds;
-            $campaignSoldLeads->setCollection(collect());
+        // ============================================================
+        // STEP 3: Hydrate full data for final IDs
+        // ============================================================
+        if (empty($filteredIds)) {
+            $campaignSoldLeads = new \Illuminate\Pagination\Paginator(
+                collect(), 10, 1
+            );
         } else {
-            // ============================================================
-            // STEP 2: Hydrate full data for these 10 IDs
-            // ============================================================
             $leads = DB::table('campaigns_leads_users')
                 ->join('campaigns', 'campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
                 ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'campaigns.service_campaign_id')
@@ -454,7 +480,7 @@ class CampaignLeadsAdminController extends Controller
                 ->leftJoin('campaigns AS camp_seller', 'camp_seller.vendor_id', '=', 'leads_customers.vendor_id')
                 ->join('users', 'users.id', '=', 'campaigns_leads_users.user_id')
                 ->join('states', 'states.state_id', '=', 'leads_customers.lead_state_id')
-                ->whereIn('campaigns_leads_users.campaigns_leads_users_id', $ids)
+                ->whereIn('campaigns_leads_users.campaigns_leads_users_id', $filteredIds)
                 ->select([
                     'campaigns_leads_users.campaigns_leads_users_id',
                     'campaigns.campaign_name',
@@ -471,8 +497,10 @@ class CampaignLeadsAdminController extends Controller
                 ->orderBy($sort_by, $sort_type)
                 ->get();
 
-            $paginatedIds->setCollection($leads);
-            $campaignSoldLeads = $paginatedIds;
+            // Manual paginator since we bypassed Laravel's query builder pagination
+            $campaignSoldLeads = new \Illuminate\Pagination\Paginator(
+                $leads, 10, 1
+            );
         }
 
         return view('Render.Lead_Received_Render', compact('campaignSoldLeads'))->render();
