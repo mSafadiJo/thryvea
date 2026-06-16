@@ -388,11 +388,12 @@ class CampaignLeadsAdminController extends Controller
         $query_search = str_replace(" ", "%", $request->get('query'));
 
         // ============================================================
-        // STEP 1: Get IDs from campaigns_leads_users (primary table)
+        // STEP 1: Get IDs from campaigns_leads_users
         // ============================================================
         $idQuery = DB::table('campaigns_leads_users')
             ->select('campaigns_leads_users.campaigns_leads_users_id')
             ->join('campaigns', 'campaigns.campaign_id', '=', 'campaigns_leads_users.campaign_id')
+            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'campaigns.service_campaign_id')  // <-- FIXED: added this join
             ->join('leads_customers', 'leads_customers.lead_id', '=', 'campaigns_leads_users.lead_id')
             ->join('users', 'users.id', '=', 'campaigns_leads_users.user_id')
             ->where('campaigns_leads_users.is_returned', 0)
