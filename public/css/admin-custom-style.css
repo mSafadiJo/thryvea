@@ -322,7 +322,7 @@ body {
 .nav-third-level li a:hover,
 .nav-second-level li.active > a,
 .nav-third-level li.active > a {
-    color: var(--primary-color);
+    color: #64748b;
     background: rgba(59, 130, 246, 0.06);
     border-left-color: var(--sidebar-active-border);
 }
@@ -677,6 +677,7 @@ body {
 .nav-second-level li a:focus, .nav-thrid-level li a:focus
 {
     background-color: #9315f5;
+    color: #fff;
 }
 .charts-line{
     padding: 7px;
