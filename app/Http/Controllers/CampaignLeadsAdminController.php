@@ -29,312 +29,332 @@ class CampaignLeadsAdminController extends Controller
 
     public function list_of_leads_all()
     {
-        $services = DB::table('service__campaigns')->where('service_is_active', 1)->get()->All();
-        $buyers = DB::table('users')->whereIn('role_id', ['3', '4', '6'])->where('user_visibility', 1)->get()->All();
-        //$sellers = DB::table('users')->whereIn('role_id', [4, 5])->where('user_visibility', 1)->get()->All();
-        //$list_of_ts = LeadTrafficSources::pluck('name')->toArray();
-        //$list_of_g = DB::table('leads_customers')->groupBy('google_g')->pluck('google_g')->toArray();
-        //$list_of_c = DB::table('leads_customers')->groupBy('google_c')->pluck('google_c')->toArray();
-        //$list_of_k = DB::table('leads_customers')->groupBy('google_k')->pluck('google_k')->toArray();
-        $states = State::All();
+        $services = DB::table('service__campaigns')->where('service_is_active', 1)->get()->all();
+        $buyers = DB::table('users')->whereIn('role_id', ['3', '4', '6'])->where('user_visibility', 1)->get()->all();
+        $states = State::all();
 
-        $QA_status = array(
-            "Not started",
-            "Not a working number",
-            "Didn't request",
-            "Bogus info",
-            "Wrong number",
-            "Doesn't qualify",
-            "Not interested",
-            "N/A",
-            "False Advertisement",
-            "DNC",
-            "Interested",
-            "Line Busy",
-            "Job done",
-            "Invalid Address",
-            "Not a home"
-        );
+        $QA_status = [
+            "Not started", "Not a working number", "Didn't request", "Bogus info",
+            "Wrong number", "Doesn't qualify", "Not interested", "N/A",
+            "False Advertisement", "DNC", "Interested", "Line Busy",
+            "Job done", "Invalid Address", "Not a home"
+        ];
 
-        $data = array(
+        $data = [
             'services' => $services,
             'buyers' => $buyers,
             'states' => $states,
-            //'sellers' => $sellers,
-            //'list_of_ts' => $list_of_ts,
-            //'list_of_g' => $list_of_g,
-            //'list_of_c' => $list_of_c,
-            //'list_of_k' => $list_of_k
-        );
+        ];
 
         $yesterday = date('Y-m-d', strtotime('-1 days')) . ' 00:00:00';
         $today = date('Y-m-d') . ' 23:59:59';
 
-        $ListOfLeads = DB::table('leads_customers')
-            ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
-            ->join('states', 'states.state_id', '=', 'leads_customers.lead_state_id')
-            ->join('cities', 'cities.city_id', '=', 'leads_customers.lead_city_id')
-            ->join('zip_codes_lists', 'zip_codes_lists.zip_code_list_id', '=', 'leads_customers.lead_zipcode_id')
-            ->leftJoin('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
-            ->leftJoin('users', 'users.id', '=', 'campaigns_leads_users.user_id')
-            ->where('leads_customers.is_duplicate_lead',"<>", 1)
-            ->where(function ($query) {
-                $query->whereNull('campaigns_leads_users.is_returned');
-                $query->OrWhere('campaigns_leads_users.is_returned', 0);
-            })
-            ->where('leads_customers.lead_fname', '!=', "test")
-            ->where('leads_customers.lead_lname', '!=', "test")
-            ->where('leads_customers.lead_fname', '!=', "testing")
-            ->where('leads_customers.lead_lname', '!=', "testing")
-            ->where('leads_customers.lead_fname', '!=', "Test")
-            ->where('leads_customers.lead_lname', '!=', "Test")
-            ->where('leads_customers.is_test', 0)
-            ->whereBetween('leads_customers.created_at', [$yesterday, $today])
-            ->orderBy('leads_customers.created_at', 'DESC')
-            ->groupBy('leads_customers.lead_id')
-            ->Select([
-                'service__campaigns.service_campaign_name', 'leads_customers.*',
-                'states.state_code', 'cities.city_name', 'zip_codes_lists.zip_code_list',
-                DB::raw("GROUP_CONCAT(users.user_business_name) AS buyerUser"),
-                DB::raw("GROUP_CONCAT(campaigns_leads_users.campaigns_leads_users_type_bid) AS bid_type"),
-                DB::raw("GROUP_CONCAT(campaigns_leads_users.is_returned) AS is_returned_concat"),
-                DB::raw("SUM(campaigns_leads_users.campaigns_leads_users_bid) AS sum_bid"),
-                'campaigns_leads_users.created_at AS sold_date', 'campaigns_leads_users.is_returned'
-            ])
-            ->simplePaginate(10);
-            //->paginate(10);
+        // === STEP 1: Get IDs only — no joins, no GROUP BY, uses covering index ===
+        $leadIdsQuery = DB::table('leads_customers')
+            ->select('lead_id')
+            ->where('is_duplicate_lead', '<>', 1)
+            ->where('is_test', 0)
+            ->whereNotIn('lead_fname', ['test', 'testing', 'Test', 'Testing'])
+            ->whereNotIn('lead_lname', ['test', 'testing', 'Test', 'Testing'])
+            ->whereBetween('created_at', [$yesterday, $today])
+            ->orderBy('created_at', 'DESC');
+
+        $paginatedIds = $leadIdsQuery->simplePaginate(10);
+        $ids = collect($paginatedIds->items())->pluck('lead_id')->toArray();
+
+        if (empty($ids)) {
+            $ListOfLeads = $paginatedIds;
+            $ListOfLeads->setCollection(collect());
+        } else {
+            // === STEP 2: Fetch full data only for these 10 leads ===
+            $leads = DB::table('leads_customers')
+                ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
+                ->join('states', 'states.state_id', '=', 'leads_customers.lead_state_id')
+                ->join('cities', 'cities.city_id', '=', 'leads_customers.lead_city_id')
+                ->join('zip_codes_lists', 'zip_codes_lists.zip_code_list_id', '=', 'leads_customers.lead_zipcode_id')
+                ->leftJoin('campaigns_leads_users', function ($join) {
+                    $join->on('campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                        ->where(function ($q) {
+                            $q->whereNull('campaigns_leads_users.is_returned')
+                                ->orWhere('campaigns_leads_users.is_returned', 0);
+                        });
+                })
+                ->leftJoin('users', 'users.id', '=', 'campaigns_leads_users.user_id')
+                ->whereIn('leads_customers.lead_id', $ids)
+                ->groupBy('leads_customers.lead_id')
+                ->select([
+                    'service__campaigns.service_campaign_name',
+                    'leads_customers.*',
+                    'states.state_code',
+                    'cities.city_name',
+                    'zip_codes_lists.zip_code_list',
+                    DB::raw("GROUP_CONCAT(DISTINCT users.user_business_name) AS buyerUser"),
+                    DB::raw("GROUP_CONCAT(DISTINCT campaigns_leads_users.campaigns_leads_users_type_bid) AS bid_type"),
+                    DB::raw("GROUP_CONCAT(DISTINCT campaigns_leads_users.is_returned) AS is_returned_concat"),
+                    DB::raw("SUM(campaigns_leads_users.campaigns_leads_users_bid) AS sum_bid"),
+                    'campaigns_leads_users.created_at AS sold_date',
+                    'campaigns_leads_users.is_returned'
+                ])
+                ->orderBy('leads_customers.created_at', 'DESC')
+                ->get();
+
+            $paginatedIds->setCollection($leads);
+            $ListOfLeads = $paginatedIds;
+        }
 
         return view('Admin.CampaignLeads.all_lead_list')
             ->with('data', $data)
-            ->with('QA_status',$QA_status)
+            ->with('QA_status', $QA_status)
             ->with('ListOfLeads', $ListOfLeads);
     }
-    public function fetch_data_all_list_lead(Request $request){
-        if($request->ajax()) {
-            $buyer_id = $request->buyer_id;
-            $service_id = $request->service_id;
-            $states = $request->states;
-            $start_date = $request->start_date . ' 00:00:00';
-            $end_date = $request->end_date . ' 23:59:59';
-            $environments = $request->environments;
-            $traffic_source = $request->traffic_source;
-            $google_g = $request->google_g;
-            $google_c = $request->google_c;
-            $google_k = $request->google_k;
+    public function fetch_data_all_list_lead(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json(['error' => 'Invalid request'], 400);
+        }
 
-            $county_id = array();
-            if( !empty($request->county_id) ){
-                $county_id = explode(',', $request->county_id);
-            }
+        $buyer_id = $request->buyer_id;
+        $service_id = $request->service_id;
+        $states = $request->states;
+        $start_date = $request->start_date . ' 00:00:00';
+        $end_date = $request->end_date . ' 23:59:59';
+        $environments = $request->environments;
+        $traffic_source = $request->traffic_source;
+        $google_g = $request->google_g;
+        $google_c = $request->google_c;
+        $google_k = $request->google_k;
 
-            $city_id = array();
-            if( !empty($request->city_id) ){
-                $city_id = explode(',', $request->city_id);
-            }
+        $county_id = !empty($request->county_id) ? explode(',', $request->county_id) : [];
+        $city_id = !empty($request->city_id) ? explode(',', $request->city_id) : [];
+        $zipcode_id = !empty($request->zipcode_id) ? explode(',', $request->zipcode_id) : [];
 
-            $zipcode_id = array();
-            if( !empty($request->zipcode_id) ){
-                $zipcode_id = explode(',', $request->zipcode_id);
-            }
+        $query_search = str_replace(" ", "%", $request->get('query'));
 
-            $query_search = $request->get('query');
-            $query_search = str_replace(" ", "%", $query_search);
+        // ============================================================
+        // === STEP 1: Build ID-only query with all filters ===
+        // ============================================================
+        $idQuery = DB::table('leads_customers')->select('leads_customers.lead_id');
 
-            $ListOfLeadsNotIn = DB::table('leads_customers')
+        // Search filter — only on leads_customers table (no joins needed)
+        if (!empty($query_search)) {
+            $idQuery->where(function ($query) use ($query_search) {
+                $query->where('leads_customers.lead_id', 'like', '%' . $query_search . '%')
+                    ->orWhere('leads_customers.lead_fname', 'like', '%' . $query_search . '%')
+                    ->orWhere('leads_customers.lead_lname', 'like', '%' . $query_search . '%')
+                    ->orWhere('leads_customers.lead_source_text', 'like', '%' . $query_search . '%')
+                    ->orWhereRaw("concat(leads_customers.lead_fname, ' ', leads_customers.lead_lname) like ?", ["%" . $query_search . "%"])
+                    ->orWhere('leads_customers.google_ts', 'like', '%' . $query_search . '%')
+                    ->orWhere('leads_customers.QA_status', 'like', '%' . $query_search . '%');
+            });
+        }
+
+        // Service filter
+        if (!empty($service_id)) {
+            $idQuery->whereIn('leads_customers.lead_type_service_id', $service_id);
+        }
+        if (!empty($states)) {
+            $idQuery->whereIn('leads_customers.lead_state_id', $states);
+        }
+        if (!empty($county_id)) {
+            $idQuery->whereIn('leads_customers.lead_county_id', $county_id);
+        }
+        if (!empty($city_id)) {
+            $idQuery->whereIn('leads_customers.lead_city_id', $city_id);
+        }
+        if (!empty($zipcode_id)) {
+            $idQuery->whereIn('leads_customers.lead_zipcode_id', $zipcode_id);
+        }
+        if (!empty($traffic_source)) {
+            $idQuery->whereIn('leads_customers.google_ts', $traffic_source);
+        }
+        if (!empty($google_g)) {
+            $idQuery->whereIn('leads_customers.google_g', $google_g);
+        }
+        if (!empty($google_c)) {
+            $idQuery->whereIn('leads_customers.google_c', $google_c);
+        }
+        if (!empty($google_k)) {
+            $idQuery->whereIn('leads_customers.google_k', $google_k);
+        }
+
+        // Date range
+        if (!empty($start_date) && !empty($end_date)) {
+            $idQuery->whereBetween('leads_customers.created_at', [$start_date, $end_date]);
+        }
+
+        // Environment filters — CRITICAL: buyer_id and is_returned need joins
+        if (!empty($buyer_id)) {
+            $idQuery->whereExists(function ($sub) use ($buyer_id) {
+                $sub->select(DB::raw(1))
+                    ->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
+                    ->whereIn('campaigns_leads_users.user_id', $buyer_id);
+            });
+        }
+
+        if ($environments == 2) {
+            $idQuery->whereExists(function ($sub) {
+                $sub->select(DB::raw(1))
+                    ->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
+                    ->where('campaigns_leads_users.is_returned', '<>', 1);
+            });
+            $idQuery->whereNotIn('leads_customers.status', [1, 2]);
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 3) {
+            $idQuery->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
+            });
+            $idQuery->where('leads_customers.status', 0);
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 4) {
+            $idQuery->where('leads_customers.status', 1)
+                ->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 5) {
+            $idQuery->where(function ($query) {
+                $query->where('leads_customers.lead_fname', "test")
+                    ->orWhere('leads_customers.lead_lname', "test")
+                    ->orWhere('leads_customers.lead_fname', "testing")
+                    ->orWhere('leads_customers.lead_lname', "testing")
+                    ->orWhere('leads_customers.lead_fname', "Test")
+                    ->orWhere('leads_customers.lead_lname', "Test")
+                    ->orWhere('leads_customers.is_test', 1);
+            });
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 6) {
+            $idQuery->where('leads_customers.is_duplicate_lead', 1);
+        } elseif ($environments == 7) {
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1)
+                ->where('leads_customers.status', 2);
+        } elseif ($environments == 8) {
+            $idQuery->whereExists(function ($sub) {
+                $sub->select(DB::raw(1))
+                    ->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
+                    ->where('campaigns_leads_users.is_returned', 1);
+            });
+            $idQuery->whereNotIn('leads_customers.status', [1, 2]);
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 9) {
+            $idQuery->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
+            });
+            $idQuery->where('leads_customers.status', 3);
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } elseif ($environments == 10) {
+            $idQuery->whereNotExists(function ($sub) {
+                $sub->select(DB::raw(1))->from('campaigns_leads_users')
+                    ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
+            });
+            $idQuery->where('leads_customers.status', 4);
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+        } else {
+            $idQuery->where('leads_customers.is_duplicate_lead', "<>", 1);
+            $idQuery->where(function ($query) {
+                $query->whereNotExists(function ($sub) {
+                    $sub->select(DB::raw(1))->from('campaigns_leads_users')
+                        ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id');
+                })->orWhereExists(function ($sub) {
+                    $sub->select(DB::raw(1))
+                        ->from('campaigns_leads_users')
+                        ->whereColumn('campaigns_leads_users.lead_id', 'leads_customers.lead_id')
+                        ->where('campaigns_leads_users.is_returned', 0);
+                });
+            });
+            $idQuery->where('leads_customers.lead_fname', '!=', "test")
+                ->where('leads_customers.lead_lname', '!=', "test")
+                ->where('leads_customers.lead_fname', '!=', "testing")
+                ->where('leads_customers.lead_lname', '!=', "testing")
+                ->where('leads_customers.lead_fname', '!=', "Test")
+                ->where('leads_customers.lead_lname', '!=', "Test")
+                ->where('leads_customers.is_test', 0);
+        }
+
+        // === Paginate IDs ===
+        $paginatedIds = $idQuery->orderBy('leads_customers.created_at', 'DESC')->simplePaginate(10);
+        $ids = collect($paginatedIds->items())->pluck('lead_id')->toArray();
+
+        if (empty($ids)) {
+            $ListOfLeads = $paginatedIds;
+            $ListOfLeads->setCollection(collect());
+        } else {
+            // ============================================================
+            // === STEP 2: Hydrate full data for these 10 IDs only ===
+            // ============================================================
+            $hydrateQuery = DB::table('leads_customers')
                 ->join('service__campaigns', 'service__campaigns.service_campaign_id', '=', 'leads_customers.lead_type_service_id')
                 ->join('states', 'states.state_id', '=', 'leads_customers.lead_state_id')
                 ->join('cities', 'cities.city_id', '=', 'leads_customers.lead_city_id')
                 ->join('zip_codes_lists', 'zip_codes_lists.zip_code_list_id', '=', 'leads_customers.lead_zipcode_id')
                 ->leftJoin('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
                 ->leftJoin('users', 'users.id', '=', 'campaigns_leads_users.user_id')
-                ->where(function ($query) use($query_search) {
-                    $query->where('leads_customers.lead_id', 'like', '%'.$query_search.'%');
-                    $query->orWhere('leads_customers.lead_fname', 'like', '%'.$query_search.'%');
-                    $query->orWhere('leads_customers.lead_lname', 'like', '%'.$query_search.'%');
-                    $query->orWhere('leads_customers.lead_source_text', 'like', '%'.$query_search.'%');
-                    $query->orWhere(DB::raw("concat(leads_customers.lead_fname, ' ', leads_customers.lead_lname)"), 'like', "%".$query_search."%");
-                    $query->orWhere('leads_customers.google_ts', 'like', '%'.$query_search.'%');
-                    $query->orWhere('leads_customers.QA_status', 'like', '%'.$query_search.'%');
-                });
-
-            if (!empty($service_id)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.lead_type_service_id', $service_id);
-            }
-
-            if (!empty($states)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.lead_state_id', $states);
-            }
-
-            if (!empty($county_id)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.lead_county_id', $county_id);
-            }
-
-            if (!empty($city_id)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.lead_city_id', $city_id);
-            }
-
-            if (!empty($zipcode_id)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.lead_zipcode_id', $zipcode_id);
-            }
-
-            if (!empty($traffic_source)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.google_ts', $traffic_source);
-            }
-
-            if (!empty($google_g)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.google_g', $google_g);
-            }
-
-            if (!empty($google_c)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.google_c', $google_c);
-            }
-
-            if (!empty($google_k)) {
-                $ListOfLeadsNotIn->whereIn('leads_customers.google_k', $google_k);
-            }
-
-            if (!empty($buyer_id)) {
-                $ListOfLeadsNotIn->whereIn('campaigns_leads_users.user_id', $buyer_id);
-            }
-
-            if (!empty($start_date) && !empty($end_date)) {
-                $ListOfLeadsNotIn->whereBetween('leads_customers.created_at', [$start_date, $end_date]);
-            }
-
-            if ($environments == 2) {
-                $ListOfLeadsNotIn->whereNotNull('campaigns_leads_users.lead_id');
-                $ListOfLeadsNotIn->whereNotIn('leads_customers.status', [1, 2])
-                    ->where('campaigns_leads_users.is_returned', '<>', 1);
-                $ListOfLeadsNotIn->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 3) {
-                $ListOfLeadsNotIn->whereNull('campaigns_leads_users.lead_id');
-                $ListOfLeadsNotIn->where('leads_customers.status', 0);
-                $ListOfLeadsNotIn->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 4) {
-                $ListOfLeadsNotIn->where('leads_customers.status', 1)
-                    ->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 5) {
-                $ListOfLeadsNotIn->where(function ($query) {
-                    $query->where('leads_customers.lead_fname', "test");
-                    $query->OrWhere('leads_customers.lead_lname', "test");
-                    $query->OrWhere('leads_customers.lead_fname', "testing");
-                    $query->OrWhere('leads_customers.lead_lname', "testing");
-                    $query->OrWhere('leads_customers.lead_fname', "Test");
-                    $query->OrWhere('leads_customers.lead_lname', "Test");
-                    $query->OrWhere('leads_customers.is_test', 1);
-                });
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 6) {
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead', 1);
-            }
-            else if ($environments == 7) {
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1)
-                    ->where('leads_customers.status', 2);
-            }
-            else if ($environments == 8) {
-                $ListOfLeadsNotIn->whereNotNull('campaigns_leads_users.lead_id');
-                $ListOfLeadsNotIn->whereNotIn('leads_customers.status', [1, 2])
-                    ->where('campaigns_leads_users.is_returned', 1);
-                $ListOfLeadsNotIn->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 9) {
-                $ListOfLeadsNotIn->whereNull('campaigns_leads_users.lead_id');
-                $ListOfLeadsNotIn->where('leads_customers.status', 3);
-                $ListOfLeadsNotIn->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else if ($environments == 10) {
-                $ListOfLeadsNotIn->whereNull('campaigns_leads_users.lead_id');
-                $ListOfLeadsNotIn->where('leads_customers.status', 4);
-                $ListOfLeadsNotIn->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1);
-            }
-            else {
-                $ListOfLeadsNotIn->where('leads_customers.is_duplicate_lead',"<>", 1)
-                    ->where(function ($query) {
-                        $query->whereNull('campaigns_leads_users.is_returned');
-                        $query->OrWhere('campaigns_leads_users.is_returned', 0);
-                    })
-                    ->where('leads_customers.lead_fname', '!=', "test")
-                    ->where('leads_customers.lead_lname', '!=', "test")
-                    ->where('leads_customers.lead_fname', '!=', "testing")
-                    ->where('leads_customers.lead_lname', '!=', "testing")
-                    ->where('leads_customers.lead_fname', '!=', "Test")
-                    ->where('leads_customers.lead_lname', '!=', "Test")
-                    ->where('leads_customers.is_test', 0);
-            }
-
-            $ListOfLeads = $ListOfLeadsNotIn->orderBy('leads_customers.created_at', 'DESC')
+                ->whereIn('leads_customers.lead_id', $ids)
                 ->groupBy('leads_customers.lead_id')
                 ->select([
-                    'service__campaigns.service_campaign_name', 'leads_customers.*',
-                    'states.state_code', 'cities.city_name', 'zip_codes_lists.zip_code_list',
-                    DB::raw("GROUP_CONCAT(users.user_business_name) AS buyerUser"),
-                    DB::raw("GROUP_CONCAT(campaigns_leads_users.campaigns_leads_users_type_bid) AS bid_type"),
-                    DB::raw("GROUP_CONCAT(campaigns_leads_users.is_returned) AS is_returned_concat"),
+                    'service__campaigns.service_campaign_name',
+                    'leads_customers.*',
+                    'states.state_code',
+                    'cities.city_name',
+                    'zip_codes_lists.zip_code_list',
+                    DB::raw("GROUP_CONCAT(DISTINCT users.user_business_name) AS buyerUser"),
+                    DB::raw("GROUP_CONCAT(DISTINCT campaigns_leads_users.campaigns_leads_users_type_bid) AS bid_type"),
+                    DB::raw("GROUP_CONCAT(DISTINCT campaigns_leads_users.is_returned) AS is_returned_concat"),
                     DB::raw("SUM(campaigns_leads_users.campaigns_leads_users_bid) AS sum_bid"),
-                    'campaigns_leads_users.created_at AS sold_date', 'campaigns_leads_users.is_returned'
+                    'campaigns_leads_users.created_at AS sold_date',
+                    'campaigns_leads_users.is_returned'
                 ])
-                ->simplePaginate(10);
-                //->paginate(10);
+                ->orderBy('leads_customers.created_at', 'DESC');
 
-            $QA_status = array(
-                "Not started",
-                "Not a working number",
-                "Didn't request",
-                "Bogus info",
-                "Wrong number",
-                "Doesn't qualify",
-                "Not interested",
-                "N/A",
-                "False Advertisement",
-                "DNC",
-                "Interested",
-                "Line Busy",
-                "Job done",
-                "Invalid Address",
-                "Not a home"
-            );
-
-            return view('Render.All_Lead_List_Render', compact('ListOfLeads', 'QA_status'))->render();
+            $leads = $hydrateQuery->get();
+            $paginatedIds->setCollection($leads);
+            $ListOfLeads = $paginatedIds;
         }
+
+        $QA_status = [
+            "Not started", "Not a working number", "Didn't request", "Bogus info",
+            "Wrong number", "Doesn't qualify", "Not interested", "N/A",
+            "False Advertisement", "DNC", "Interested", "Line Busy",
+            "Job done", "Invalid Address", "Not a home"
+        ];
+
+        return view('Render.All_Lead_List_Render', compact('ListOfLeads', 'QA_status'))->render();
     }
 
     public function list_of_leads_received(){
