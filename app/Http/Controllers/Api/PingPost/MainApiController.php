@@ -415,79 +415,191 @@ class MainApiController extends Controller
         }
 
         //Filtration
-        $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
+//        $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->where('date', date("Y-m-d"))
+//            ->where('campaigns_leads_users_type_bid','Exclusive')
+//            ->whereIn('campaign_id', $campaigns_list_ex)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsWeeklyExclusive = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
+//            ->where('campaigns_leads_users_type_bid','Exclusive')
+//            ->whereIn('campaign_id', $campaigns_list_ex)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsMonthlyExclusive = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
+//            ->where('campaigns_leads_users_type_bid','Exclusive')
+//            ->whereIn('campaign_id', $campaigns_list_ex)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsDailiesShared = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->where('date', date("Y-m-d"))
+//            ->where('campaigns_leads_users_type_bid','Shared')
+//            ->whereIn('campaign_id', $campaigns_list_sh)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsWeeklyShared = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
+//            ->where('campaigns_leads_users_type_bid','Shared')
+//            ->whereIn('campaign_id', $campaigns_list_sh)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsMonthlyShared = DB::table('campaigns_leads_users_affs')
+//            ->select('campaigns_leads_users_type_bid','campaign_id',
+//                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+//                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+//            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
+//            ->where('campaigns_leads_users_type_bid','Shared')
+//            ->whereIn('campaign_id', $campaigns_list_sh)
+//            ->where('is_returned', '<>', 1)
+//            ->groupBy('campaign_id')
+//            ->get()->keyBy('campaign_id');
+//
+//        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = json_decode($leadsCampaignsDailiesExclusive,true);
+//        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive'] = json_decode($leadsCampaignsWeeklyExclusive,true);
+//        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = json_decode($leadsCampaignsMonthlyExclusive,true);
+//
+//        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared'] = json_decode($leadsCampaignsDailiesShared,true);
+//        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared'] = json_decode($leadsCampaignsWeeklyShared,true);
+//        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared'] = json_decode($leadsCampaignsMonthlyShared,true);
+
+
+        // ONE query for Exclusive (covers daily + weekly + monthly)
+        $exclusiveLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
                 DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->where('date', date("Y-m-d"))
-            ->where('campaigns_leads_users_type_bid','Exclusive')
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Exclusive')
             ->whereIn('campaign_id', $campaigns_list_ex)
             ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
 
-        $leadsCampaignsWeeklyExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
+// ONE query for Shared (covers daily + weekly + monthly)
+        $sharedLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
                 DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
-            ->where('campaigns_leads_users_type_bid','Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
-
-        $leadsCampaignsMonthlyExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
-            ->where('campaigns_leads_users_type_bid','Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
-
-        $leadsCampaignsDailiesShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->where('date', date("Y-m-d"))
-            ->where('campaigns_leads_users_type_bid','Shared')
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Shared')
             ->whereIn('campaign_id', $campaigns_list_sh)
             ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
 
-        $leadsCampaignsWeeklyShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
-            ->where('campaigns_leads_users_type_bid','Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+        //Filtration
+        $today      = date('Y-m-d');
+        $weekStart  = date('Y-m-d', strtotime(Carbon::now()->startOfWeek()));
+        $weekEnd    = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
 
-        $leadsCampaignsMonthlyShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
-            ->where('campaigns_leads_users_type_bid','Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+// Group Exclusive by period in PHP
+        $leadsCampaignsDailiesExclusive   = [];
+        $leadsCampaignsWeeklyExclusive    = [];
+        $leadsCampaignsMonthlyExclusive   = [];
 
-        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = json_decode($leadsCampaignsDailiesExclusive,true);
-        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive'] = json_decode($leadsCampaignsWeeklyExclusive,true);
-        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = json_decode($leadsCampaignsMonthlyExclusive,true);
+        foreach ($exclusiveLeads as $row) {
+            $cid = $row->campaign_id;
 
-        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared'] = json_decode($leadsCampaignsDailiesShared,true);
-        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared'] = json_decode($leadsCampaignsWeeklyShared,true);
-        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared'] = json_decode($leadsCampaignsMonthlyShared,true);
+            // Monthly — all rows qualify (we fetched the whole month)
+            if (!isset($leadsCampaignsMonthlyExclusive[$cid])) {
+                $leadsCampaignsMonthlyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyExclusive[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyExclusive[$cid]['sumbid']    += $row->sumbid;
+
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyExclusive[$cid])) {
+                    $leadsCampaignsWeeklyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
+
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesExclusive[$cid])) {
+                    $leadsCampaignsDailiesExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
+
+// Group Shared by period in PHP
+        $leadsCampaignsDailiesShared  = [];
+        $leadsCampaignsWeeklyShared   = [];
+        $leadsCampaignsMonthlyShared  = [];
+
+        foreach ($sharedLeads as $row) {
+            $cid = $row->campaign_id;
+
+            // Monthly
+            if (!isset($leadsCampaignsMonthlyShared[$cid])) {
+                $leadsCampaignsMonthlyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyShared[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyShared[$cid]['sumbid']    += $row->sumbid;
+
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyShared[$cid])) {
+                    $leadsCampaignsWeeklyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyShared[$cid]['sumbid']    += $row->sumbid;
+            }
+
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesShared[$cid])) {
+                    $leadsCampaignsDailiesShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesShared[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
+
+        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = $leadsCampaignsDailiesExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive']  = $leadsCampaignsWeeklyExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = $leadsCampaignsMonthlyExclusive;
+
+        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared']  = $leadsCampaignsDailiesShared;
+        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared']   = $leadsCampaignsWeeklyShared;
+        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared']  = $leadsCampaignsMonthlyShared;
 
         $listOFCampainDB_array_shared = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_sharedDB, $data_msg, 10, 2, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 1, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
