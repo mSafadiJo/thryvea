@@ -521,48 +521,48 @@ class MainApiController extends Controller
             $listOFCampainDB_array_ping_ex['response'] = array();
         }
 
-        // ===== TEMPORARY DEBUG LOGGING =====
-        $debugLog = [
-            'ping_lead_id'    => $pingLeads_id ?? null,
-            'timestamp'       => date('Y-m-d H:i:s'),
-            'zipcode'         => $request['zipcode'] ?? null,
-            'state'           => $request['state'] ?? null,
-            'service'         => $service ?? null,
-            'shared_direct'   => [
-                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3' => $listOFCampainDB_array_shared['LostReportStep3_3'] ?? [],
-                'LostReportStep3_4' => $listOFCampainDB_array_shared['LostReportStep3_4'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
-            ],
-            'ping_shared'     => [
-                'LostReportStep3_1' => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3' => $listOFCampainDB_array_ping_sh['LostReportStep3_3'] ?? [],
-                'LostReportStep3_4' => $listOFCampainDB_array_ping_sh['LostReportStep3_4'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
-            ],
-            'exclusive_direct' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3' => $listOFCampainDB_array_exclusive['LostReportStep3_3'] ?? [],
-                'LostReportStep3_4' => $listOFCampainDB_array_exclusive['LostReportStep3_4'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
-            ],
-            'ping_exclusive'  => [
-                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3' => $listOFCampainDB_array_ping_ex['LostReportStep3_3'] ?? [],
-                'LostReportStep3_4' => $listOFCampainDB_array_ping_ex['LostReportStep3_4'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
-            ],
-        ];
-
-        Log::channel('daily')->info('PING_FILTER_DEBUG', $debugLog);
+//        // ===== TEMPORARY DEBUG LOGGING =====
+//        $debugLog = [
+//            'ping_lead_id'    => $pingLeads_id ?? null,
+//            'timestamp'       => date('Y-m-d H:i:s'),
+//            'zipcode'         => $request['zipcode'] ?? null,
+//            'state'           => $request['state'] ?? null,
+//            'service'         => $service ?? null,
+//            'shared_direct'   => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3' => $listOFCampainDB_array_shared['LostReportStep3_3'] ?? [],
+//                'LostReportStep3_4' => $listOFCampainDB_array_shared['LostReportStep3_4'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
+//            ],
+//            'ping_shared'     => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3' => $listOFCampainDB_array_ping_sh['LostReportStep3_3'] ?? [],
+//                'LostReportStep3_4' => $listOFCampainDB_array_ping_sh['LostReportStep3_4'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
+//            ],
+//            'exclusive_direct' => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3' => $listOFCampainDB_array_exclusive['LostReportStep3_3'] ?? [],
+//                'LostReportStep3_4' => $listOFCampainDB_array_exclusive['LostReportStep3_4'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
+//            ],
+//            'ping_exclusive'  => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3' => $listOFCampainDB_array_ping_ex['LostReportStep3_3'] ?? [],
+//                'LostReportStep3_4' => $listOFCampainDB_array_ping_ex['LostReportStep3_4'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
+//            ],
+//        ];
+//
+//        Log::channel('daily')->info('PING_FILTER_DEBUG', $debugLog);
 
 // ===== END DEBUG LOGGING =====
 
