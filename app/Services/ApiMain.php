@@ -1253,6 +1253,10 @@ class ApiMain {
         $LostReportStep3_1 = array();
         $LostReportStep3_2 = array();
         $LostReportStep3_3 = array();
+        $LostReportStep3_3_percentage  = array(); // rejected by source percentage cap
+        $LostReportStep3_3_budget_cap  = array(); // rejected by lead count cap (daily/weekly/monthly)
+        $LostReportStep3_3_crm         = array(); // rejected by CRM pingandpost returning empty
+
         $LostReportStep3_4 = array();
         $LostReportStep3_5 = array();
 
@@ -1531,7 +1535,9 @@ class ApiMain {
                         }
                     }
                 } else {
-                    $LostReportStep3_3[]=$campaign_id_curent; //cap out
+//                    $LostReportStep3_3[]=$campaign_id_curent; //cap out
+
+                    $LostReportStep3_3_percentage[] = $campaign_id_curent;
                     continue;
                 }
 
@@ -1546,7 +1552,14 @@ class ApiMain {
                     $is_multi_api = 1;
                     $ping_approved_arr = $ping_and_post_class->pingandpost($campaign, $data_msg, $numberOfCamp, $type, $is_pingandpost, $is_multi_api);
                     if(empty($ping_approved_arr)){
-                        $LostReportStep3_3[] = $campaign_id_curent; //cap out
+                        $LostReportStep3_3_crm[] = [
+                            'campaign_id'          => $campaign_id_curent,
+                            'campaign_name'        => $campaign->campaign_name ?? null,
+                            'type'                 => $type,
+                            'budget_bid'           => $budget_bid,
+                            'numberOfLeadCampaign' => $numberOfLeadCampaign,
+                            'daily_total'          => $leadsCampaignsDailiesTotallead,
+                        ];
                         continue;
                     }
 
@@ -1554,21 +1567,34 @@ class ApiMain {
                     $ping_post_arr[] = $ping_approved_arr;
                     $listOFCampainDB_array_shared[] = $campaign;
                 } else {
-                    $LostReportStep3_3[] = $campaign_id_curent;//cap out
+                    $LostReportStep3_3_budget_cap[] = [
+                        'campaign_id'       => $campaign_id_curent,
+                        'period'            => $period_campaign_count_lead_id, // 1=daily, 2=weekly, 3=monthly
+                        'allowed'           => $numberOfLeadCampaign,
+                        'used_daily'        => $leadsCampaignsDailiesTotallead,
+                        'used_weekly'       => $leadsCampaignsWeeklyTotallead,
+                        'used_monthly'      => $leadsCampaignsMonthlyTotallead,
+                    ];
                     continue;
                 }
             }
         }
 
         $response_arr = array(
-            'campaigns' => $listOFCampainDB_array_shared,
-            'response' => $ping_post_arr,
-            'LostReportStep3_1' => $LostReportStep3_1,
-            'LostReportStep3_2' => $LostReportStep3_2,
-            'LostReportStep3_3' => $LostReportStep3_3,
-            'LostReportStep3_4' => $LostReportStep3_4,
-            'LostReportStep3_5' => $LostReportStep3_5,
-
+            'campaigns'              => $listOFCampainDB_array_shared,
+            'response'               => $ping_post_arr,
+            'LostReportStep3_1'      => $LostReportStep3_1,
+            'LostReportStep3_2'      => $LostReportStep3_2,
+            'LostReportStep3_3'      => array_merge(
+                $LostReportStep3_3_percentage,
+                array_column($LostReportStep3_3_budget_cap, 'campaign_id'),
+                array_column($LostReportStep3_3_crm, 'campaign_id')
+            ), // keep original for backward compatibility
+            'LostReportStep3_3_percentage' => $LostReportStep3_3_percentage,
+            'LostReportStep3_3_budget_cap' => $LostReportStep3_3_budget_cap,
+            'LostReportStep3_3_crm'        => $LostReportStep3_3_crm,
+            'LostReportStep3_4'      => $LostReportStep3_4,
+            'LostReportStep3_5'      => $LostReportStep3_5,
         );
 
         return $response_arr;
