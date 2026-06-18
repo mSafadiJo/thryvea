@@ -37,14 +37,13 @@ class MainApiController extends Controller
         // save ping lead to DB
         // Check if any Campaign match ping lead details
         //
-
         $request->headers->set('Accept', 'application/json');
 
         $this->validate($request, [
             'campaign_id' => ['required', 'string', 'max:255'],
             'campaign_key' => ['required', 'string', 'max:255'],
             'vendor_id' => ['required', 'string', 'max:255'],
-            'street' => ['required', 'string', 'max:255'],
+            'street' => ['string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'zipcode' => ['required'],
@@ -204,7 +203,7 @@ class MainApiController extends Controller
         //Add PingLeads
         $pingLeads = new PingLeads();
 
-        $pingLeads->lead_address = $request['street'];
+        $pingLeads->lead_address = "0";
         $pingLeads->lead_state_id = $address['state_id'];
         $pingLeads->lead_city_id = $address['city_id'];
         $pingLeads->lead_zipcode_id = $address['zipcode_id'];
@@ -229,6 +228,7 @@ class MainApiController extends Controller
         $pingLeads->hash_legs_sold = $hash_legs_sold;
         $pingLeads->tcpa_compliant = ($request['tcpa_compliant'] == 1 ?  $request['tcpa_compliant'] : 0);
         $pingLeads->tcpa_consent_text = $request->tcpa_consent_text;
+        $pingLeads->traffic_source = $request->sub_id??'';
 
         //Get TS
         $lead_source = trim($is_valid_vendor_id->typeOFLead_Source);
@@ -250,8 +250,7 @@ class MainApiController extends Controller
         $pingLeads = $servcesFunct->saveQuesAnswersInDb($pingLeads, $questions, $service);
 
         $pingLeads->save();
-        $pingLeads_id = DB::getPdo()->lastInsertId();
-
+        $pingLeads_id = $pingLeads->lead_id;
         //save transaction id value on ping table
         $transaction_id = md5($pingLeads_id . "-" . time());
         DB::table('ping_leads')->where('lead_id', $pingLeads_id)->update(["transaction_id" => $transaction_id]);
@@ -270,6 +269,23 @@ class MainApiController extends Controller
         }
         //Check if this Test Lead ==============================================================
 
+//        if( config('app.name', '') == "Zone1Remodeling" ){
+//            $vendors_users_id = array(11);
+//        } else {
+//            $vendors_users_id = array(152);
+//        }
+//        if(!in_array($is_valid_vendor_id->user_id, $vendors_users_id)) {
+//            //Jornaya ID Validations1=========================================================================
+//            $check_lead_id = $api_validations->check_lead_id($request->lead_id);
+//            if ($check_lead_id == "false") {
+//                $response_code['error'] = 'Invalid Universal LeadID';
+//                PingLeads::where('lead_id', $pingLeads_id)->update([
+//                    "status" => 'Invalid Universal LeadID'
+//                ]);
+//                return response()->json($response_code);
+//            }
+//            //Jornaya ID Validations1=========================================================================
+//        }
 
         //Check if Match Lead ==============================================================
         $if_campaign_is_set = $this->check_if_match_campaign($questions['data_arr']['LeaddataIDs'], $service, $address, $request['vendor_id'], $request['sub_id']);
@@ -283,6 +299,8 @@ class MainApiController extends Controller
             return response()->json($response_code);
         }
         //Check if Match Lead ==============================================================
+
+
 
         //Shearing regarding budget ====================================================================================
         $period_campaign_count_lead_id =  $if_campaign_is_set->period_campaign_count_lead_id_exclusive;
@@ -374,141 +392,102 @@ class MainApiController extends Controller
         $questions['data_arr']['LeaddataIDs']['seller_id'] = $is_valid_vendor_id->user_id;
         $questions['data_arr']['LeaddataIDs']['hash_legs_sold'] = (!empty($hash_legs_sold) ? json_decode($hash_legs_sold, true) : "" );
 
-        $allCampaigns = $service_queries->service_queries_all($service, $questions['data_arr']['LeaddataIDs'], $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
-
-        // Split in PHP (free, no DB cost)
-        $listOFCampain_sharedDB    = $allCampaigns->filter(fn($c) => !$c->is_ping_account && $c->campaign_budget_bid_shared > 0  && in_array('2', json_decode($c->custom_paid_campaign_id, true) ?? []));
+        $listOFCampain_sharedDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
         $campaigns_list_direct_sh = $listOFCampain_sharedDB->pluck('campaign_id')->toArray();
 
-        $listOFCampain_pingDB_sh   = $allCampaigns->filter(fn($c) =>  $c->is_ping_account && $c->campaign_budget_bid_shared > 0  && in_array('2', json_decode($c->custom_paid_campaign_id, true) ?? []));
+        $listOFCampain_pingDB_sh = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
         $campaigns_list_ping_sh = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
 
         $campaigns_list_sh = array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh);
 
         if( $request->is_shared != 1 ){
-            $listOFCampain_exclusiveDB = $allCampaigns->filter(fn($c) => !$c->is_ping_account && $c->campaign_budget_bid_exclusive > 0 && in_array('1', json_decode($c->custom_paid_campaign_id, true) ?? []));
+            $listOFCampain_exclusiveDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
             $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
 
-            $listOFCampain_pingDB_ex   = $allCampaigns->filter(fn($c) =>  $c->is_ping_account && $c->campaign_budget_bid_exclusive > 0 && in_array('1', json_decode($c->custom_paid_campaign_id, true) ?? []));
+            $listOFCampain_pingDB_ex = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
             $campaigns_list_ping_ex = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
 
             $campaigns_list_ex = array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex);
         } else {
-            $listOFCampain_exclusiveDB = collect();
-            $listOFCampain_pingDB_ex   = collect();
-            $campaigns_list_ex         = [];
+            $listOFCampain_exclusiveDB['campaigns'] = array();
+            $listOFCampain_pingDB_ex['campaigns'] = array();
+            $campaigns_list_ex = array();
         }
-
-        // ONE query for Exclusive (covers daily + weekly + monthly)
-        $exclusiveLeads = DB::table('campaigns_leads_users_affs')
-            ->select(
-                'campaign_id',
-                'date',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
-            )
-            ->where('campaigns_leads_users_type_bid', 'Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
-            ->groupBy('campaign_id', 'date')
-            ->get();
-
-// ONE query for Shared (covers daily + weekly + monthly)
-        $sharedLeads = DB::table('campaigns_leads_users_affs')
-            ->select(
-                'campaign_id',
-                'date',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
-            )
-            ->where('campaigns_leads_users_type_bid', 'Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
-            ->groupBy('campaign_id', 'date')
-            ->get();
 
         //Filtration
-        $today      = date('Y-m-d');
-        $weekStart  = date('Y-m-d', strtotime(Carbon::now()->startOfWeek()));
-        $weekEnd    = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
+        $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->where('date', date("Y-m-d"))
+            ->where('campaigns_leads_users_type_bid','Exclusive')
+            ->whereIn('campaign_id', $campaigns_list_ex)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-// Group Exclusive by period in PHP
-        $leadsCampaignsDailiesExclusive   = [];
-        $leadsCampaignsWeeklyExclusive    = [];
-        $leadsCampaignsMonthlyExclusive   = [];
+        $leadsCampaignsWeeklyExclusive = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
+            ->where('campaigns_leads_users_type_bid','Exclusive')
+            ->whereIn('campaign_id', $campaigns_list_ex)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-        foreach ($exclusiveLeads as $row) {
-            $cid = $row->campaign_id;
+        $leadsCampaignsMonthlyExclusive = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
+            ->where('campaigns_leads_users_type_bid','Exclusive')
+            ->whereIn('campaign_id', $campaigns_list_ex)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-            // Monthly — all rows qualify (we fetched the whole month)
-            if (!isset($leadsCampaignsMonthlyExclusive[$cid])) {
-                $leadsCampaignsMonthlyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-            }
-            $leadsCampaignsMonthlyExclusive[$cid]['totallead'] += $row->totallead;
-            $leadsCampaignsMonthlyExclusive[$cid]['sumbid']    += $row->sumbid;
+        $leadsCampaignsDailiesShared = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->where('date', date("Y-m-d"))
+            ->where('campaigns_leads_users_type_bid','Shared')
+            ->whereIn('campaign_id', $campaigns_list_sh)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-            // Weekly
-            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
-                if (!isset($leadsCampaignsWeeklyExclusive[$cid])) {
-                    $leadsCampaignsWeeklyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-                }
-                $leadsCampaignsWeeklyExclusive[$cid]['totallead'] += $row->totallead;
-                $leadsCampaignsWeeklyExclusive[$cid]['sumbid']    += $row->sumbid;
-            }
+        $leadsCampaignsWeeklyShared = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
+            ->where('campaigns_leads_users_type_bid','Shared')
+            ->whereIn('campaign_id', $campaigns_list_sh)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-            // Daily
-            if ($row->date === $today) {
-                if (!isset($leadsCampaignsDailiesExclusive[$cid])) {
-                    $leadsCampaignsDailiesExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-                }
-                $leadsCampaignsDailiesExclusive[$cid]['totallead'] += $row->totallead;
-                $leadsCampaignsDailiesExclusive[$cid]['sumbid']    += $row->sumbid;
-            }
-        }
+        $leadsCampaignsMonthlyShared = DB::table('campaigns_leads_users_affs')
+            ->select('campaigns_leads_users_type_bid','campaign_id',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
+            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
+            ->where('campaigns_leads_users_type_bid','Shared')
+            ->whereIn('campaign_id', $campaigns_list_sh)
+            ->where('is_returned', '<>', 1)
+            ->groupBy('campaign_id')
+            ->get()->keyBy('campaign_id');
 
-// Group Shared by period in PHP
-        $leadsCampaignsDailiesShared  = [];
-        $leadsCampaignsWeeklyShared   = [];
-        $leadsCampaignsMonthlyShared  = [];
+        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = json_decode($leadsCampaignsDailiesExclusive,true);
+        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive'] = json_decode($leadsCampaignsWeeklyExclusive,true);
+        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = json_decode($leadsCampaignsMonthlyExclusive,true);
 
-        foreach ($sharedLeads as $row) {
-            $cid = $row->campaign_id;
-
-            // Monthly
-            if (!isset($leadsCampaignsMonthlyShared[$cid])) {
-                $leadsCampaignsMonthlyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-            }
-            $leadsCampaignsMonthlyShared[$cid]['totallead'] += $row->totallead;
-            $leadsCampaignsMonthlyShared[$cid]['sumbid']    += $row->sumbid;
-
-            // Weekly
-            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
-                if (!isset($leadsCampaignsWeeklyShared[$cid])) {
-                    $leadsCampaignsWeeklyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-                }
-                $leadsCampaignsWeeklyShared[$cid]['totallead'] += $row->totallead;
-                $leadsCampaignsWeeklyShared[$cid]['sumbid']    += $row->sumbid;
-            }
-
-            // Daily
-            if ($row->date === $today) {
-                if (!isset($leadsCampaignsDailiesShared[$cid])) {
-                    $leadsCampaignsDailiesShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
-                }
-                $leadsCampaignsDailiesShared[$cid]['totallead'] += $row->totallead;
-                $leadsCampaignsDailiesShared[$cid]['sumbid']    += $row->sumbid;
-            }
-        }
-
-        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = $leadsCampaignsDailiesExclusive;
-        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive']  = $leadsCampaignsWeeklyExclusive;
-        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = $leadsCampaignsMonthlyExclusive;
-
-        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared']  = $leadsCampaignsDailiesShared;
-        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared']   = $leadsCampaignsWeeklyShared;
-        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared']  = $leadsCampaignsMonthlyShared;
+        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared'] = json_decode($leadsCampaignsDailiesShared,true);
+        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared'] = json_decode($leadsCampaignsWeeklyShared,true);
+        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared'] = json_decode($leadsCampaignsMonthlyShared,true);
 
         $listOFCampainDB_array_shared = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_sharedDB, $data_msg, 10, 2, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 1, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
@@ -535,9 +514,6 @@ class MainApiController extends Controller
         $campaigns_ex = array_merge($listOFCampainDB_array_exclusive['campaigns'],$multi_pings_api_responses_ex['campaigns']);
         $ping_post_arr = array_merge($multi_pings_api_responses_ex['response'],$multi_pings_api_responses_sh['response']);
 
-
-
-
         //Sort Campaign By Bid
         $campaigns_sh = collect($campaigns_sh);
         $campaigns_sh_sorted = $campaigns_sh->sortByDesc('campaign_budget_bid_shared');
@@ -560,75 +536,6 @@ class MainApiController extends Controller
         }
 
         $response_code = $this->check_ping_if_sold($listOFCampainDB, $listOFCampainDB_type, $if_campaign_is_set, $pingLeads_id, $transaction_id, $ping_post_arr, $address['state_id'], $count_of_lead, $data_msg['google_ts']);
-
-//        // ===== TEMPORARY DEBUG LOGGING =====
-//        Log::channel('daily')->info('PING_FILTER_DEBUG', [
-//            'ping_lead_id' => $pingLeads_id ?? null,
-//            'timestamp'    => date('Y-m-d H:i:s'),
-//            'zipcode'      => $request['zipcode'] ?? null,
-//            'state'        => $request['state'] ?? null,
-//            'service'      => $service ?? null,
-//
-//            // Filter results
-//            'shared_direct' => [
-//                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
-//                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
-//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-//                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
-//                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
-//            ],
-//            'ping_shared' => [
-//                'LostReportStep3_1'           => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
-//                'LostReportStep3_2'           => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
-//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-//                'LostReportStep3_5'           => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
-//                'campaigns_count'             => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
-//            ],
-//            'exclusive_direct' => [
-//                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
-//                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
-//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-//                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
-//                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
-//            ],
-//            'ping_exclusive' => [
-//                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
-//                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
-//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-//                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
-//                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
-//            ],
-//
-//            // After CRM pings
-//            'crm_responses' => [
-//                'multi_ping_sh_campaigns' => count($multi_pings_api_responses_sh['campaigns'] ?? []),
-//                'multi_ping_ex_campaigns' => count($multi_pings_api_responses_ex['campaigns'] ?? []),
-//                'ping_post_arr_count'     => count($ping_post_arr),
-//            ],
-//
-//            // Final decision
-//            'final_decision' => [
-//                'type'              => $listOFCampainDB_type,
-//                'count_of_lead'     => $count_of_lead,
-//                'shared_bid_sum'    => $campaigns_sh_col,
-//                'exclusive_bid_sum' => $campaigns_ex_col,
-//                'final_campaigns'   => $listOFCampainDB->pluck('campaign_id')->toArray(),
-//            ],
-//
-//            // Final response
-//            'response_code' => $response_code,
-//        ]);
-//// ===== END DEBUG LOGGING =====
-
-        return $response_code;
         return response()->json($response_code);
     }
 
@@ -705,9 +612,6 @@ class MainApiController extends Controller
         $request['UserAgent'] = str_replace('&', "%26", $request['UserAgent']);
         $request['UserAgent'] = str_replace('[]', "", $request['UserAgent']);
 
-//        $request['UserAgent'] = isset($request['UserAgent'])
-//            ? str_replace(['#', '"', '&', '[]'], ['%23', "'", '%26', ''], $request['UserAgent'])
-//            : '';
 
         //Check TCPA Content if null
         $request->tcpa_consent_text = str_replace("#", "%23", $request->tcpa_consent_text);
@@ -722,17 +626,6 @@ class MainApiController extends Controller
             }
         }
 
-
-//        // Normalize TCPA consent text
-//        if (isset($request->tcpa_consent_text)) {
-//            $request->tcpa_consent_text = str_replace(['#', '"', '&'], ['%23', "'", '%26'], $request->tcpa_consent_text
-//            );
-//        }
-//
-//        // Validate TCPA compliance
-//        if (!empty($request->tcpa_compliant) && $request->tcpa_compliant == 1 && empty($request->tcpa_consent_text)) {
-//            return response()->json(['error' => 'The tcpa_consent_text is empty']);
-//        }
 
 
         $service = $request->service;
@@ -835,11 +728,6 @@ class MainApiController extends Controller
         //end window questions ==========================================================================
 
         //Check If duplicate Leads
-//        $is_set_lead = LeadsCustomer::where(function ($query) use($request) {
-//            $query->where('lead_phone_number', $request['phone_number']);
-//            $query->OrWhere('lead_email', $request->email);
-//        })->first();
-
         $is_set_lead = LeadsCustomer::where('lead_phone_number', $request['phone_number'])
             ->union(
                 LeadsCustomer::where('lead_email', $request->email)
@@ -905,12 +793,14 @@ class MainApiController extends Controller
         $postLeads = $servcesFunct->saveQuesAnswersInDb($postLeads, $questions, $service);
 
         $postLeads->save();
-        $postLeads_id = DB::getPdo()->lastInsertId();
+        // $postLeads_id = DB::getPdo()->lastInsertId();
+        $postLeads_id = $postLeads->lead_id;
 
         //Check if Valid Transaction Id =================================================================
         $lead_details_ping_check_transaction_id = PingLeads::where('transaction_id', $request->transaction_id)
             ->where('created_at', '>=', Carbon::now()->subMinutes(15)->toDateTimeString())
             ->first();
+
         if( empty($lead_details_ping_check_transaction_id) ){
             LeadsCustomer::where('lead_id', $postLeads_id)->update([
                 "response_data" => 'Invalid transaction_id Or expired'
@@ -950,7 +840,8 @@ class MainApiController extends Controller
             $vendors_users_id = array(11);
             $vendors_users_id2_ip = array();
             $vendors_users_id3_tf = array();
-        } else {
+        }
+        else {
             $vendors_users_id = array(630);
             $vendors_users_id2_ip = array();
             $vendors_users_id3_tf = array(1131);
@@ -1393,7 +1284,9 @@ class MainApiController extends Controller
         $postLeads = $servcesFunct->saveQuesAnswersInDb($postLeads, $questions, $service);
 
         $postLeads->save();
-        $postLeads_id = DB::getPdo()->lastInsertId();
+        // $postLeads_id = DB::getPdo()->lastInsertId();
+        $postLeads_id = $postLeads->lead_id;
+
         $transaction_id = md5($postLeads_id . "-" . time());
         LeadsCustomer::where('lead_id', $postLeads_id)->update(["token" => $transaction_id]);
         $response_code['transaction_id'] = $transaction_id;
@@ -1993,15 +1886,33 @@ class MainApiController extends Controller
                     // for special source
                     // checks if there's a special source in campaign settings to set a specific price for the lead
                     $is_special_source = 0;
-                    if (!empty($if_campaign_is_set->special_source) && $if_campaign_is_set->special_source != "[]") {
-                        if (in_array($google_ts, json_decode($if_campaign_is_set->special_source, true))) {
-                            $is_special_source = 1;
-                        }
+                    $special_source_price = 0;
+
+                    $tier1 = json_decode($if_campaign_is_set->special_source, true);
+                    $tier2 = json_decode($if_campaign_is_set->special_source_tier2, true);
+                    $tier3 = json_decode($if_campaign_is_set->special_source_tier3, true);
+                    $tier4 = json_decode($if_campaign_is_set->special_source_tier4, true);
+
+                    if (!empty($tier1) && in_array($google_ts, $tier1)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price;
+
+                    } else if (!empty($tier2) && in_array($google_ts, $tier2)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier2;
+
+                    } else if (!empty($tier3) && in_array($google_ts, $tier3)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier3;
+
+                    } else if (!empty($tier4) && in_array($google_ts, $tier4)) {
+                        $is_special_source = 1;
+                        $special_source_price = $if_campaign_is_set->special_source_price_tier4;
                     }
 
                     if ($if_campaign_is_set->if_static_cost == 1) {
                         if ($is_special_source == 1) {
-                            $price_return = $if_campaign_is_set->special_source_price;
+                            $price_return = $special_source_price;
                         } else if ($is_special == 1) {
                             $price_return = $if_campaign_is_set->special_budget_bid_exclusive;
                         } else {
@@ -2009,7 +1920,7 @@ class MainApiController extends Controller
                         }
                     } else {
                         if ($is_special_source == 1) {
-                            $price_return += $budget_bid - ($budget_bid * ($if_campaign_is_set->special_source_price / 100));
+                            $price_return += $budget_bid - ($budget_bid * ($special_source_price / 100));
                         } else if ($is_special == 1) {
                             $price_return += $budget_bid - ($budget_bid * ($if_campaign_is_set->special_budget_bid_exclusive / 100));
                         } else {
