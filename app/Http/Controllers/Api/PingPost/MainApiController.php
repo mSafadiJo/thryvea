@@ -561,72 +561,72 @@ class MainApiController extends Controller
 
         $response_code = $this->check_ping_if_sold($listOFCampainDB, $listOFCampainDB_type, $if_campaign_is_set, $pingLeads_id, $transaction_id, $ping_post_arr, $address['state_id'], $count_of_lead, $data_msg['google_ts']);
 
-        // ===== TEMPORARY DEBUG LOGGING =====
-        Log::channel('daily')->info('PING_FILTER_DEBUG', [
-            'ping_lead_id' => $pingLeads_id ?? null,
-            'timestamp'    => date('Y-m-d H:i:s'),
-            'zipcode'      => $request['zipcode'] ?? null,
-            'state'        => $request['state'] ?? null,
-            'service'      => $service ?? null,
-
-            // Filter results
-            'shared_direct' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
-            ],
-            'ping_shared' => [
-                'LostReportStep3_1'           => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2'           => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5'           => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
-                'campaigns_count'             => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
-            ],
-            'exclusive_direct' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
-            ],
-            'ping_exclusive' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
-            ],
-
-            // After CRM pings
-            'crm_responses' => [
-                'multi_ping_sh_campaigns' => count($multi_pings_api_responses_sh['campaigns'] ?? []),
-                'multi_ping_ex_campaigns' => count($multi_pings_api_responses_ex['campaigns'] ?? []),
-                'ping_post_arr_count'     => count($ping_post_arr),
-            ],
-
-            // Final decision
-            'final_decision' => [
-                'type'              => $listOFCampainDB_type,
-                'count_of_lead'     => $count_of_lead,
-                'shared_bid_sum'    => $campaigns_sh_col,
-                'exclusive_bid_sum' => $campaigns_ex_col,
-                'final_campaigns'   => $listOFCampainDB->pluck('campaign_id')->toArray(),
-            ],
-
-            // Final response
-            'response_code' => $response_code,
-        ]);
-// ===== END DEBUG LOGGING =====
+//        // ===== TEMPORARY DEBUG LOGGING =====
+//        Log::channel('daily')->info('PING_FILTER_DEBUG', [
+//            'ping_lead_id' => $pingLeads_id ?? null,
+//            'timestamp'    => date('Y-m-d H:i:s'),
+//            'zipcode'      => $request['zipcode'] ?? null,
+//            'state'        => $request['state'] ?? null,
+//            'service'      => $service ?? null,
+//
+//            // Filter results
+//            'shared_direct' => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
+//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
+//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
+//            ],
+//            'ping_shared' => [
+//                'LostReportStep3_1'           => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2'           => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
+//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
+//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
+//                'LostReportStep3_5'           => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
+//                'campaigns_count'             => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
+//            ],
+//            'exclusive_direct' => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
+//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
+//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
+//            ],
+//            'ping_exclusive' => [
+//                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
+//                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
+//                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
+//                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
+//                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
+//                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
+//                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
+//            ],
+//
+//            // After CRM pings
+//            'crm_responses' => [
+//                'multi_ping_sh_campaigns' => count($multi_pings_api_responses_sh['campaigns'] ?? []),
+//                'multi_ping_ex_campaigns' => count($multi_pings_api_responses_ex['campaigns'] ?? []),
+//                'ping_post_arr_count'     => count($ping_post_arr),
+//            ],
+//
+//            // Final decision
+//            'final_decision' => [
+//                'type'              => $listOFCampainDB_type,
+//                'count_of_lead'     => $count_of_lead,
+//                'shared_bid_sum'    => $campaigns_sh_col,
+//                'exclusive_bid_sum' => $campaigns_ex_col,
+//                'final_campaigns'   => $listOFCampainDB->pluck('campaign_id')->toArray(),
+//            ],
+//
+//            // Final response
+//            'response_code' => $response_code,
+//        ]);
+//// ===== END DEBUG LOGGING =====
 
         return $response_code;
         return response()->json($response_code);
