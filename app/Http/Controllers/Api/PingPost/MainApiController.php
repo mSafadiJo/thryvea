@@ -270,23 +270,6 @@ class MainApiController extends Controller
         }
         //Check if this Test Lead ==============================================================
 
-//        if( config('app.name', '') == "Zone1Remodeling" ){
-//            $vendors_users_id = array(11);
-//        } else {
-//            $vendors_users_id = array(152);
-//        }
-//        if(!in_array($is_valid_vendor_id->user_id, $vendors_users_id)) {
-//            //Jornaya ID Validations1=========================================================================
-//            $check_lead_id = $api_validations->check_lead_id($request->lead_id);
-//            if ($check_lead_id == "false") {
-//                $response_code['error'] = 'Invalid Universal LeadID';
-//                PingLeads::where('lead_id', $pingLeads_id)->update([
-//                    "status" => 'Invalid Universal LeadID'
-//                ]);
-//                return response()->json($response_code);
-//            }
-//            //Jornaya ID Validations1=========================================================================
-//        }
 
         //Check if Match Lead ==============================================================
         $if_campaign_is_set = $this->check_if_match_campaign($questions['data_arr']['LeaddataIDs'], $service, $address, $request['vendor_id'], $request['sub_id']);
@@ -391,102 +374,141 @@ class MainApiController extends Controller
         $questions['data_arr']['LeaddataIDs']['seller_id'] = $is_valid_vendor_id->user_id;
         $questions['data_arr']['LeaddataIDs']['hash_legs_sold'] = (!empty($hash_legs_sold) ? json_decode($hash_legs_sold, true) : "" );
 
-        $listOFCampain_sharedDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+        $allCampaigns = $service_queries->service_queries_all($service, $questions['data_arr']['LeaddataIDs'], $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+
+        // Split in PHP (free, no DB cost)
+        $listOFCampain_sharedDB    = $allCampaigns->filter(fn($c) => !$c->is_ping_account && $c->campaign_budget_bid_shared > 0  && in_array('2', json_decode($c->custom_paid_campaign_id, true) ?? []));
         $campaigns_list_direct_sh = $listOFCampain_sharedDB->pluck('campaign_id')->toArray();
 
-        $listOFCampain_pingDB_sh = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+        $listOFCampain_pingDB_sh   = $allCampaigns->filter(fn($c) =>  $c->is_ping_account && $c->campaign_budget_bid_shared > 0  && in_array('2', json_decode($c->custom_paid_campaign_id, true) ?? []));
         $campaigns_list_ping_sh = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
 
         $campaigns_list_sh = array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh);
 
         if( $request->is_shared != 1 ){
-            $listOFCampain_exclusiveDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+            $listOFCampain_exclusiveDB = $allCampaigns->filter(fn($c) => !$c->is_ping_account && $c->campaign_budget_bid_exclusive > 0 && in_array('1', json_decode($c->custom_paid_campaign_id, true) ?? []));
             $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
 
-            $listOFCampain_pingDB_ex = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+            $listOFCampain_pingDB_ex   = $allCampaigns->filter(fn($c) =>  $c->is_ping_account && $c->campaign_budget_bid_exclusive > 0 && in_array('1', json_decode($c->custom_paid_campaign_id, true) ?? []));
             $campaigns_list_ping_ex = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
 
             $campaigns_list_ex = array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex);
         } else {
-            $listOFCampain_exclusiveDB['campaigns'] = array();
-            $listOFCampain_pingDB_ex['campaigns'] = array();
-            $campaigns_list_ex = array();
+            $listOFCampain_exclusiveDB = collect();
+            $listOFCampain_pingDB_ex   = collect();
+            $campaigns_list_ex         = [];
         }
 
+        // ONE query for Exclusive (covers daily + weekly + monthly)
+        $exclusiveLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Exclusive')
+            ->whereIn('campaign_id', $campaigns_list_ex)
+            ->where('is_returned', '<>', 1)
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
+
+// ONE query for Shared (covers daily + weekly + monthly)
+        $sharedLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Shared')
+            ->whereIn('campaign_id', $campaigns_list_sh)
+            ->where('is_returned', '<>', 1)
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
+
         //Filtration
-        $leadsCampaignsDailiesExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->where('date', date("Y-m-d"))
-            ->where('campaigns_leads_users_type_bid','Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+        $today      = date('Y-m-d');
+        $weekStart  = date('Y-m-d', strtotime(Carbon::now()->startOfWeek()));
+        $weekEnd    = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
 
-        $leadsCampaignsWeeklyExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
-            ->where('campaigns_leads_users_type_bid','Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+// Group Exclusive by period in PHP
+        $leadsCampaignsDailiesExclusive   = [];
+        $leadsCampaignsWeeklyExclusive    = [];
+        $leadsCampaignsMonthlyExclusive   = [];
 
-        $leadsCampaignsMonthlyExclusive = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
-            ->where('campaigns_leads_users_type_bid','Exclusive')
-            ->whereIn('campaign_id', $campaigns_list_ex)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+        foreach ($exclusiveLeads as $row) {
+            $cid = $row->campaign_id;
 
-        $leadsCampaignsDailiesShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->where('date', date("Y-m-d"))
-            ->where('campaigns_leads_users_type_bid','Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+            // Monthly — all rows qualify (we fetched the whole month)
+            if (!isset($leadsCampaignsMonthlyExclusive[$cid])) {
+                $leadsCampaignsMonthlyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyExclusive[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyExclusive[$cid]['sumbid']    += $row->sumbid;
 
-        $leadsCampaignsWeeklyShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m-d', strtotime(Carbon::now()->startOfWeek())), date('Y-m-d', strtotime(Carbon::now()->endOfWeek()))])
-            ->where('campaigns_leads_users_type_bid','Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyExclusive[$cid])) {
+                    $leadsCampaignsWeeklyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
 
-        $leadsCampaignsMonthlyShared = DB::table('campaigns_leads_users_affs')
-            ->select('campaigns_leads_users_type_bid','campaign_id',
-                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
-                DB::raw('SUM(campaigns_leads_users_bid) as sumbid' ))
-            ->whereBetween('date', [date('Y-m'). '-1', date('Y-m-t')])
-            ->where('campaigns_leads_users_type_bid','Shared')
-            ->whereIn('campaign_id', $campaigns_list_sh)
-            ->where('is_returned', '<>', 1)
-            ->groupBy('campaign_id')
-            ->get()->keyBy('campaign_id');
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesExclusive[$cid])) {
+                    $leadsCampaignsDailiesExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
 
-        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = json_decode($leadsCampaignsDailiesExclusive,true);
-        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive'] = json_decode($leadsCampaignsWeeklyExclusive,true);
-        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = json_decode($leadsCampaignsMonthlyExclusive,true);
+// Group Shared by period in PHP
+        $leadsCampaignsDailiesShared  = [];
+        $leadsCampaignsWeeklyShared   = [];
+        $leadsCampaignsMonthlyShared  = [];
 
-        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared'] = json_decode($leadsCampaignsDailiesShared,true);
-        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared'] = json_decode($leadsCampaignsWeeklyShared,true);
-        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared'] = json_decode($leadsCampaignsMonthlyShared,true);
+        foreach ($sharedLeads as $row) {
+            $cid = $row->campaign_id;
+
+            // Monthly
+            if (!isset($leadsCampaignsMonthlyShared[$cid])) {
+                $leadsCampaignsMonthlyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyShared[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyShared[$cid]['sumbid']    += $row->sumbid;
+
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyShared[$cid])) {
+                    $leadsCampaignsWeeklyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyShared[$cid]['sumbid']    += $row->sumbid;
+            }
+
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesShared[$cid])) {
+                    $leadsCampaignsDailiesShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesShared[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
+
+        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = $leadsCampaignsDailiesExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive']  = $leadsCampaignsWeeklyExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = $leadsCampaignsMonthlyExclusive;
+
+        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared']  = $leadsCampaignsDailiesShared;
+        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared']   = $leadsCampaignsWeeklyShared;
+        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared']  = $leadsCampaignsMonthlyShared;
 
         $listOFCampainDB_array_shared = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_sharedDB, $data_msg, 10, 2, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
         $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 1, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
@@ -512,6 +534,9 @@ class MainApiController extends Controller
         $campaigns_sh = array_merge($listOFCampainDB_array_shared['campaigns'],$multi_pings_api_responses_sh['campaigns']);
         $campaigns_ex = array_merge($listOFCampainDB_array_exclusive['campaigns'],$multi_pings_api_responses_ex['campaigns']);
         $ping_post_arr = array_merge($multi_pings_api_responses_ex['response'],$multi_pings_api_responses_sh['response']);
+
+
+
 
         //Sort Campaign By Bid
         $campaigns_sh = collect($campaigns_sh);
