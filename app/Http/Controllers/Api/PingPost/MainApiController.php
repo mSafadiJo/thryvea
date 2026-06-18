@@ -37,14 +37,13 @@ class MainApiController extends Controller
         // save ping lead to DB
         // Check if any Campaign match ping lead details
         //
-
         $request->headers->set('Accept', 'application/json');
 
         $this->validate($request, [
             'campaign_id' => ['required', 'string', 'max:255'],
             'campaign_key' => ['required', 'string', 'max:255'],
             'vendor_id' => ['required', 'string', 'max:255'],
-            'street' => ['required', 'string', 'max:255'],
+            'street' => ['string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'zipcode' => ['required'],
@@ -204,7 +203,7 @@ class MainApiController extends Controller
         //Add PingLeads
         $pingLeads = new PingLeads();
 
-        $pingLeads->lead_address = $request['street'];
+        $pingLeads->lead_address = "0";
         $pingLeads->lead_state_id = $address['state_id'];
         $pingLeads->lead_city_id = $address['city_id'];
         $pingLeads->lead_zipcode_id = $address['zipcode_id'];
@@ -229,6 +228,7 @@ class MainApiController extends Controller
         $pingLeads->hash_legs_sold = $hash_legs_sold;
         $pingLeads->tcpa_compliant = ($request['tcpa_compliant'] == 1 ?  $request['tcpa_compliant'] : 0);
         $pingLeads->tcpa_consent_text = $request->tcpa_consent_text;
+        $pingLeads->traffic_source = $request->sub_id??'';
 
         //Get TS
         $lead_source = trim($is_valid_vendor_id->typeOFLead_Source);
@@ -250,8 +250,7 @@ class MainApiController extends Controller
         $pingLeads = $servcesFunct->saveQuesAnswersInDb($pingLeads, $questions, $service);
 
         $pingLeads->save();
-        $pingLeads_id = DB::getPdo()->lastInsertId();
-
+        $pingLeads_id = $pingLeads->lead_id;
         //save transaction id value on ping table
         $transaction_id = md5($pingLeads_id . "-" . time());
         DB::table('ping_leads')->where('lead_id', $pingLeads_id)->update(["transaction_id" => $transaction_id]);
@@ -270,7 +269,6 @@ class MainApiController extends Controller
         }
         //Check if this Test Lead ==============================================================
 
-
         //Check if Match Lead ==============================================================
         $if_campaign_is_set = $this->check_if_match_campaign($questions['data_arr']['LeaddataIDs'], $service, $address, $request['vendor_id'], $request['sub_id']);
         // return $if_campaign_is_set;
@@ -283,6 +281,8 @@ class MainApiController extends Controller
             return response()->json($response_code);
         }
         //Check if Match Lead ==============================================================
+
+
 
         //Shearing regarding budget ====================================================================================
         $period_campaign_count_lead_id =  $if_campaign_is_set->period_campaign_count_lead_id_exclusive;
@@ -374,30 +374,27 @@ class MainApiController extends Controller
         $questions['data_arr']['LeaddataIDs']['seller_id'] = $is_valid_vendor_id->user_id;
         $questions['data_arr']['LeaddataIDs']['hash_legs_sold'] = (!empty($hash_legs_sold) ? json_decode($hash_legs_sold, true) : "" );
 
-        $allSplit = $service_queries->service_queries_all(
-            $service,
-            $questions['data_arr']['LeaddataIDs'],
-            $address,
-            $lead_source,
-            0,
-            $request['sub_id'],
-            $request['OriginalURL']
-        );
-
-        $listOFCampain_exclusiveDB = $allSplit['exclusive'];
-        $listOFCampain_sharedDB    = $allSplit['shared'];
-        $listOFCampain_pingDB_ex   = $allSplit['ping_ex'];
-        $listOFCampain_pingDB_sh   = $allSplit['ping_sh'];
-
-        // Build campaign ID lists for the budget cap queries
-        $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
-        $campaigns_list_ping_ex   = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
+        $listOFCampain_sharedDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
         $campaigns_list_direct_sh = $listOFCampain_sharedDB->pluck('campaign_id')->toArray();
-        $campaigns_list_ping_sh   = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
 
-        $campaigns_list_ex = array_unique(array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex));
-        $campaigns_list_sh = array_unique(array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh));
+        $listOFCampain_pingDB_sh = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 2, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+        $campaigns_list_ping_sh = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
 
+        $campaigns_list_sh = array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh);
+
+        if( $request->is_shared != 1 ){
+            $listOFCampain_exclusiveDB = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 0, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+            $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
+
+            $listOFCampain_pingDB_ex = $service_queries->service_queries_new_way($service, $questions['data_arr']['LeaddataIDs'], 1, 1, $address, $lead_source, 0, $request['sub_id'], $request['OriginalURL']);
+            $campaigns_list_ping_ex = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
+
+            $campaigns_list_ex = array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex);
+        } else {
+            $listOFCampain_exclusiveDB['campaigns'] = array();
+            $listOFCampain_pingDB_ex['campaigns'] = array();
+            $campaigns_list_ex = array();
+        }
 
         //Filtration
 
@@ -537,9 +534,6 @@ class MainApiController extends Controller
         $campaigns_ex = array_merge($listOFCampainDB_array_exclusive['campaigns'],$multi_pings_api_responses_ex['campaigns']);
         $ping_post_arr = array_merge($multi_pings_api_responses_ex['response'],$multi_pings_api_responses_sh['response']);
 
-
-
-
         //Sort Campaign By Bid
         $campaigns_sh = collect($campaigns_sh);
         $campaigns_sh_sorted = $campaigns_sh->sortByDesc('campaign_budget_bid_shared');
@@ -562,75 +556,6 @@ class MainApiController extends Controller
         }
 
         $response_code = $this->check_ping_if_sold($listOFCampainDB, $listOFCampainDB_type, $if_campaign_is_set, $pingLeads_id, $transaction_id, $ping_post_arr, $address['state_id'], $count_of_lead, $data_msg['google_ts']);
-
-        // ===== TEMPORARY DEBUG LOGGING =====
-        Log::channel('daily')->info('PING_FILTER_DEBUG', [
-            'ping_lead_id' => $pingLeads_id ?? null,
-            'timestamp'    => date('Y-m-d H:i:s'),
-            'zipcode'      => $request['zipcode'] ?? null,
-            'state'        => $request['state'] ?? null,
-            'service'      => $service ?? null,
-
-            // Filter results
-            'shared_direct' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_shared['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_shared['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_shared['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_shared['campaigns'] ?? []),
-            ],
-            'ping_shared' => [
-                'LostReportStep3_1'           => $listOFCampainDB_array_ping_sh['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2'           => $listOFCampainDB_array_ping_sh['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5'           => $listOFCampainDB_array_ping_sh['LostReportStep3_5'] ?? [],
-                'campaigns_count'             => count($listOFCampainDB_array_ping_sh['campaigns'] ?? []),
-            ],
-            'exclusive_direct' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_exclusive['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_exclusive['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_exclusive['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_exclusive['campaigns'] ?? []),
-            ],
-            'ping_exclusive' => [
-                'LostReportStep3_1' => $listOFCampainDB_array_ping_ex['LostReportStep3_1'] ?? [],
-                'LostReportStep3_2' => $listOFCampainDB_array_ping_ex['LostReportStep3_2'] ?? [],
-                'LostReportStep3_3_percentage'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_percentage'] ?? [],
-                'LostReportStep3_3_budget_cap'=> $listOFCampainDB_array_ping_sh['LostReportStep3_3_budget_cap'] ?? [],
-                'LostReportStep3_3_crm'       => $listOFCampainDB_array_ping_sh['LostReportStep3_3_crm'] ?? [],
-                'LostReportStep3_5' => $listOFCampainDB_array_ping_ex['LostReportStep3_5'] ?? [],
-                'campaigns_count'   => count($listOFCampainDB_array_ping_ex['campaigns'] ?? []),
-            ],
-
-            // After CRM pings
-            'crm_responses' => [
-                'multi_ping_sh_campaigns' => count($multi_pings_api_responses_sh['campaigns'] ?? []),
-                'multi_ping_ex_campaigns' => count($multi_pings_api_responses_ex['campaigns'] ?? []),
-                'ping_post_arr_count'     => count($ping_post_arr),
-            ],
-
-            // Final decision
-            'final_decision' => [
-                'type'              => $listOFCampainDB_type,
-                'count_of_lead'     => $count_of_lead,
-                'shared_bid_sum'    => $campaigns_sh_col,
-                'exclusive_bid_sum' => $campaigns_ex_col,
-                'final_campaigns'   => $listOFCampainDB->pluck('campaign_id')->toArray(),
-            ],
-
-            // Final response
-            'response_code' => $response_code,
-        ]);
-// ===== END DEBUG LOGGING =====
-
-        return $response_code;
         return response()->json($response_code);
     }
 
