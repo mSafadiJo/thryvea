@@ -784,7 +784,8 @@ class MainApiController extends Controller
         $pingLeads = $servcesFunct->saveQuesAnswersInDb($pingLeads, $questions, $service);
 
         $pingLeads->save();
-        $pingLeads_id = DB::getPdo()->lastInsertId();
+       // $pingLeads_id = DB::getPdo()->lastInsertId();
+        $pingLeads_id = $pingLeads->lead_id;
 
         //save transaction id value on ping table
         $transaction_id = md5($pingLeads_id . "-" . time());
@@ -1057,7 +1058,7 @@ class MainApiController extends Controller
             $listOFCampainDB_array_ping_ex['campaigns'] = array();
             $listOFCampainDB_array_ping_ex['response'] = array();
         }
-        
+
         Log::channel('daily')->info('OLD_DEBUG_COLLECTIONS', [
            'sharedDB_count'    => count($listOFCampain_sharedDB),
             'pingDB_sh_count'   => count($listOFCampain_pingDB_sh),
