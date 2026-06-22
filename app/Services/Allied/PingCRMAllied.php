@@ -3889,6 +3889,8 @@ class PingCRMAllied
                             "tcpa_consent" => "Yes",
                             "redirect_url" => "No",
                             "test" => "false",
+                            "owned_and_operated" => "No",
+                            "lead_date_time" => gmdate('Y-m-d H:i:s'),
 
                         );
 
@@ -4171,7 +4173,6 @@ class PingCRMAllied
 
                                 $Lead_data_array['ownhome'] = $homeowner;
                                 $Lead_data_array['service_code'] = "BATH_REMODEL";
-                                $Lead_data_array['OptIn1'] = "No";
                                 break;
                         }
 

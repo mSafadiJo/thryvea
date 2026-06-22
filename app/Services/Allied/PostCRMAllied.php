@@ -6014,7 +6014,9 @@ class PostCRMAllied {
                         "tcpa_consent" => $tcpa_compliant2,
                         "tcpa_consent_language" => $TCPAText,
                         "certification_type" => "TrustedForm",
-                        "certification_token" => $trusted_form
+                        "certification_token" => $trusted_form,
+                        "owned_and_operated" => "No",
+                        "lead_date_time" => gmdate('Y-m-d H:i:s'),
                     );
 
                     switch ($lead_type_service_id) {
@@ -6295,7 +6297,6 @@ class PostCRMAllied {
 
                             $Lead_data_array['ownhome'] = $homeowner;
                             $Lead_data_array['service_code'] = "BATH_REMODEL";
-                            $Lead_data_array['OptIn1'] = "No";
                             break;
                     }
 
