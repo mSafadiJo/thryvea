@@ -9,8 +9,8 @@ class PingLeads extends Model
 
     protected $table = 'ping_leads'; // Optional if using default naming
     protected $primaryKey = 'lead_id';
-    public $incrementing = true;
-    protected $keyType = 'int';
+//    public $incrementing = true;
+//    protected $keyType = 'int';
 
 
     protected $fillable = [
