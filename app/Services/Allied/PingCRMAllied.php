@@ -6773,7 +6773,7 @@ class PingCRMAllied
                             "city" => $city,
                             "s1" => $google_ts,
                             "tcpa_text" => $TCPAText,
-                            "session_length" => $SessionLength,
+                            "session_length" => $SessionLength ?? 98,
                             "jornaya_leadid" => $LeadId,
                             "trustedform_cert_url" => $trusted_form,
                         );

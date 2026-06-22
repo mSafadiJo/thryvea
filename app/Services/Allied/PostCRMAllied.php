@@ -8989,7 +8989,7 @@ class PostCRMAllied {
                         "city" => $city,
                         "s1" => $google_ts,
                         "tcpa_text" => $TCPAText,
-                        "session_length" => $SessionLength,
+                        "session_length" => $SessionLength ?? 98,
                     );
 
                     switch ($lead_type_service_id) {
