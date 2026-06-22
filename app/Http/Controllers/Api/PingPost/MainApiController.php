@@ -1059,14 +1059,6 @@ class MainApiController extends Controller
             $listOFCampainDB_array_ping_ex['response'] = array();
         }
 
-        Log::channel('daily')->info('OLD_DEBUG_COLLECTIONS', [
-           'sharedDB_count'    => count($listOFCampain_sharedDB),
-            'pingDB_sh_count'   => count($listOFCampain_pingDB_sh),
-           'exclusiveDB_count' => count($listOFCampain_exclusiveDB),
-            'pingDB_ex_count'   => count($listOFCampain_pingDB_ex),
-            'data_msg'   => $data_msg,
-        ]);
-
         //multi pings api responses
         $crm_api_file = new CrmApi();
         $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);
