@@ -1617,6 +1617,12 @@ class MainApiController extends Controller
                 $client->setAccessType('offline');
                 $client->setAuthConfig(public_path() . '/GoogleFile/credentials.json');
 
+
+                $keyData = json_decode(file_get_contents(public_path() . '/GoogleFile/credentials.json'), true);
+                Log::info('Private key first 100 chars: ' . substr($keyData['private_key'], 0, 100));
+                Log::info('Private key contains newlines: ' . (strpos($keyData['private_key'], "\n") !== false ? 'YES' : 'NO'));
+
+
                 // ✅ Force UTC timezone for JWT
                 date_default_timezone_set('UTC');
 
