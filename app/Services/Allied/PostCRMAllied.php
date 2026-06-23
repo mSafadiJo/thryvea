@@ -9008,6 +9008,17 @@ class PostCRMAllied {
                             $Lead_data_array['lp_supplier_id'] = "115851";
                             $Lead_data_array['lp_key'] = "y2ydflw0jte5oo";
 
+                            switch ($start_time) {
+                                case 'Immediately':
+                                    $start_time = "Immediately";
+                                    break;
+                                case 'Within 6 months':
+                                    $start_time = "1-3 months";
+                                    break;
+                                default:
+                                    $start_time = "Within 1 month";
+                            }
+
 
                             $Lead_data_array['number_of_windows'] = $number_of_windows;
                             $Lead_data_array['time_frame'] = $start_time;
