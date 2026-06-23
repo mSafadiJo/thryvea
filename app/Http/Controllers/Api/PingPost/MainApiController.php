@@ -1620,10 +1620,10 @@ class MainApiController extends Controller
                 $client->setApplicationName('GoogleSheetThryvea');
                 $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
                 $client->setAccessType('offline');
-                $client->setAuthConfig(public_path() . '/GoogleFile/credentials.json');
+                $client->setAuthConfig(public_path() . '/GoogleFile/eloquent-victor-324807-eeb1c833bce2.json');
 
 
-                $keyData = json_decode(file_get_contents(public_path() . '/GoogleFile/credentials.json'), true);
+                $keyData = json_decode(file_get_contents(public_path() . '/GoogleFile/eloquent-victor-324807-eeb1c833bce2.json'), true);
                 Log::info('Private key first 100 chars: ' . substr($keyData['private_key'], 0, 100));
                 Log::info('Private key contains newlines: ' . (strpos($keyData['private_key'], "\n") !== false ? 'YES' : 'NO'));
 
