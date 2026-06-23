@@ -753,3 +753,15 @@ body {
 .report-inner-cards-wrapper {
     padding-top: 25px;
 }
+
+.ListBuyersDrop .suberadminBuyerspan{
+    cursor: pointer;
+    color: #0275d8;
+    padding: 7px 20px;
+    font-size: 14px;
+}
+
+.ListBuyersDrop .suberadminBuyerspan:hover{
+    background-color: #f3f3f3 !important;
+    color: #313a46 !important;
+}
