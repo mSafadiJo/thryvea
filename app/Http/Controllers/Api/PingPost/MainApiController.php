@@ -1612,16 +1612,9 @@ class MainApiController extends Controller
         if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7'])) {
             try {
 
-                $serverTime = time();
-                $googleTime = json_decode(file_get_contents('https://worldtimeapi.org/api/timezone/UTC'), true)['unixtime'] ?? 0;
-                $diff = abs($serverTime - $googleTime);
-
-                Log::info('Server time: ' . date('Y-m-d H:i:s'));
-                Log::info('Time diff with Google (seconds): ' . $diff);
-
-                if ($diff > 60) {
-                    Log::error('Server clock is out of sync by ' . $diff . ' seconds!');
-                }
+                Log::info('Server UTC time: ' . gmdate('Y-m-d H:i:s'));
+                Log::info('Server local time: ' . date('Y-m-d H:i:s'));
+                Log::info('Server timezone: ' . date_default_timezone_get());
 
                 $client = new \Google_Client();
                 $client->setApplicationName('GoogleSheetThryvea');
