@@ -1609,6 +1609,76 @@ class MainApiController extends Controller
 
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
+        if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7'])) {
+            try {
+                $client = new \Google_Client();
+                $client->setApplicationName('GoogleSheetThryvea');
+                $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+                $client->setAccessType('offline');
+                $client->setAuthConfig(public_path() . '/GoogleFile/credentials.json');
+
+                $sheetsService = new \Google_Service_Sheets($client);
+
+                $spreadsheetId = "1EYrNqw4WVr-A88N74k3o5T4wkcp4Q0MIZLsESFE9ByY";
+
+                switch ($service) {
+                    case 1:
+                        //Window
+                        $range = "WindowLeadUnsold";
+                        break;
+                    case 6:
+                        //roofing
+                        $range = "RoofingLeadUnsold";
+                        break;
+                    case 7:
+                        //siding
+                        $range = "SidingLeadUnsold";
+                        break;
+                    case 9:
+                        //Bathroom
+                        $range = "BathroomLeadUnsold";
+                        break;
+                }
+
+                // ✅ Fix address - remove numbers appended at the end
+                $cleanAddress = trim(preg_replace('/\d+$/', '', $request['street']));
+
+                // ✅ Fix details - handle both array and string
+                $details = $questions['data_arr']['dataMassageForDB'] ?? '';
+                if (is_array($details)) {
+                    $details = '[' . implode(', ', $details) . ']';
+                } else {
+                    $details = (string)$details;
+                }
+
+                $row = array_values([
+                    (string)($request['first_name'] ?? ''),
+                    (string)($request['last_name']  ?? ''),
+                    (string)($request['email']      ?? ''),
+                    (string)($request['phone_number'] ?? ''),
+                    $cleanAddress,
+                    (string)($address['zip_code_list'] ?? ''),
+                    $details,
+                ]);
+
+                $body = new \Google_Service_Sheets_ValueRange([
+                    'values' => [$row]
+                ]);
+
+                $params = ['valueInputOption' => 'RAW'];
+                $insert = ['insertDataOption' => 'INSERT_ROWS'];
+
+                $result = $sheetsService->spreadsheets_values->append(
+                    $spreadsheetId, $range, $body, $params, $insert
+                );
+
+                Log::info('Google Sheets: Row added successfully');
+
+            } catch (\Exception $e) {
+                Log::error('Google Sheets append failed: ' . $e->getMessage());
+            }
+        }
+
         return response()->json($response_code);
     }
 

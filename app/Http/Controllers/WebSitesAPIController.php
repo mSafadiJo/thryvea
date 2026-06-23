@@ -107,7 +107,7 @@ class WebSitesAPIController extends Controller
      * @return array
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function addLeadCustomer(Request $request){
+    public function addLeadCustomer_old(Request $request){
         //validate
         $this->validate($request, [
             'fname' => ['required', 'string', 'max:255'],
@@ -817,6 +817,775 @@ class WebSitesAPIController extends Controller
                      $r = array($url_conv);
                      Log::info('wedebeek', $r);
                  }
+                $main_api_file->server_to_server_conv($url_conv);
+            }
+        }
+
+        return json_encode($response_code);
+    }
+
+    public function addLeadCustomer(Request $request){
+        //validate
+        $this->validate($request, [
+            'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255'],
+            'street_name' => ['required', 'string', 'max:255'],
+            'city_id' => ['required', 'string', 'max:255'],
+            'state_id' => ['required', 'string', 'max:255'],
+            'zipcode_id' => ['required', 'string', 'max:255'],
+            'service_id' => ['required'],
+            'lead_website' => ['required', 'string', 'max:255'],
+            'serverDomain' => ['required'],
+            'timeInBrowseData' => ['required'],
+            'ipaddress' => ['required'],
+            'FullUrl' => ['required'],
+            'browser_name' => ['required'],
+            'aboutUserBrowser',
+            'tc',
+            'c',
+            'g',
+            'k',
+            'token',
+            'visitor_id',
+            'fl', //for bad traffic (flag)
+            's1',
+            's2',
+            's3',
+            'gclid'
+        ]);
+        $main_api_file = new ApiMain();
+        $response_code = array();
+        if( !($request->campaign_id == config('services.ApiLead.API_Campaign_ID', '') &&
+            $request->campaign_key == config('services.ApiLead.API_Campaign_Key', '')) ){
+            $response_code = array(
+                'response_code' => 'false',
+                'message' => 'Reject',
+                'error' => 'Invalid campaign_id or campaign_key value'
+            );
+
+            return json_encode($response_code);die();
+        }
+
+        try {
+            //Lead Address ==================================================================
+            if (empty($request['county_id'])) {
+                $county_id_list = DB::table('zip_codes_lists')
+                    ->join('counties', 'counties.county_id', '=', 'zip_codes_lists.county_id')
+                    ->where('zip_codes_lists.zip_code_list_id', $request['zipcode_id'])
+                    ->first(['zip_codes_lists.county_id', 'counties.county_name']);
+
+                $address['county_id'] = $county_id_list->county_id;
+                $address['county_name'] = $county_id_list->county_name;
+            }
+            else {
+                $address['county_id'] = $request['county_id'];
+                $address['county_name'] = $request['county_name'];
+            }
+
+            $address['zipcode_id'] = $request['zipcode_id'];
+            $address['zip_code_list'] = $request['zipcode_name'];
+            $address['city_id'] = $request['city_id'];
+            $address['city_name'] = $request['city_name'];
+            $address['state_id'] = $request['state_id'];
+            $address['state_name'] = $request['state_name'];
+            $address['state_code'] = $request['state_code'];
+            //Lead Address ==================================================================
+
+            //Update Questions =======================================================================================
+            if ($request['ownership'] == 2) {
+                $request['ownership'] = 0;
+            }
+
+            //Kitchen
+            if ($request['removing_adding_walls'] == 2) {
+                $request['removing_adding_walls'] = 0;
+            }
+
+            if ($request['service_id'] == 4) {
+                $request['projectnature'] = $request['nature_flooring_project'];
+            }
+            else if ($request['service_id'] == 6) {
+                $request['projectnature'] = $request['nature_of_roofing'];
+            }
+            else if ($request['service_id'] == 7) {
+                if ($request['nature_of_siding'] == 1 || $request['nature_of_siding'] == 2) {
+                    $request['projectnature'] = 1;
+                } else if ($request['nature_of_siding'] == 3) {
+                    $request['projectnature'] = 2;
+                } else if ($request['nature_of_siding'] == 4) {
+                    $request['projectnature'] = 3;
+                }
+            }
+            //Update Questions =======================================================================================
+
+            //start window questions ==========================================================================
+            $api_validations = new APIValidations();
+            $questions = $api_validations->check_questions_ids_array($request);
+            $dataMassageForBuyers = $questions['dataMassageForBuyers'];
+            $Leaddatadetails = $questions['Leaddatadetails'];
+            $LeaddataIDs = $questions['LeaddataIDs'];
+            $dataMassageForDB = $questions['dataMassageForDB'];
+            //end window questions ==========================================================================
+
+            //To Get Lead Source ===========================================================================
+            $lead_source = "SEO";
+            $lead_source2 = "SEO";
+            $lead_source_api = "THV1";
+            $lead_source_id = 1;
+            $is_lead_review = 0;
+            if (!empty($request['tc'])) {
+                $ts_data_arr = explode("-", $request['tc']);
+                $marketing_ts = DB::table('lead_traffic_sources')->where('name', strtolower($ts_data_arr[0]))->first(['marketing_platform_id']);
+                if (!empty($marketing_ts)) {
+                    $marketing_platform = DB::table('marketing_platforms')->select('id', 'lead_source', 'name')
+                        ->where('id', $marketing_ts->marketing_platform_id)->first();
+                    if (!empty($marketing_platform)) {
+                        $lead_source = $marketing_platform->name;
+                        $lead_source2 = $marketing_platform->name;
+                        $lead_source_id = $marketing_platform->id;
+                        $lead_source_api = $marketing_platform->lead_source;
+                        if ($lead_source2 == "ReAffiliate") {
+                            $request['traffic_source'] = "ReAffiliate";
+                        }
+                    }
+                }
+
+                if (!empty($ts_data_arr[1])) {
+                    $ts_data_arr1_data = str_split($ts_data_arr[1]);
+                    if (!empty($ts_data_arr1_data[0])) {
+                        if (strtolower($ts_data_arr1_data[0]) == "r") {
+                            $lead_source2 .= " > R";
+                            $is_lead_review = 1;
+                        }
+                    }
+                }
+            }
+            //To Get Lead Source ===========================================================================
+
+            //Change Phone Structure ====================================================
+            $request['phone_number'] = trim(str_replace([' ', '(', ')', '-'], '', $request['phone_number']));
+            //Change Phone Structure ====================================================
+
+            //To check If Duplicated Lead =================================================================
+            $today_start = date('Y-m-d') . ' 00:00:00';
+            $today_end   = date('Y-m-d') . ' 23:59:59';
+
+            $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                ->where('status', 0)
+                ->where('lead_phone_number', $request['phone_number'])
+                ->whereBetween('created_at', [$today_start, $today_end])
+                ->union(
+                    LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                        ->where('status', 0)
+                        ->where('lead_email', $request->email)
+                        ->whereBetween('created_at', [$today_start, $today_end])
+                )
+                ->first();
+
+            $thirty_days_start = date('Y-m-d', strtotime('-30 day')) . ' 00:00:00';
+
+            $is_sold_duplicate = LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
+                ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                ->where('leads_customers.status', 0)
+                ->where('leads_customers.lead_phone_number', $request['phone_number'])
+                ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                ->union(
+                    LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
+                        ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                        ->where('leads_customers.status', 0)
+                        ->where('leads_customers.lead_email', $request->email)
+                        ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                )
+                ->first();
+            //To check If Duplicated Lead =================================================================
+
+            //Checked Blocked Info =================================================================
+            $is_blocked_phone_number = DB::table('block_phone_number_lists')->where('value', $request['phone_number'])->first();
+            $is_blocked_email = DB::table('block_email_lists')->where('value', $request['email'])->first();
+            $is_blocked_ip_address = DB::table('block_ip_address_lists')->where('value', $request['ipaddress'])->first();
+            $is_blocked_first_name = DB::table('block_first_name_lists')->where('value', $request['fname'])->first();
+            $is_blocked_last_name = DB::table('block_last_name_lists')->where('value', $request['lname'])->first();
+
+            $is_blocked_lead_info = 0;
+            if (!empty($is_blocked_phone_number) || !empty($is_blocked_email) || !empty($is_blocked_ip_address)
+                || !empty($is_blocked_first_name) || !empty($is_blocked_last_name)) {
+                $is_blocked_lead_info = 1;
+            }
+            //Checked Blocked Info =================================================================
+
+            //TCPA ==============================================================================================
+            $tcpa_compliant = 1;
+            if (!empty($request->tcpa_consent_text)) {
+                $tcpa_consent_text = $request->tcpa_consent_text;
+            } else {
+                $tcpa_consent_text = "By clicking the finish button and submitting this form, you are providing your electronic signature in which you consent, acknowledge, and agree to this website's Privacy Policy and Terms And Conditions. You also hereby consent to receive marketing communications via automated telephone dialing systems and/or pre-recorded calls, text messages, and/or emails from our Premiere Partners and marketing partners at the phone number, physical address and email address provided above, with offers regarding the requested Home service. This is also a consent to receive communications even if you are on any State and/or Federal Do Not Call list. Consent is not a condition of purchase and may be revoked at any time. Message and data rates may apply. California Residents Privacy Notice.";
+            }
+            //TCPA ==============================================================================================
+
+            //For Restructure the Domain name ==========================================================================
+            $request['serverDomain'] = trim(str_replace(['https://', 'http://', 'www.'], '', $request['serverDomain']));
+            //For Restructure the Domain name ==========================================================================
+            //Add LeadsCustomer ==============================================================================================
+            $leadCustomerStore = new LeadsCustomer();
+
+            $allservicesQues = new AllServicesQuestions();
+
+            $leadCustomerStore = $allservicesQues->websitesAPIControllerAddLeadCustomer($leadCustomerStore, $request, $lead_source_id, $lead_source2, $dataMassageForDB, $tcpa_compliant, $tcpa_consent_text, $is_blocked_lead_info);
+
+            $leadCustomerStore->save();
+            // $leadCustomer_id = DB::getPdo()->lastInsertId();
+            $leadCustomer_id = $leadCustomerStore->lead_id;
+            //Add LeadsCustomer ==============================================================================================
+
+            //Delete Lead from Lead Review =================================================================
+            LeadReview::where('universal_leadid', $request['universal_leadid'])->delete();
+            //Delete Lead from Lead Review =================================================================
+//|| strtolower(substr($request['tc'], 0, 2)) == 'y1'
+            if( strtolower(substr($request['tc'], 0, 2)) == 'fn' || strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
+                if (empty($request['is_sec_service'])) {
+                    if ($is_lead_review != 1) {
+                        //IPQS IP Validation
+                        $lead_ip_validation = $api_validations->lead_ip_validation_ipqs($request->ipaddress);
+                        if ($lead_ip_validation != "true") {
+                            LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+                                "response_data" => $lead_ip_validation,
+                                "status" => 4,
+                                "flag" => 1
+                            ]);
+
+                            $response_code = array(
+                                'response_code' => 'false',
+                                'message' => 'Reject',
+                                'error' => $lead_ip_validation,
+                                'responce_code' => 'false'
+                            );
+
+                            return json_encode($response_code);
+                        } else {
+                            $lead_phone_validation = $api_validations->lead_phone_validation_ipqs($request['phone_number']);
+                            if ($lead_phone_validation != "true") {
+                                LeadsCustomer::where('lead_id', $leadCustomer_id)->update([
+                                    "response_data" => $lead_phone_validation,
+                                    "status" => 4,
+                                    "flag" => 1
+                                ]);
+
+                                $response_code = array(
+                                    'response_code' => 'false',
+                                    'message' => 'Reject',
+                                    'error' => $lead_phone_validation,
+                                    'responce_code' => 'false'
+                                );
+
+                                return json_encode($response_code);
+                                die();
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            //Server to server Conversion =================================================================
+
+// // send s2s to facebook
+//             if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
+//                 Log::info('facbook', ['message' => 'step1']);
+//                 $pixel_id = '745435376655904';
+//                 $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
+//                 Log::info('facbook', ['message' => 'step2']);
+//                 $fbclid = $request['fbclid'];
+//                 $fbc = 'fb.1.' . time() . '.' . $fbclid;
+//                 $finel_price = 10;
+//                // $finel_price = $finel_price ?: 0;
+//                 $data = [
+//     'pixel_id' => $pixel_id,
+//     'access_token' => $access_token,
+//     'fbc' => $fbc,
+//     'finel_price' => $finel_price,
+//     'email' => $request['email'],
+//     'phone_number' => $request['phone_number'],
+//     'ipaddress' => $request['ipaddress'],
+//     'aboutUserBrowser' => $request['aboutUserBrowser'],
+//     'event_id' => $request['event_id'],
+// ];
+//                 Log::info('facbook step3', $data);
+//                 $result = $main_api_file->facebook_capi_purchase(
+//                     $pixel_id,
+//                     $access_token,
+//                     $fbc,
+//                     $finel_price,
+//                     $request['email'],
+//                     $request['phone_number'],
+//                     $request['ipaddress'],
+//                     $request['aboutUserBrowser'],
+//                     $request['event_id'],
+//                 );
+//             }
+
+//            if(!empty($request['token'])){
+//                $token_data_conv = $request['token'];
+//                $url_conv = "";
+//                if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+//                    //Wedebeek
+//                    $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=90";
+
+//                    $r = array($url_conv);
+//                    Log::info('fn', $r);
+//                }
+//                $main_api_file->server_to_server_conv($url_conv);
+//            }
+
+            //Server to server Conversion =================================================================
+        } catch (Exception $e) {
+
+            $response_code = array(
+                'response_code' => 'false',
+                'message' => 'Reject',
+                'error' => 'Something went wrong',
+                'responce_code' => 'false'
+            );
+
+            return json_encode($response_code);die();
+        }
+
+        if( $leadCustomer_id >= 1 ){
+
+            $response_code = array(
+                'response_code' => 'true',
+                'message' => 'Lead Accepted',
+                'error' => '',
+                'responce_code' => 'true'
+            );
+
+            //Check if test lead ===============================================================================
+            if( strtolower($request['fname']) == 'test' || strtolower($request['lname']) == 'test'
+                || strtolower($request['fname']) == 'testing' || strtolower($request['lname']) == 'testing'){
+                return json_encode($response_code);die();
+            }
+            //Check if test lead ===============================================================================
+
+            //Check if ReAffiliate Lead ===============================================================================
+            if( strtolower($request['tc']) == 'raf1' || strtolower($request['tc']) == 'raf2' ){
+                return json_encode($response_code);die();
+            }
+            //Check if ReAffiliate Lead ===============================================================================
+
+            //Check if Flag Lead ===============================================================================
+            if(!empty($request['fl']) && in_array(strtolower($request['fl']), ['1', '2'])){
+                return json_encode($response_code);die();
+            }
+            //Check if Flag Lead ===============================================================================
+
+            //Check if Duplicated Lead ===============================================================================
+            if(strtolower(substr($request['tc'], 0, 5)) != 'thvbo' ) {
+                if (!empty($is_sold_duplicate) || !empty($is_unsold_duplicate)) {
+                    $response_code = array(
+                        'response_code' => 'false',
+                        'message' => 'Reject',
+                        'error' => 'Duplicated Lead',
+                        'responce_code' => 'false'
+                    );
+
+                    return json_encode($response_code);
+                    die();
+                }
+            }
+            //Check if Duplicated Lead ===============================================================================
+
+            //Check if Blocked Lead ===============================================================================
+            if( $is_blocked_lead_info == 1 ){
+                $response_code = array(
+                    'response_code' => 'false',
+                    'message' => 'Reject',
+                    'error' => 'Blocked Lead',
+                    'responce_code' => 'false'
+                );
+
+                return json_encode($response_code);die();
+            }
+            //Check if Blocked Lead ===============================================================================
+
+            if (strtolower($request['tc']) == 'push1') {
+                return json_encode($response_code);die();
+            }
+        }
+        else {
+            $response_code = array(
+                'response_code' => 'false',
+                'message' => 'Reject',
+                'error' => 'Something went wrong',
+                'responce_code' => 'false'
+            );
+
+            return json_encode($response_code);die();
+        }
+
+        //Claim TrustedForm
+//        if( !empty($request['trusted_form']) ) {
+//            $main_api_file->claim_trusted_form($request['trusted_form']);
+//        }
+        //Claim Jornaya LeadId
+        if( !empty($request['universal_leadid']) ) {
+            $main_api_file->claim_jornaya_id($request['universal_leadid']);
+        }
+
+        //Add Seconds Service to $LeaddataIDs Array
+        if(!empty($request['is_sec_service'])){
+            $LeaddataIDs['is_sec_service'] = $request['is_sec_service'];
+        }
+
+        $service_info = DB::table('service__campaigns')
+            ->where('service_campaign_id', $request['service_id'])
+            ->first(['service_campaign_name']);
+
+        //Lead Info =====================================================================================================================
+        $city_arr = explode('=>', $request['city_name']);
+        $county_arr = explode('=>', $request['county_name']);
+        $data_msg = array(
+            'leadCustomer_id' => $leadCustomer_id,
+            'leadName' => $request['fname'] . ' ' . $request['lname'],
+            'LeadEmail' => $request['email'],
+            'LeadPhone' => $request['phone_number'],
+            'Address' => 'Address: ' . $request['street_name'] . ', City: ' . $city_arr[0] . ', State: ' . $request['state_name'] . ', Zipcode: ' . $request['zipcode_name'],
+            'LeadService' => $service_info->service_campaign_name,
+            'service_id' => $request->service_id,
+            'data' => $dataMassageForBuyers,
+            'trusted_form' => $request['trusted_form'],
+            'street' => $request['street_name'],
+            'City' => $city_arr[0],
+            'State' => $request['state_name'],
+            'state_code' => $request['state_code'],
+            'Zipcode' => $request['zipcode_name'],
+            'county' => $county_arr[0],
+            'first_name' => $request['fname'],
+            'last_name' => $request['lname'],
+            'UserAgent' => $request['aboutUserBrowser'],
+            'OriginalURL' => $request['serverDomain'],
+            'OriginalURL2' => "https://www.".$request['serverDomain'],
+            'SessionLength' => $request['timeInBrowseData'],
+            'IPAddress' => $request['ipaddress'],
+            'LeadId' => $request['universal_leadid'],
+            'browser_name' => $request['browser_name'],
+            'tcpa_compliant' => $tcpa_compliant,
+            'TCPAText' => $tcpa_consent_text,
+            'lead_source' => $lead_source_api,
+            'lead_source_name' => $lead_source,
+            'lead_source_id' => $lead_source_id,
+            'traffic_source' => $request['traffic_source'],
+            'google_ts' => $request['tc'],
+            'is_multi_service' => $request['is_multi_service'],
+            'is_sec_service' => $request['is_sec_service'],
+            'dataMassageForBuyers' => $dataMassageForBuyers,
+            'Leaddatadetails' => $Leaddatadetails,
+            'LeaddataIDs' => $LeaddataIDs,
+            'dataMassageForDB' => $dataMassageForDB,
+            'appointment_date' => '',
+            'appointment_type' => '',
+            "is_lead_review" => $is_lead_review,
+            'oldNumber' => $request['phone_number'],
+            'newNumber' => ""
+        );
+        //Lead Info =====================================================================================================================
+
+        //Check if Brand Leads===========================================================
+        $LeaddataIDs['is_brand_lead']  = ( !empty($request->brand_buyer_id) ? 1 : 0 );
+        $LeaddataIDs['brand_buyer_id'] = ( !empty($request->brand_buyer_id) ? $request->brand_buyer_id : 0 );
+        //================================================================================
+
+        $service_queries = new ServiceQueries();
+        $allSplit = $service_queries->service_queries_all(
+            $request->service_id,
+            $LeaddataIDs,
+            $address,
+            $lead_source,
+            0,
+            strtolower($request['tc']),
+            $request['serverDomain']
+        );
+
+        $listOFCampain_exclusiveDB = $allSplit['exclusive'];
+        $listOFCampain_sharedDB    = $allSplit['shared'];
+        $listOFCampain_pingDB_ex   = $allSplit['ping_ex'];
+        $listOFCampain_pingDB_sh   = $allSplit['ping_sh'];
+
+        // Build campaign ID lists for the budget cap queries
+        $campaigns_list_direct_ex = $listOFCampain_exclusiveDB->pluck('campaign_id')->toArray();
+        $campaigns_list_ping_ex   = $listOFCampain_pingDB_ex->pluck('campaign_id')->toArray();
+        $campaigns_list_direct_sh = $listOFCampain_sharedDB->pluck('campaign_id')->toArray();
+        $campaigns_list_ping_sh   = $listOFCampain_pingDB_sh->pluck('campaign_id')->toArray();
+
+        $campaigns_list_ex = array_unique(array_merge($campaigns_list_direct_ex, $campaigns_list_ping_ex));
+        $campaigns_list_sh = array_unique(array_merge($campaigns_list_direct_sh, $campaigns_list_ping_sh));
+
+
+        //Filtration
+
+        // ONE query for Exclusive (covers daily + weekly + monthly)
+        $exclusiveLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Exclusive')
+            ->whereIn('campaign_id', $campaigns_list_ex)
+            ->where('is_returned', '<>', 1)
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
+
+        // ONE query for Shared (covers daily + weekly + monthly)
+        $sharedLeads = DB::table('campaigns_leads_users_affs')
+            ->select(
+                'campaign_id',
+                'date',
+                DB::raw('COUNT(campaigns_leads_users_id) as totallead'),
+                DB::raw('SUM(campaigns_leads_users_bid) as sumbid')
+            )
+            ->where('campaigns_leads_users_type_bid', 'Shared')
+            ->whereIn('campaign_id', $campaigns_list_sh)
+            ->where('is_returned', '<>', 1)
+            ->whereBetween('date', [date('Y-m') . '-01', date('Y-m-t')])  // whole month
+            ->groupBy('campaign_id', 'date')
+            ->get();
+
+        //Filtration
+        $today      = date('Y-m-d');
+        $weekStart  = date('Y-m-d', strtotime(Carbon::now()->startOfWeek()));
+        $weekEnd    = date('Y-m-d', strtotime(Carbon::now()->endOfWeek()));
+
+// Group Exclusive by period in PHP
+        $leadsCampaignsDailiesExclusive   = [];
+        $leadsCampaignsWeeklyExclusive    = [];
+        $leadsCampaignsMonthlyExclusive   = [];
+
+        foreach ($exclusiveLeads as $row) {
+            $cid = $row->campaign_id;
+
+            // Monthly — all rows qualify (we fetched the whole month)
+            if (!isset($leadsCampaignsMonthlyExclusive[$cid])) {
+                $leadsCampaignsMonthlyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyExclusive[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyExclusive[$cid]['sumbid']    += $row->sumbid;
+
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyExclusive[$cid])) {
+                    $leadsCampaignsWeeklyExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
+
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesExclusive[$cid])) {
+                    $leadsCampaignsDailiesExclusive[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesExclusive[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesExclusive[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
+
+// Group Shared by period in PHP
+        $leadsCampaignsDailiesShared  = [];
+        $leadsCampaignsWeeklyShared   = [];
+        $leadsCampaignsMonthlyShared  = [];
+
+        foreach ($sharedLeads as $row) {
+            $cid = $row->campaign_id;
+
+            // Monthly
+            if (!isset($leadsCampaignsMonthlyShared[$cid])) {
+                $leadsCampaignsMonthlyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+            }
+            $leadsCampaignsMonthlyShared[$cid]['totallead'] += $row->totallead;
+            $leadsCampaignsMonthlyShared[$cid]['sumbid']    += $row->sumbid;
+
+            // Weekly
+            if ($row->date >= $weekStart && $row->date <= $weekEnd) {
+                if (!isset($leadsCampaignsWeeklyShared[$cid])) {
+                    $leadsCampaignsWeeklyShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsWeeklyShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsWeeklyShared[$cid]['sumbid']    += $row->sumbid;
+            }
+
+            // Daily
+            if ($row->date === $today) {
+                if (!isset($leadsCampaignsDailiesShared[$cid])) {
+                    $leadsCampaignsDailiesShared[$cid] = ['campaign_id' => $cid, 'totallead' => 0, 'sumbid' => 0];
+                }
+                $leadsCampaignsDailiesShared[$cid]['totallead'] += $row->totallead;
+                $leadsCampaignsDailiesShared[$cid]['sumbid']    += $row->sumbid;
+            }
+        }
+
+        $leadsCampaignsCapsExclusive['leadsCampaignsDailiesExclusive'] = $leadsCampaignsDailiesExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsWeeklyExclusive']  = $leadsCampaignsWeeklyExclusive;
+        $leadsCampaignsCapsExclusive['leadsCampaignsMonthlyExclusive'] = $leadsCampaignsMonthlyExclusive;
+
+        $leadsCampaignsCapsShared['leadsCampaignsDailiesShared']  = $leadsCampaignsDailiesShared;
+        $leadsCampaignsCapsShared['leadsCampaignsWeeklyShared']   = $leadsCampaignsWeeklyShared;
+        $leadsCampaignsCapsShared['leadsCampaignsMonthlyShared']  = $leadsCampaignsMonthlyShared;
+
+        //Filtaration
+        $listOFCampainDB_array_exclusive = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_exclusiveDB, $data_msg, 5, 1, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
+        $listOFCampainDB_array_shared = $main_api_file->filterCampaign_exclusive_sheared_new_way($listOFCampain_sharedDB, $data_msg, 10, 2, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
+        $listOFCampainDB_array_ping_ex = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_ex, $data_msg, 1, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
+        $listOFCampainDB_array_ping_sh = $main_api_file->filterCampaign_ping_post_new_way2($listOFCampain_pingDB_sh, $data_msg, 2, 0, $leadsCampaignsCapsExclusive, $leadsCampaignsCapsShared);
+
+        //multi pings api responses
+        $crm_api_file = new CrmApi();
+        $multi_pings_api_responses_sh = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_sh['response']);
+        $multi_pings_api_responses_ex = $crm_api_file->send_multi_ping_apis($listOFCampainDB_array_ping_ex['response']);
+
+        $campaigns_sh = array_merge($listOFCampainDB_array_shared['campaigns'],$multi_pings_api_responses_sh['campaigns']);
+        $campaigns_ex = array_merge($listOFCampainDB_array_exclusive['campaigns'],$multi_pings_api_responses_ex['campaigns']);
+        $ping_post_arr = array_merge($multi_pings_api_responses_ex['response'],$multi_pings_api_responses_sh['response']);
+
+        //Sort Campaign By Bid
+        $campaigns_sh = collect($campaigns_sh);
+        $campaigns_sh_sorted = $campaigns_sh->sortByDesc('campaign_budget_bid_shared');
+        $campaigns_ex = collect($campaigns_ex);
+        $campaigns_ex_sorted = $campaigns_ex->sortByDesc('campaign_budget_bid_exclusive');
+
+        //Add Response To Test =========================================================================================
+        $TestLeadsCustomer = new TestLeadsCustomer();
+
+        $TestLeadsCustomer->lead_id = $leadCustomer_id;
+
+        $TestLeadsCustomer->lastCampainInArea = json_encode(array());
+
+        $TestLeadsCustomer->listOFCampain_exclusiveDB = json_encode($listOFCampain_exclusiveDB);
+        $TestLeadsCustomer->listOFCampain_sharedDB = json_encode($listOFCampain_sharedDB);
+        $TestLeadsCustomer->listOFCampain_pingDB = json_encode($listOFCampain_pingDB_ex);
+        $TestLeadsCustomer->listOFCampainDB_array_ping = json_encode($listOFCampain_pingDB_sh);
+
+        $TestLeadsCustomer->listOFCampainDB_array_shared = json_encode($listOFCampainDB_array_shared);
+        $TestLeadsCustomer->listOFCampainDB_array_exclusive = json_encode($listOFCampainDB_array_exclusive);
+        $TestLeadsCustomer->campaigns_sh_col = json_encode($listOFCampainDB_array_ping_ex);
+        $TestLeadsCustomer->campaigns_ex_col = json_encode($listOFCampainDB_array_ping_sh);
+
+        $TestLeadsCustomer->campaigns_sh = json_encode($campaigns_sh_sorted);
+        $TestLeadsCustomer->campaigns_ex = json_encode($campaigns_ex_sorted);
+
+        $TestLeadsCustomer->save();
+        $TestLeadsCustomer_id = DB::getPdo()->lastInsertId();
+        //==============================================================================================================
+
+        $first_one = 1;
+        while (1){ //infinite loop
+            $data_from_post_lead = $main_api_file->post_and_pay($campaigns_sh_sorted, $campaigns_ex_sorted, $data_msg, $ping_post_arr, $TestLeadsCustomer_id, $first_one);
+
+            if( !empty($data_from_post_lead) ){
+                if( $data_from_post_lead['success'] == "false" ){
+                    $first_one = $data_from_post_lead['first_one'];
+                    $campaigns_sh_sorted = $data_from_post_lead['campaigns_sh_sorted'];
+                    $campaigns_ex_sorted = $data_from_post_lead['campaigns_ex_sorted'];
+                    $data_msg = $data_from_post_lead['data_msg'];
+                } else {
+                    $data_msg = $data_from_post_lead['data_msg'];
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        // // send s2s to facebook
+        if(strtolower(substr($request['tc'], 0, 2)) == 'fb' ){
+            $pixel_id = '745435376655904';
+            $access_token = 'EAAJMbZBKdHukBRdjFD5eFA7hdDwr0MkSDESLDzd7cqNa8Xzu1szuu0ARJIJPOqkpAHP6IZCcKZBHKkmbPizk5a07Wj1hLdBLjri8vw8W7CiAQdZAs4FEnOB6rLEZCd3l0D6IVivTvJFv04ycRi9kac7ZAx4jXivOhJhJC0lEPtGocLesre50hFaRhLNAorkarMKgZDZD';
+            $fbclid = $request['fbclid'];
+            $fbc = 'fb.1.' . time() . '.' . $fbclid;
+
+            if ($data_from_post_lead['price_shared'] > $data_from_post_lead['price_exclusive']){
+                $response_code['price'] = $data_from_post_lead['price_shared'];
+            }
+            else {
+                $response_code['price'] = $data_from_post_lead['price_exclusive'];
+            }
+
+            $finel_price = $response_code['price'] ?: 0;
+            $result = $main_api_file->facebook_capi_purchase(
+                $pixel_id,
+                $access_token,
+                $fbc,
+                $finel_price,
+                $request['email'],
+                $request['phone_number'],
+                $request['ipaddress'],
+                $request['aboutUserBrowser'],
+                $request['event_id'],
+            );
+        }
+
+        if(!empty($request['token']) && $request['is_sec_service'] != 1){
+            if ($data_from_post_lead['price_shared'] > $data_from_post_lead['price_exclusive']){
+                $response_code['price'] = $data_from_post_lead['price_shared'];
+            }
+            else {
+                $response_code['price'] = $data_from_post_lead['price_exclusive'];
+            }
+            $finel_price = $response_code['price']/2;
+            $ts = strtolower(substr($request['tc'], 0, 2));
+            if( $ts  == 'mo' || $ts  == 'wk' ){
+                $finel_price = $response_code['price']*0.7;
+            }else if($ts  == 'fn' ){
+                $finel_price = $response_code['price']*0.8;
+            }
+            $token_data_conv = $request['token'];
+            $url_conv = "";
+
+            if ($finel_price != 0){
+//                if( strtolower(substr($request['tc'], 0, 2)) == 'tl' ) {
+//                    //Turtle Leads S2S
+//                    $url_conv = "https://www.dpvyw6trk.com/?nid=2167&transaction_id=$token_data_conv&amount=".$finel_price;
+//                    $r = array($url_conv);
+//                    Log::info('Turtle Leads', $r);
+//                }
+//                elseif( strtolower(substr($request['tc'], 0, 1)) == 'o' ) {
+//                    //One Pride Group S2S
+//                    $url_conv = "https://offers-onepride-group.affise.com/postback?clickid=$token_data_conv&publisher_id=".$request["c"]."&sum=$finel_price";
+//                }
+//                elseif( strtolower(substr($request['tc'], 0, 2)) == 'dm' ) {
+//                    //Dynuin Media S2S
+//                    $url_conv = "https://script.google.com/macros/s/AKfycbzZInhdAno6v-Cza0ccQeQEU7UfZh1qd720ELB63CMrA4Rpv5AoSYgZQpZcWZqA0vL-/exec?transaction_id=$token_data_conv&payout=$finel_price&affiliate_id=".$request["c"]."&ref_id=6516&adv=allied";
+////                    $url_conv = "https://dynuinmedia.go2cloud.org/aff_lsr?transaction_id=$token_data_conv&amount=$finel_price";
+//                    $r = array($url_conv);
+//                    Log::info('Dynuin Media Leads', $r);
+//
+//                }elseif( strtolower(substr($request['tc'], 0, 2)) == 'sm' ) {
+//                    //scoremobi sm
+//                    $url_conv = "http://scoremobi.fuse-cloud.com/pb?tid=$token_data_conv&adv_cvalue=".$finel_price;
+//                    $r = array($url_conv);
+//                    Log::info('scoremobi', $r);
+//                }
+                if( strtolower(substr($request['tc'], 0, 2)) == 'mo' ) {
+                    //Mobidea
+                    $url_conv = "https://postback.mobidea.ai/postback?click_id=$token_data_conv&security_token=a19ae8a5-b2cf-4dc2-928c-55c04f17e00b&sale_amount=$finel_price";
+
+                    $r = array($url_conv);
+                    Log::info('Mobidea', $r);
+                }else if( strtolower(substr($request['tc'], 0, 2)) == 'fn' ) {
+                    //finnetpartners
+                    $url_conv = "https://finnetpartners.trackdesk.com/tracking/conversion/v1?cid=$token_data_conv&conversionTypeCode=sale&amount.value=$finel_price";
+
+                    $r = array($url_conv);
+                    Log::info('Fin Net Partners', $r);
+                }else if( strtolower(substr($request['tc'], 0, 2)) == 'wk' ) {
+                    //wedebeek
+                    $url_conv = "https://wedebeek.com/postback/banner/456/xx?clickid=$token_data_conv&payout=$finel_price";
+
+                    $r = array($url_conv);
+                    Log::info('wedebeek', $r);
+                }
                 $main_api_file->server_to_server_conv($url_conv);
             }
         }
