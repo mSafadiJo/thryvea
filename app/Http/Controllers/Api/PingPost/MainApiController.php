@@ -1617,6 +1617,20 @@ class MainApiController extends Controller
                 $client->setAccessType('offline');
                 $client->setAuthConfig(public_path() . '/GoogleFile/credentials.json');
 
+                // ✅ Force UTC timezone for JWT
+                date_default_timezone_set('UTC');
+
+                // ✅ Fetch token explicitly
+                $client->fetchAccessTokenWithAssertion();
+                $token = $client->getAccessToken();
+
+                if (isset($token['error'])) {
+                    Log::error('Google Auth Error: ' . json_encode($token));
+                    throw new \Exception('Google Auth Failed: ' . $token['error_description']);
+                }
+                Log::info('Google token obtained successfully');
+
+
                 $sheetsService = new \Google_Service_Sheets($client);
 
                 $spreadsheetId = "1EYrNqw4WVr-A88N74k3o5T4wkcp4Q0MIZLsESFE9ByY";
