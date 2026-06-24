@@ -1609,96 +1609,88 @@ class MainApiController extends Controller
 
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
-//        if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7'])) {
-//            try {
-//
-//                $client = new \Google_Client();
-//                $client->setApplicationName('GoogleSheetThryvea');
-//                $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
-//                $client->setAccessType('offline');
-//                $client->setAuthConfig(public_path() . '/GoogleFile/eloquent-victor-324807-eeb1c833bce2.json');
-//
-//
-//                $keyData = json_decode(file_get_contents(public_path() . '/GoogleFile/eloquent-victor-324807-eeb1c833bce2.json'), true);
-//                Log::info('Private key first 100 chars: ' . substr($keyData['private_key'], 0, 100));
-//                Log::info('Private key contains newlines: ' . (strpos($keyData['private_key'], "\n") !== false ? 'YES' : 'NO'));
-//
-//
-//                // ✅ Force UTC timezone for JWT
-//                date_default_timezone_set('UTC');
-//
-//                // ✅ Fetch token explicitly
-//                $client->fetchAccessTokenWithAssertion();
-//                $token = $client->getAccessToken();
-//
-//                if (isset($token['error'])) {
-//                    Log::error('Google Auth Error: ' . json_encode($token));
-//                    throw new \Exception('Google Auth Failed: ' . $token['error_description']);
-//                }
-//                Log::info('Google token obtained successfully');
-//
-//
-//                $sheetsService = new \Google_Service_Sheets($client);
-//
-//                $spreadsheetId = "1EYrNqw4WVr-A88N74k3o5T4wkcp4Q0MIZLsESFE9ByY";
-//
-//                switch ($service) {
-//                    case 1:
-//                        //Window
-//                        $range = "WindowLeadUnsold";
-//                        break;
-//                    case 6:
-//                        //roofing
-//                        $range = "RoofingLeadUnsold";
-//                        break;
-//                    case 7:
-//                        //siding
-//                        $range = "SidingLeadUnsold";
-//                        break;
-//                    case 9:
-//                        //Bathroom
-//                        $range = "BathroomLeadUnsold";
-//                        break;
-//                }
-//
-//                // ✅ Fix address - remove numbers appended at the end
-//                $cleanAddress = trim(preg_replace('/\d+$/', '', $request['street']));
-//
-//                // ✅ Fix details - handle both array and string
-//                $details = $questions['data_arr']['dataMassageForDB'] ?? '';
-//                if (is_array($details)) {
-//                    $details = '[' . implode(', ', $details) . ']';
-//                } else {
-//                    $details = (string)$details;
-//                }
-//
-//                $row = array_values([
-//                    (string)($request['first_name'] ?? ''),
-//                    (string)($request['last_name']  ?? ''),
-//                    (string)($request['email']      ?? ''),
-//                    (string)($request['phone_number'] ?? ''),
-//                    $cleanAddress,
-//                    (string)($address['zip_code_list'] ?? ''),
-//                    $details,
-//                ]);
-//
-//                $body = new \Google_Service_Sheets_ValueRange([
-//                    'values' => [$row]
-//                ]);
-//
-//                $params = ['valueInputOption' => 'RAW'];
-//                $insert = ['insertDataOption' => 'INSERT_ROWS'];
-//
-//                $result = $sheetsService->spreadsheets_values->append(
-//                    $spreadsheetId, $range, $body, $params, $insert
-//                );
-//
-//                Log::info('Google Sheets: Row added successfully');
-//
-//            } catch (\Exception $e) {
-//                Log::error('Google Sheets append failed: ' . $e->getMessage());
-//            }
-//        }
+        if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7'])) {
+            try {
+
+                $client = new \Google_Client();
+                $client->setApplicationName('GoogleSheetThryvea');
+                $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+                $client->setAccessType('offline');
+                $client->setAuthConfig(public_path() . '/GoogleFile/eloquent-victor-324807-eeb1c833bce2.json');
+
+                // ✅ Force UTC timezone for JWT
+                date_default_timezone_set('UTC');
+
+                // ✅ Fetch token explicitly
+                $client->fetchAccessTokenWithAssertion();
+                $token = $client->getAccessToken();
+
+                if (isset($token['error'])) {
+                    Log::error('Google Auth Error: ' . json_encode($token));
+                    throw new \Exception('Google Auth Failed: ' . $token['error_description']);
+                }
+
+                $sheetsService = new \Google_Service_Sheets($client);
+
+                $spreadsheetId = "1Qy3RNLwo-C22EsP8EMaHwTtcZIG5PvnG1cgj40qHch8";
+
+                switch ($service) {
+                    case 1:
+                        //Window
+                        $range = "WindowLeadUnsold";
+                        break;
+                    case 6:
+                        //roofing
+                        $range = "RoofingLeadUnsold";
+                        break;
+                    case 7:
+                        //siding
+                        $range = "SidingLeadUnsold";
+                        break;
+                    case 9:
+                        //Bathroom
+                        $range = "BathroomLeadUnsold";
+                        break;
+                }
+
+                // ✅ Fix address - remove numbers appended at the end
+                $cleanAddress = trim(preg_replace('/\d+$/', '', $request['street']));
+
+                // ✅ Fix details - handle both array and string
+                $details = $questions['data_arr']['dataMassageForDB'] ?? '';
+                if (is_array($details)) {
+                    $details = '[' . implode(', ', $details) . ']';
+                } else {
+                    $details = (string)$details;
+                }
+
+                $row = array_values([
+                    (string)($request['first_name'] ?? ''),
+                    (string)($request['last_name']  ?? ''),
+                    (string)($request['email']      ?? ''),
+                    (string)($request['phone_number'] ?? ''),
+                    $cleanAddress,
+                    (string)($address['zip_code_list'] ?? ''),
+                    $details,
+                ]);
+
+                $body = new \Google_Service_Sheets_ValueRange([
+                    'values' => [$row]
+                ]);
+
+                $params = ['valueInputOption' => 'RAW'];
+                $insert = ['insertDataOption' => 'INSERT_ROWS'];
+
+                $result = $sheetsService->spreadsheets_values->append(
+                    $spreadsheetId, $range, $body, $params, $insert
+                );
+
+                Log::info('Google Sheets: Row added successfully');
+
+            } catch (\Exception $e) {
+                Log::error('Google Sheets append failed: ' . $e->getMessage());
+            }
+        }
 
         return response()->json($response_code);
     }
