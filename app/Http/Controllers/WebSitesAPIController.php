@@ -968,38 +968,56 @@ class WebSitesAPIController extends Controller
             $request['phone_number'] = trim(str_replace([' ', '(', ')', '-'], '', $request['phone_number']));
             //Change Phone Structure ====================================================
 
-            //To check If Duplicated Lead =================================================================
             $today_start = date('Y-m-d') . ' 00:00:00';
             $today_end   = date('Y-m-d') . ' 23:59:59';
 
-            $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
-                ->where('status', 0)
-                ->where('lead_phone_number', $request['phone_number'])
-                ->whereBetween('created_at', [$today_start, $today_end])
-                ->union(
-                    LeadsCustomer::where('lead_type_service_id', $request->service_id)
-                        ->where('status', 0)
-                        ->where('lead_email', $request->email)
-                        ->whereBetween('created_at', [$today_start, $today_end])
-                )
-                ->first();
+            if(strtolower(substr($request['tc'], 0, 5)) == 'thvbo' ) {
+                $get_ip_address = LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                    ->where('status', 0)
+                    ->where(function ($query) use ($request) {
+                        $query->where('lead_phone_number', $request->phone_number)
+                            ->orWhere('lead_email', $request->email);
+                    })
+                    ->first();
 
-            $thirty_days_start = date('Y-m-d', strtotime('-30 day')) . ' 00:00:00';
+                if ($get_ip_address) {
+                    $request['ipaddress'] = $get_ip_address->lead_ipaddress;
+                }
+                $is_unsold_duplicate = '';
+                $is_sold_duplicate = '';
 
-            $is_sold_duplicate = LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
-                ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
-                ->where('leads_customers.status', 0)
-                ->where('leads_customers.lead_phone_number', $request['phone_number'])
-                ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
-                ->union(
-                    LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
-                        ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
-                        ->where('leads_customers.status', 0)
-                        ->where('leads_customers.lead_email', $request->email)
-                        ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
-                )
-                ->first();
-            //To check If Duplicated Lead =================================================================
+                Log::info($request['ipaddress']);
+            }else{
+                //To check If Duplicated Lead =================================================================
+                $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                    ->where('status', 0)
+                    ->where('lead_phone_number', $request['phone_number'])
+                    ->whereBetween('created_at', [$today_start, $today_end])
+                    ->union(
+                        LeadsCustomer::where('lead_type_service_id', $request->service_id)
+                            ->where('status', 0)
+                            ->where('lead_email', $request->email)
+                            ->whereBetween('created_at', [$today_start, $today_end])
+                    )
+                    ->first();
+
+                $thirty_days_start = date('Y-m-d', strtotime('-30 day')) . ' 00:00:00';
+
+                $is_sold_duplicate = LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
+                    ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                    ->where('leads_customers.status', 0)
+                    ->where('leads_customers.lead_phone_number', $request['phone_number'])
+                    ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                    ->union(
+                        LeadsCustomer::where('leads_customers.lead_type_service_id', $request->service_id)
+                            ->join('campaigns_leads_users', 'campaigns_leads_users.lead_id', '=', 'leads_customers.lead_id')
+                            ->where('leads_customers.status', 0)
+                            ->where('leads_customers.lead_email', $request->email)
+                            ->whereBetween('leads_customers.created_at', [$thirty_days_start, $today_end])
+                    )
+                    ->first();
+                //To check If Duplicated Lead =================================================================
+            }
 
             //Checked Blocked Info =================================================================
             $is_blocked_phone_number = DB::table('block_phone_number_lists')->where('value', $request['phone_number'])->first();
@@ -1178,9 +1196,8 @@ class WebSitesAPIController extends Controller
                 return json_encode($response_code);die();
             }
             //Check if Flag Lead ===============================================================================
-
-            //Check if Duplicated Lead ===============================================================================
             if(strtolower(substr($request['tc'], 0, 5)) != 'thvbo' ) {
+                //Check if Duplicated Lead ===============================================================================
                 if (!empty($is_sold_duplicate) || !empty($is_unsold_duplicate)) {
                     $response_code = array(
                         'response_code' => 'false',

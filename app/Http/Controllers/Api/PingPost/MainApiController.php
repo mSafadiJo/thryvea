@@ -1684,9 +1684,6 @@ class MainApiController extends Controller
                 $result = $sheetsService->spreadsheets_values->append(
                     $spreadsheetId, $range, $body, $params, $insert
                 );
-
-                Log::info('Google Sheets: Row added successfully');
-
             } catch (\Exception $e) {
                 Log::error('Google Sheets append failed: ' . $e->getMessage());
             }
