@@ -985,8 +985,6 @@ class WebSitesAPIController extends Controller
                 }
                 $is_unsold_duplicate = '';
                 $is_sold_duplicate = '';
-
-                Log::info($request['ipaddress']);
             }else{
                 //To check If Duplicated Lead =================================================================
                 $is_unsold_duplicate = LeadsCustomer::where('lead_type_service_id', $request->service_id)
