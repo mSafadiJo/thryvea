@@ -2027,15 +2027,36 @@
                     </div>
                 </div>
                 <div class="col-sm-2 user_privileges_Settings_div"
-                @if( in_array('25-0', $permission_users)) style="display: block;" @else style="display: none;" @endif>
-               <div class="form-group">
-                   <label class="container-services">Export up to 30D
-                       <input type="checkbox" class="user_privileges_service" name="user_privileges[]" value="25-2"
-                              @if( in_array('25-2', $permission_users)) checked @endif>
-                       <span class="checkmark-services"></span>
-                   </label>
-               </div>
-           </div>
+                    @if( in_array('25-0', $permission_users)) style="display: block;" @else style="display: none;" @endif>
+                       <div class="form-group">
+                           <label class="container-services">Export up to 30D
+                               <input type="checkbox" class="user_privileges_service" name="user_privileges[]" value="25-2"
+                                      @if( in_array('25-2', $permission_users)) checked @endif>
+                               <span class="checkmark-services"></span>
+                           </label>
+                       </div>
+                </div>
+                <div class="col-sm-2 user_privileges_Settings_div"
+                     @if( in_array('25-0', $permission_users)) style="display: block;" @else style="display: none;" @endif>
+                    <div class="form-group">
+                        <label class="container-services">Show Bot Special Sources
+                            <input type="checkbox" class="user_privileges_service" name="user_privileges[]" value="25-3"
+                                   @if( in_array('25-3', $permission_users)) checked @endif>
+                            <span class="checkmark-services"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-sm-2 user_privileges_Settings_div"
+                     @if( in_array('25-0', $permission_users)) style="display: block;" @else style="display: none;" @endif>
+                    <div class="form-group">
+                        <label class="container-services">Add/Edit Bot Special Sources
+                            <input type="checkbox" class="user_privileges_service" name="user_privileges[]" value="25-4"
+                                   @if( in_array('25-4', $permission_users)) checked @endif>
+                            <span class="checkmark-services"></span>
+                        </label>
+                    </div>
+                </div>
 
             </div>
             <!-- =============================================================================== -->

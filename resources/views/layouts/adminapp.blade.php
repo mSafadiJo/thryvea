@@ -50,21 +50,26 @@
             <div id="sidebar-menu">
                 <ul id="side-menu">
 
-                    {{-- ==================== SETTINGS ==================== --}}
-                    {{--                    @if(empty($permission_users) || in_array('25-0', $permission_users))--}}
-                    {{--                        <li class="has-submenu">--}}
-                    {{--                            <a href="javascript: void(0);">--}}
-                    {{--                                <img class="menuLogo_svg" src="{{ URL::asset('images/menuLogo/svg/setting.svg') }}" alt="Settings">--}}
-                    {{--                                <span class="menu-text">Settings</span>--}}
-                    {{--                                <span class="menu-arrow"> </span>--}}
-                    {{--                            </a>--}}
-                    {{--                            <ul class="nav-second-level">--}}
-                    {{--                                @if(empty($permission_users) || in_array('25-1', $permission_users))--}}
-                    {{--                                    <li><a href="{{ route('Admin.Setting.Payment') }}">Payment Methods</a></li>--}}
-                    {{--                                @endif--}}
-                    {{--                            </ul>--}}
-                    {{--                        </li>--}}
-                    {{--                    @endif--}}
+                     ==================== SETTINGS ====================
+                                        @if(empty($permission_users) || in_array('25-0', $permission_users))
+                                            <li class="has-submenu">
+                                                <a href="javascript: void(0);">
+                                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                                    <span class="menu-text">Settings</span>
+                                                    <span class="menu-arrow"> </span>
+                                                </a>
+{{--                                                <ul class="nav-second-level">--}}
+{{--                                                    @if(empty($permission_users) || in_array('25-1', $permission_users))--}}
+{{--                                                        <li><a href="{{ route('Admin.Setting.Payment') }}">Payment Methods</a></li>--}}
+{{--                                                    @endif--}}
+{{--                                                </ul>--}}
+                                                <ul class="nav-second-level" aria-expanded="false">
+                                                    @if( empty($permission_users) || in_array('25-3', $permission_users) )
+                                                        <li><a href="{{ route('Admin.site.setting.show') }}">Site Setting</a></li>
+                                                    @endif
+                                                </ul>
+                                            </li>
+                                        @endif
 
                     {{-- ==================== REPORTS ==================== --}}
                     @if(empty($permission_users) || in_array('3-0', $permission_users))

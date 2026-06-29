@@ -519,6 +519,10 @@ Route::post('/Admin/Payments/Refund', 'AdminPayments\PaymentsController@refund')
 Route::get('/Admin/Setting/Payment', 'Setting\PaymentsController@index')->name('Admin.Setting.Payment');
 Route::post('/Admin/Setting/Payment/Store', 'Setting\PaymentsController@store')->name('Admin.Setting.Payment.Store');
 
+Route::post('/Admin/Site/Setting', 'Setting\SiteSettingController@index')->name('Admin.site.setting.save');
+Route::get('/Admin/Site/Setting', 'Setting\SiteSettingController@index')->name('Admin.site.setting.show');
+
+
 //Old or Inactive Buyers
 Route::get('/Old_Buyers', 'AdminBuyersController@listOfOldBuyers')->name('Old_Buyers');
 
