@@ -23,7 +23,7 @@
                     <div class="form-group">
                         <h5 class="font-weight-semibold">Add New Exclude Sources For Bot Unsold Lead</h5>
                         <span>for example: source1,source2,source3</span>
-                        <textarea class="form-control rounded-0" name="SourcesList" id="SourcesList" required rows="1">
+                        <textarea class="form-control rounded-0" name="SourcesList" id="SourcesList" rows="1">
                             {{ $sourcesString }}
                         </textarea>
                         @if(empty($sourcesString))
