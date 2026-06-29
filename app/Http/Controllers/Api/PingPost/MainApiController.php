@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Services\ApiMain;
 use App\Services\APIValidations;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class MainApiController extends Controller
 {
@@ -1580,7 +1581,6 @@ class MainApiController extends Controller
             'UserAgent' => $request['UserAgent'],
             'OriginalURL' => $request['OriginalURL'],
             'OriginalURL2' => $request['OriginalURL'],
-            //'OriginalURL2' => "https://www.".$request['OriginalURL'],
             'SessionLength' => $request['SessionLength'],
             'IPAddress' => $request['ip_address'],
             'LeadId' => $request['lead_id'],
@@ -1609,7 +1609,9 @@ class MainApiController extends Controller
 
         $response_code = $main_api_file->check_post_if_sold_and_send($lead_details_ping, $data_msg, $request->transaction_id);
 
-        if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7'])) {
+ // to get Bot Unsold sources from cache and check if in service and response rejected (unsold) to added to google sheet
+        $sourcesBotUnsold = Cache::get('sources', []);
+        if ($response_code['message'] == 'Reject' && in_array($service, ['9', '6', '1', '7']) && (empty($sourcesBotUnsold) || in_array($request['sub_id'], $sourcesBotUnsold)) ) {
             try {
 
                 $client = new \Google_Client();

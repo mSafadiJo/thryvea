@@ -32,10 +32,7 @@ class SiteSettingController extends Controller
 
             Cache::forever('sourcesBotUnsoldLead', $sources);
 
-            $sourcesString = implode(' , ', $sources);
-
-            return view('Admin.Setting.index', compact('sourcesString'))
-                ->with('success', 'Sources updated!');
+            return redirect()->route('Admin.site.setting.show');
         }
     }
 
