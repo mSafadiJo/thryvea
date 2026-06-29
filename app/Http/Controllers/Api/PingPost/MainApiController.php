@@ -738,7 +738,7 @@ class MainApiController extends Controller
         //Add PingLeads
         $pingLeads = new PingLeads();
 
-        $pingLeads->lead_address = $request['street'];
+        $pingLeads->lead_address = $request['street'] ?: 0;
         $pingLeads->lead_state_id = $address['state_id'];
         $pingLeads->lead_city_id = $address['city_id'];
         $pingLeads->lead_zipcode_id = $address['zipcode_id'];
