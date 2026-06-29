@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-sm-6" style="border-radius: 10px;background-color: #fff;border: 1px solid rgba(0, 0, 0, .125);padding: 20px;">
                     <div class="form-group">
-                        <h5 class="font-weight-semibold">Add New Exclude Sources For Bot Unsold Lead</h5>
+                        <h5 class="font-weight-semibold">Add New Include Sources For Bot Unsold Lead</h5>
                         <span>for example: source1,source2,source3</span>
                         <textarea class="form-control rounded-0" name="SourcesList" id="SourcesList" rows="1">
                             {{ $sourcesString }}
