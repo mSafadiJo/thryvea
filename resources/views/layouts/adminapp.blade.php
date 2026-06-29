@@ -50,7 +50,7 @@
             <div id="sidebar-menu">
                 <ul id="side-menu">
 
-                     ==================== SETTINGS ====================
+{{--                     ==================== SETTINGS ====================--}}
                                         @if(empty($permission_users) || in_array('25-0', $permission_users))
                                             <li class="has-submenu">
                                                 <a href="javascript: void(0);">
