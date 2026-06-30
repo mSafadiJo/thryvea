@@ -1496,7 +1496,7 @@ class PingCRMAllied
                                 break;
                             case 80:
                                 // 1303	Solar Direct Marketing
-                                $url_api .= "&tcpaText=$TCPAText&lp_s1=283W&window_count=$number_of_windows";
+                                $url_api .= "&tcpa_consent_text=$TCPAText&tcpaText=$TCPAText&lp_s1=283W&window_count=$number_of_windows";
                                 break;
                             default:
                                 $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -2067,7 +2067,7 @@ class PingCRMAllied
                                 break;
                             case 80:
                                 // 1303	Solar Direct Marketing
-                                $url_api .= "&siding_type=$type_of_siding&tcpaText=$TCPAText&lp_s1=283Siding&repair_replace=Replace";
+                                $url_api .= "&siding_type=$type_of_siding&tcpa_text=$TCPAText&lp_s1=283Siding&repair_replace=Replace";
                                 break;
                         }
                         break;
