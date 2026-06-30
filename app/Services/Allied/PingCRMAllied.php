@@ -6911,10 +6911,10 @@ class PingCRMAllied
                                         $start_time = "Immediately";
                                         break;
                                     case 'Within 6 months':
-                                        $start_time = "1-3 months";
+                                        $start_time = "1-6 months";
                                         break;
                                     default:
-                                        $start_time = "Within 1 month";
+                                        $start_time = "Not sure";
                                 }
 
 
