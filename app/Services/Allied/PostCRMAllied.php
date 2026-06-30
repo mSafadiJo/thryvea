@@ -2393,6 +2393,10 @@ class PostCRMAllied {
 
                     $url_api .= "&universal_leadid=$LeadId&jornaya_lead_id=$LeadId&type=$type_data&pub_id=$pub_id&tcpa_language=$TCPAText&TCPA=$tcpa_compliant2&trusted_form=$trusted_form&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form_cert_id&landing_page=$OriginalURL2&user_agent=$UserAgent";
                     break;
+                case 80:
+                    // 1303	Solar Direct Marketing
+                    $url_api = "$lp_url?lp_campaign_id=$lp_campaign_id&lp_campaign_key=$lp_campaign_key&lp_response=JSON&city=$city&state=$state&zip_code=$zip&ip_address=$IPAddress&landing_page=$OriginalURL2&tcpa=$tcpa_compliant2&tcpaDisclosure=$tcpa_compliant2&tcpaText=$TCPAText&jornaya_lead_id=$LeadId&trusted_form_cert_id=$trusted_form&user_agent=$UserAgent&lp_s2=$lead_source_text&first_name=$first_name&last_name=$last_name&address=$street&phone_home=$number1&phone_cell=$number1&email_address=$email&address_1=$street";
+                    break;
 
             }
 
@@ -2446,6 +2450,10 @@ class PostCRMAllied {
 
                             $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
                             break;
+                        case 80:
+                            // 1303	Solar Direct Marketing
+                            $url_api .= "&lp_s1=283W&window_count=$number_of_windows";
+                            break;
                         default:
                             $homeowner = ($ownership == "Yes" ? "yes" : "no");
                             $replace_repair = ($project_nature == "Repair" ? "repair" : "install");
@@ -2497,6 +2505,59 @@ class PostCRMAllied {
                             }
 
                             $url_api .= "&type_of_work=$type_of_work&home_owner=$home_owner&residential_commercia=$residential_commercia&category=$category";
+                            break;
+                        case 80:
+                            // 1303	Solar Direct Marketing
+                            $home_owner = ($property_type == "Owned" ? "Yes" : "No");
+
+                            switch ($monthly_electric_bill){
+                                case '$51 - $100':
+                                case '$101 - $150':
+                                    $average_bill = '$100-$150';
+                                    break;
+                                case '$151 - $200':
+                                    $average_bill = "$151-$200";
+                                    break;
+                                case '$201 - $300':
+                                    $average_bill = '$251-$300';
+                                    break;
+                                case '$301 - $400':
+                                    $average_bill = '$301-$400';
+                                    break;
+                                case '$401 - $500':
+                                    $average_bill = '$401-$500';
+                                    break;
+                                default:
+                                    $average_bill = '$401-$500';
+                            }
+
+                            switch ($roof_shade){
+                                case "Full Sun":
+                                    $roof_shade_data = "No Shade";
+                                    break;
+                                case "Mostly Shaded":
+                                    $roof_shade_data = "A Lot Of Shade";
+                                    break;
+                                case "Partial Sun":
+                                    $roof_shade_data = "A Little Shade";
+                                    break;
+                                default:
+                                    $roof_shade_data = "Not Sure";
+                            }
+
+                            switch ($power_solution){
+                                case "Solar Electricity for my Home":
+                                case "Solar Electricity & Water Heating for my Home":
+                                    $power_solution_data = "Yes";
+                                    break;
+                                case "Solar Water Heating for my Home":
+                                    $power_solution_data = "No";
+                                    break;
+                                default:
+                                    $power_solution_data = "No";
+                            }
+
+                            $url_api .= "&lp_s1=283S&traffic_source=$lead_source_name&credit_score=Good&source_page_url=$OriginalURL2&homeowner=$home_owner&property_type=Single Family&roof_shade=$roof_shade_data&utility_electric_monthly_amount=$average_bill&utility_electric_company_name=$utility_provider&solar_electric=$power_solution_data";
                             break;
                     }
                     break;
@@ -2755,6 +2816,49 @@ class PostCRMAllied {
 
                             $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
                             break;
+                        case 80:
+                            // 1303	Solar Direct Marketing
+                            switch ($project_nature){
+                                case "Install roof on new construction":
+                                    $replace_or_repair = "Replace";
+                                    $taskId = "New";
+                                    break;
+                                case "Completely replace roof":
+                                    $replace_or_repair = "Replace";
+                                    $taskId = "Replace";
+                                    break;
+                                default:
+                                    $replace_or_repair = "Repair";
+                                    $taskId = "Repair";
+                            }
+
+                            switch ($roof_type){
+                                case "Asphalt Roofing":
+                                    $roofType = "Asphalt";
+                                    break;
+                                case "Metal Roofing":
+                                    $roofType = "Metal";
+                                    break;
+                                case "Natural Slate Roofing":
+                                    $roofType = "Natural Slate";
+                                    break;
+                                case "Tile Roofing":
+                                    $roofType = "Tile";
+                                    break;
+                                default:
+                                    $roofType = "Other";
+                            }
+
+                            switch ($start_time){
+                                case 'Immediately':
+                                    $start_time_data = "Ready Now";
+                                    break;
+                                default:
+                                    $start_time_data = "4 To 6 Months";
+                            }
+
+                            $url_api .= "&lp_s1=283R&roof_type=$roofType&replace_or_repair=$replace_or_repair&taskId=$taskId&home_type=Single Family Home&timeFrame=$start_time_data";
+                            break;
                         default:
                             $owner = "yes";
                             $time_frame = ($start_time == 'Immediately' ? "immediate" : "over_2_weeks");
@@ -2916,6 +3020,10 @@ class PostCRMAllied {
 
                             $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
                             break;
+                        case 80:
+                            // 1303	Solar Direct Marketing
+                            $url_api .= "&lp_s1=283Siding";
+                            break;
                     }
                     break;
                 case 8:
@@ -2966,6 +3074,10 @@ class PostCRMAllied {
                             $homeowner = ($ownership == "Yes" ? "YES" : "NO");
 
                             $url_api .= "&Project=$type_of_work&home_owner=$homeowner";
+                            break;
+                        case 80:
+                            // 1303	Solar Direct Marketing
+                            $url_api .= "&lp_s1=283B&repair_or_replace=Replace";
                             break;
                     }
                     break;
