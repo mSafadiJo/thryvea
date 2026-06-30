@@ -1440,7 +1440,7 @@ class PingCRMAllied
                         break;
                     case 80:
                         // 1303	Solar Direct Marketing
-                        $url_api = "$lp_url?lp_campaign_id=$lp_campaign_id&lp_campaign_key=$lp_campaign_key&lp_response=JSON&city=$city&state=$state&zip_code=$zip&ip_address=$IPAddress&landing_page=$OriginalURL2&tcpa=$tcpa_compliant2&tcpaDisclosure=$tcpa_compliant2&tcpa_text=$TCPAText&jornaya_lead_id=$LeadId&trusted_form_cert_id=$trusted_form&user_agent=$UserAgent&lp_s2=$lead_source_text";
+                        $url_api = "$lp_url?lp_campaign_id=$lp_campaign_id&lp_campaign_key=$lp_campaign_key&lp_response=JSON&city=$city&state=$state&zip_code=$zip&ip_address=$IPAddress&landing_page=$OriginalURL2&jornaya_lead_id=$LeadId&trusted_form_cert_id=$trusted_form&user_agent=$UserAgent&lp_s2=$lead_source_text";
                         break;
                 }
 
@@ -1496,7 +1496,7 @@ class PingCRMAllied
                                 break;
                             case 80:
                                 // 1303	Solar Direct Marketing
-                                $url_api .= "&lp_s1=283W&window_count=$number_of_windows";
+                                $url_api .= "&tcpaText=$TCPAText&lp_s1=283W&window_count=$number_of_windows";
                                 break;
                             default:
                                 $homeowner = ($ownership == "Yes" ? "yes" : "no");
@@ -1601,7 +1601,7 @@ class PingCRMAllied
                                         $power_solution_data = "No";
                                 }
 
-                                $url_api .= "&lp_s1=283S&traffic_source=$lead_source_name&credit_score=Good&source_page_url=$OriginalURL2&homeowner=$home_owner&property_type=Single Family&roof_shade=$roof_shade_data&utility_electric_monthly_amount=$average_bill&utility_electric_company_name=$utility_provider&solar_electric=$power_solution_data";
+                                $url_api .= "&tcpa_text=$TCPAText&lp_s1=283S&traffic_source=$lead_source_name&credit_score=Good&source_page_url=$OriginalURL2&homeowner=$home_owner&property_type=Single Family&roof_shade=$roof_shade_data&utility_electric_monthly_amount=$average_bill&utility_electric_company_name=$utility_provider&solar_electric=$power_solution_data";
                                 break;
 
                         }
@@ -1904,7 +1904,7 @@ class PingCRMAllied
                                         $start_time_data = "4 To 6 Months";
                                 }
 
-                                $url_api .= "&lp_s1=283R&roof_type=$roofType&replace_or_repair=$replace_or_repair&taskId=$taskId&home_type=Single Family Home&timeFrame=$start_time_data";
+                                $url_api .= "&tcpaText=$TCPAText&lp_s1=283R&roof_type=$roofType&replace_or_repair=$replace_or_repair&taskId=$taskId&home_type=Single Family Home&timeFrame=$start_time_data";
                                 break;
                             default:
                                 $owner = "yes";
@@ -2067,7 +2067,7 @@ class PingCRMAllied
                                 break;
                             case 80:
                                 // 1303	Solar Direct Marketing
-                                $url_api .= "&lp_s1=283Siding";
+                                $url_api .= "&siding_type=$type_of_siding&tcpaText=$TCPAText&lp_s1=283Siding&repair_replace=Replace";
                                 break;
                         }
                         break;
@@ -2122,7 +2122,7 @@ class PingCRMAllied
                                 break;
                             case 80:
                                 // 1303	Solar Direct Marketing
-                                $url_api .= "&lp_s1=283B&repair_or_replace=Replace";
+                                $url_api .= "&tcpaText=$TCPAText&lp_s1=283B&repair_or_replace=Replace";
                                 break;
 
                         }
