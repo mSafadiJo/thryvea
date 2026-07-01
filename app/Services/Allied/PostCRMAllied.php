@@ -688,6 +688,7 @@ class PostCRMAllied {
             $lead_source_text = $data_msg['lead_source'];
             $leadsCustomerCampaign_id = $crm_details['leadsCustomerCampaign_id'];
             $tcpa_compliant = $data_msg['tcpa_compliant'];
+            $google_ts = $data_msg['google_ts'];
             if( $tcpa_compliant == 1 ){
                 $tcpa_compliant2 = "Yes";
                 $tcpa_compliant3 = "yes";
@@ -2394,7 +2395,8 @@ class PostCRMAllied {
                     $url_api .= "&universal_leadid=$LeadId&jornaya_lead_id=$LeadId&type=$type_data&pub_id=$pub_id&tcpa_language=$TCPAText&TCPA=$tcpa_compliant2&trusted_form=$trusted_form&trusted_form_cert_url=$trusted_form&trusted_form_cert_id=$trusted_form_cert_id&landing_page=$OriginalURL2&user_agent=$UserAgent";
                     break;
                 case 80:
-                    // 1303	Solar Direct Marketing
+                case 81:
+                    // 80 Solar Direct Marketing
                     $url_api = "$lp_url?lp_campaign_id=$lp_campaign_id&lp_campaign_key=$lp_campaign_key&lp_response=JSON&city=$city&state=$state&zip_code=$zip&ip_address=$IPAddress&landing_page=$OriginalURL2&jornaya_lead_id=$LeadId&trusted_form_cert_id=$trusted_form&user_agent=$UserAgent&lp_s2=$lead_source_text&first_name=$first_name&last_name=$last_name&address=$street&phone_home=$number1&phone_cell=$number1&email_address=$email&address_1=$street";
                     break;
 
@@ -3078,6 +3080,10 @@ class PostCRMAllied {
                         case 80:
                             // 1303	Solar Direct Marketing
                             $url_api .= "&tcpaText=$TCPAText&lp_s1=283B&repair_or_replace=Replace";
+                            break;
+                        case 81:
+                            // 1303	Solar Direct Marketing
+                            $url_api .= "&tcpaText=$TCPAText&lp_s1=283BD&repair_or_replace=Replace";
                             break;
                     }
                     break;
