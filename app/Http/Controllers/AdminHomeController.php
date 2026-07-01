@@ -30,6 +30,234 @@ class AdminHomeController extends Controller
         $this->AccessLogService = $AccessLogService;
     }
 
+//    public function index()
+//    {
+//        $todayStart = now()->startOfDay()->format('Y-m-d H:i:s');
+//        $todayEnd = now()->endOfDay()->format('Y-m-d H:i:s');
+//        $monthStart = now()->startOfMonth()->format('Y-m-d H:i:s');
+//        $monthEnd = now()->endOfMonth()->format('Y-m-d H:i:s');
+//        $yearStart = now()->startOfYear()->format('Y-m-d H:i:s');
+//        $yearEnd = now()->endOfYear()->format('Y-m-d H:i:s');
+//
+//        // ========== TODAY'S STATS (unchanged) ==========
+//        $leadStats = DB::table('leads_customers as lc')
+//            ->selectRaw('
+//            COUNT(*) as total,
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold,
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold
+//        ')
+//            ->leftJoin('campaigns_leads_users as clu', function ($join) {
+//                $join->on('clu.lead_id', '=', 'lc.lead_id')
+//                    ->where('clu.is_returned', 0);
+//            })
+//            ->where('lc.is_duplicate_lead', '<>', 1)
+//            ->whereNotIn('lc.lead_fname', ['test', 'testing', 'Test'])
+//            ->whereNotIn('lc.lead_lname', ['test', 'testing', 'Test'])
+//            ->where('lc.is_test', 0)
+//            ->whereBetween('lc.created_at', [$todayStart, $todayEnd])
+//            ->first();
+//
+//        $totalLeads = $leadStats->total;
+//        $soldLeads = $leadStats->sold;
+//        $unsoldLeads = $leadStats->unsold;
+//
+//        // ========== MONTHLY DATA: Cache with fallback to full query ==========
+//        $cacheKey = 'dashboard_monthly_data_' . now()->year;
+//        $cachedData = Cache::get($cacheKey);
+//
+//        // If cache is empty, compute ALL months and store
+//        if (empty($cachedData)) {
+//            $cachedData = $this->computeAllMonthsData($yearStart, $yearEnd);
+//            Cache::put($cacheKey, $cachedData, now()->endOfYear());
+//        }
+//        // If cache exists but current month missing, update only current month
+//        elseif (!isset($cachedData[now()->format('Y-m')])) {
+//            $currentMonthData = $this->computeCurrentMonthData();
+//            $cachedData = array_merge($cachedData, $currentMonthData);
+//            Cache::put($cacheKey, $cachedData, now()->endOfYear());
+//        }
+//
+//        // Build arrays for charts
+//        $months = [];
+//        $profitData = [];
+//        $soldLeadsData = [];
+//        $unsoldLeadsData = [];
+//
+//        for ($i = 1; $i <= 12; $i++) {
+//            $monthKey = now()->year . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+//            $months[] = date('M', mktime(0, 0, 0, $i, 1));
+//
+//            $profitData[$i] = $cachedData[$monthKey]['profit'] ?? 0;
+//            $soldLeadsData[$i] = $cachedData[$monthKey]['sold_leads'] ?? 0;
+//            $unsoldLeadsData[$i] = $cachedData[$monthKey]['unsold_leads'] ?? 0;
+//        }
+//
+//        // ========== TODAY'S & MONTH'S PROFIT (real-time) ==========
+//        $todaySellingPrice = CampaignsLeadsUsers::whereIn('campaigns_leads_users_type_bid', ['Exclusive', 'Shared'])
+//            ->whereBetween('date', [$todayStart, $todayEnd])
+//            ->where('is_returned', 0)
+//            ->sum('campaigns_leads_users_bid');
+//
+//        $todayPurchasingPrice = DB::table('leads_customers as lc')
+//            ->join('campaigns AS camp_seller', 'camp_seller.vendor_id', '=', 'lc.vendor_id')
+//            ->join('users AS Seller', 'Seller.id', '=', 'camp_seller.user_id')
+//            ->where('lc.response_data', "Lead Accepted")
+//            ->whereBetween('lc.created_at', [$todayStart, $todayEnd])
+//            ->where('lc.is_duplicate_lead', '<>', 1)
+//            ->whereNotIn('lc.lead_fname', ['test', 'testing', 'Test'])
+//            ->whereNotIn('lc.lead_lname', ['test', 'testing', 'Test'])
+//            ->where('lc.is_test', 0)
+//            ->sum('lc.ping_price');
+//
+//        $profitToday = $todaySellingPrice - $todayPurchasingPrice;
+//
+//        $monthSellingPrice = CampaignsLeadsUsers::whereIn('campaigns_leads_users_type_bid', ['Exclusive', 'Shared'])
+//            ->whereBetween('date', [$monthStart, $monthEnd])
+//            ->where('is_returned', 0)
+//            ->sum('campaigns_leads_users_bid');
+//
+//        $monthPurchasingPrice = DB::table('leads_customers as lc')
+//            ->join('campaigns AS camp_seller', 'camp_seller.vendor_id', '=', 'lc.vendor_id')
+//            ->join('users AS Seller', 'Seller.id', '=', 'camp_seller.user_id')
+//            ->where('lc.response_data', "Lead Accepted")
+//            ->whereBetween('lc.created_at', [$monthStart, $monthEnd])
+//            ->where('lc.is_duplicate_lead', '<>', 1)
+//            ->whereNotIn('lc.lead_fname', ['test', 'testing', 'Test'])
+//            ->whereNotIn('lc.lead_lname', ['test', 'testing', 'Test'])
+//            ->where('lc.is_test', 0)
+//            ->sum('lc.ping_price');
+//
+//        $profitMonth = $monthSellingPrice - $monthPurchasingPrice;
+//
+//        // ========== RING CALCULATIONS (unchanged) ==========
+//        $marginPercentToday = $todaySellingPrice > 0 ? (($profitToday / $todaySellingPrice) * 100) : 0;
+//        $marginRingPercentToday = min($marginPercentToday, 100);
+//        $maxProfitValueToday = 50000;
+//        $profitPercentToday = $maxProfitValueToday > 0 ? min(($profitToday / $maxProfitValueToday) * 100, 100) : 0;
+//        $circumference = 364.4;
+//        $profitOffsetToday = $circumference - ($circumference * $profitPercentToday / 100);
+//
+//        $marginPercentMonth = $monthSellingPrice > 0 ? (($profitMonth / $monthSellingPrice) * 100) : 0;
+//        $marginRingPercentMonth = min($marginPercentMonth, 100);
+//        $maxProfitValueMonth = 50000 * 30;
+//        $profitPercentMonth = $maxProfitValueMonth > 0 ? min(($profitMonth / $maxProfitValueMonth) * 100, 100) : 0;
+//        $profitOffsetMonth = $circumference - ($circumference * $profitPercentMonth / 100);
+//
+//        return view('Admin.home', compact(
+//            'totalLeads', 'soldLeads', 'unsoldLeads',
+//            'profitToday', 'profitMonth',
+//            'todaySellingPrice', 'todayPurchasingPrice',
+//            'monthSellingPrice', 'monthPurchasingPrice',
+//            'marginPercentToday', 'marginRingPercentToday',
+//            'marginPercentMonth', 'marginRingPercentMonth',
+//            'profitOffsetToday', 'profitOffsetMonth',
+//            'circumference', 'maxProfitValueToday', 'maxProfitValueMonth',
+//            'months', 'profitData', 'soldLeadsData', 'unsoldLeadsData'
+//        ));
+//    }
+//    private function computeAllMonthsData(string $yearStart, string $yearEnd): array
+//    {
+//        // Get profit for all months
+//        $monthlyProfit = DB::select("
+//        SELECT
+//            DATE_FORMAT(clu.date, '%Y-%m') as month,
+//            MONTH(clu.date) as month_num,
+//            COALESCE(SUM(clu.campaigns_leads_users_bid), 0) - COALESCE(SUM(lc.ping_price), 0) as profit
+//        FROM campaigns_leads_users clu
+//        LEFT JOIN leads_customers lc ON lc.lead_id = clu.lead_id
+//            AND lc.response_data = 'Lead Accepted'
+//            AND lc.is_duplicate_lead <> 1
+//            AND lc.lead_fname NOT IN ('test', 'testing', 'Test')
+//            AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
+//            AND lc.is_test = 0
+//        WHERE clu.campaigns_leads_users_type_bid IN ('Exclusive', 'Shared')
+//        AND clu.is_returned = 0
+//        AND clu.date BETWEEN ? AND ?
+//        GROUP BY DATE_FORMAT(clu.date, '%Y-%m'), MONTH(clu.date)
+//        ORDER BY month
+//    ", [$yearStart, $yearEnd]);
+//
+//        // Get lead counts for all months
+//        $monthlyLeads = DB::select("
+//        SELECT
+//            DATE_FORMAT(lc.created_at, '%Y-%m') as month,
+//            MONTH(lc.created_at) as month_num,
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold_leads,
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold_leads
+//        FROM leads_customers lc
+//        LEFT JOIN campaigns_leads_users clu ON clu.lead_id = lc.lead_id AND clu.is_returned = 0
+//        WHERE lc.is_duplicate_lead <> 1
+//        AND lc.lead_fname NOT IN ('test', 'testing', 'Test')
+//        AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
+//        AND lc.is_test = 0
+//        AND lc.created_at BETWEEN ? AND ?
+//        GROUP BY DATE_FORMAT(lc.created_at, '%Y-%m'), MONTH(lc.created_at)
+//        ORDER BY month
+//    ", [$yearStart, $yearEnd]);
+//
+//        // Build cache structure
+//        $cachedData = [];
+//        foreach ($monthlyProfit as $row) {
+//            $cachedData[$row->month] = [
+//                'profit' => (float) $row->profit,
+//                'sold_leads' => 0,
+//                'unsold_leads' => 0,
+//            ];
+//        }
+//        foreach ($monthlyLeads as $row) {
+//            if (!isset($cachedData[$row->month])) {
+//                $cachedData[$row->month] = ['profit' => 0, 'sold_leads' => 0, 'unsold_leads' => 0];
+//            }
+//            $cachedData[$row->month]['sold_leads'] = (int) $row->sold_leads;
+//            $cachedData[$row->month]['unsold_leads'] = (int) $row->unsold_leads;
+//        }
+//
+//        return $cachedData;
+//    }
+//    private function computeCurrentMonthData(): array
+//    {
+//        $currentMonthStart = now()->startOfMonth()->format('Y-m-d H:i:s');
+//        $currentMonthEnd = now()->endOfMonth()->format('Y-m-d H:i:s');
+//        $currentMonthKey = now()->format('Y-m');
+//
+//        $profitRow = DB::selectOne("
+//        SELECT
+//            COALESCE(SUM(clu.campaigns_leads_users_bid), 0) - COALESCE(SUM(lc.ping_price), 0) as profit
+//        FROM campaigns_leads_users clu
+//        LEFT JOIN leads_customers lc ON lc.lead_id = clu.lead_id
+//            AND lc.response_data = 'Lead Accepted'
+//            AND lc.is_duplicate_lead <> 1
+//            AND lc.lead_fname NOT IN ('test', 'testing', 'Test')
+//            AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
+//            AND lc.is_test = 0
+//        WHERE clu.campaigns_leads_users_type_bid IN ('Exclusive', 'Shared')
+//        AND clu.is_returned = 0
+//        AND clu.date BETWEEN ? AND ?
+//    ", [$currentMonthStart, $currentMonthEnd]);
+//
+//        $leadsRow = DB::selectOne("
+//        SELECT
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold_leads,
+//            COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold_leads
+//        FROM leads_customers lc
+//        LEFT JOIN campaigns_leads_users clu ON clu.lead_id = lc.lead_id AND clu.is_returned = 0
+//        WHERE lc.is_duplicate_lead <> 1
+//        AND lc.lead_fname NOT IN ('test', 'testing', 'Test')
+//        AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
+//        AND lc.is_test = 0
+//        AND lc.created_at BETWEEN ? AND ?
+//    ", [$currentMonthStart, $currentMonthEnd]);
+//
+//        return [
+//            $currentMonthKey => [
+//                'profit' => (float) ($profitRow->profit ?? 0),
+//                'sold_leads' => (int) ($leadsRow->sold_leads ?? 0),
+//                'unsold_leads' => (int) ($leadsRow->unsold_leads ?? 0),
+//            ]
+//        ];
+//    }
+
+
     public function index()
     {
         $todayStart = now()->startOfDay()->format('Y-m-d H:i:s');
@@ -38,14 +266,15 @@ class AdminHomeController extends Controller
         $monthEnd = now()->endOfMonth()->format('Y-m-d H:i:s');
         $yearStart = now()->startOfYear()->format('Y-m-d H:i:s');
         $yearEnd = now()->endOfYear()->format('Y-m-d H:i:s');
+        $currentMonthKey = now()->format('Y-m');
 
         // ========== TODAY'S STATS (unchanged) ==========
         $leadStats = DB::table('leads_customers as lc')
             ->selectRaw('
-            COUNT(*) as total,
-            COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold,
-            COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold
-        ')
+        COUNT(*) as total,
+        COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold,
+        COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold
+    ')
             ->leftJoin('campaigns_leads_users as clu', function ($join) {
                 $join->on('clu.lead_id', '=', 'lc.lead_id')
                     ->where('clu.is_returned', 0);
@@ -61,21 +290,29 @@ class AdminHomeController extends Controller
         $soldLeads = $leadStats->sold;
         $unsoldLeads = $leadStats->unsold;
 
-        // ========== MONTHLY DATA: Cache with fallback to full query ==========
+        // ========== MONTHLY DATA: Cache only COMPLETED months ==========
         $cacheKey = 'dashboard_monthly_data_' . now()->year;
         $cachedData = Cache::get($cacheKey);
 
-        // If cache is empty, compute ALL months and store
         if (empty($cachedData)) {
-            $cachedData = $this->computeAllMonthsData($yearStart, $yearEnd);
+            // Compute all months from Jan 1 up to the END OF LAST MONTH only.
+            // Current month is deliberately excluded from the cache.
+            $cachedData = $this->computeAllMonthsData($yearStart, $currentMonthKey);
             Cache::put($cacheKey, $cachedData, now()->endOfYear());
         }
-        // If cache exists but current month missing, update only current month
-        elseif (!isset($cachedData[now()->format('Y-m')])) {
-            $currentMonthData = $this->computeCurrentMonthData();
-            $cachedData = array_merge($cachedData, $currentMonthData);
-            Cache::put($cacheKey, $cachedData, now()->endOfYear());
+        // If the previous month just finished and isn't cached yet, add it now.
+        // (e.g. it's Aug 1st and July's final numbers were never stored)
+        else {
+            $previousMonthKey = now()->subMonthNoOverflow()->format('Y-m');
+            if ($previousMonthKey < $currentMonthKey && !isset($cachedData[$previousMonthKey])) {
+                $previousMonthData = $this->computeSpecificMonthData(now()->subMonthNoOverflow());
+                $cachedData = array_merge($cachedData, $previousMonthData);
+                Cache::put($cacheKey, $cachedData, now()->endOfYear());
+            }
         }
+
+        // Current month is ALWAYS computed live, never read from/written to cache
+        $liveCurrentMonthData = $this->computeCurrentMonthData();
 
         // Build arrays for charts
         $months = [];
@@ -87,12 +324,22 @@ class AdminHomeController extends Controller
             $monthKey = now()->year . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
             $months[] = date('M', mktime(0, 0, 0, $i, 1));
 
-            $profitData[$i] = $cachedData[$monthKey]['profit'] ?? 0;
-            $soldLeadsData[$i] = $cachedData[$monthKey]['sold_leads'] ?? 0;
-            $unsoldLeadsData[$i] = $cachedData[$monthKey]['unsold_leads'] ?? 0;
+            if ($monthKey === $currentMonthKey) {
+                // Live data for the in-progress month
+                $profitData[$i] = $liveCurrentMonthData[$currentMonthKey]['profit'] ?? 0;
+                $soldLeadsData[$i] = $liveCurrentMonthData[$currentMonthKey]['sold_leads'] ?? 0;
+                $unsoldLeadsData[$i] = $liveCurrentMonthData[$currentMonthKey]['unsold_leads'] ?? 0;
+            } else {
+                // Cached data for finished months
+                $profitData[$i] = $cachedData[$monthKey]['profit'] ?? 0;
+                $soldLeadsData[$i] = $cachedData[$monthKey]['sold_leads'] ?? 0;
+                $unsoldLeadsData[$i] = $cachedData[$monthKey]['unsold_leads'] ?? 0;
+            }
         }
 
-        // ========== TODAY'S & MONTH'S PROFIT (real-time) ==========
+        // ... rest of your today/month profit + ring calculations stay unchanged ...
+
+        //        // ========== TODAY'S & MONTH'S PROFIT (real-time) ==========
         $todaySellingPrice = CampaignsLeadsUsers::whereIn('campaigns_leads_users_type_bid', ['Exclusive', 'Shared'])
             ->whereBetween('date', [$todayStart, $todayEnd])
             ->where('is_returned', 0)
@@ -155,13 +402,26 @@ class AdminHomeController extends Controller
             'months', 'profitData', 'soldLeadsData', 'unsoldLeadsData'
         ));
     }
-    private function computeAllMonthsData(string $yearStart, string $yearEnd): array
+
+    /**
+     * Compute data for all FINISHED months of the year (excludes current month).
+     */
+    private function computeAllMonthsData(string $yearStart, string $currentMonthKey): array
     {
-        // Get profit for all months
+        // End boundary = last day of the month BEFORE the current one
+        $cutoffEnd = \Carbon\Carbon::createFromFormat('Y-m', $currentMonthKey)
+            ->subMonthNoOverflow()
+            ->endOfMonth()
+            ->format('Y-m-d H:i:s');
+
+        // If we're in January, there's nothing finished yet this year
+        if (\Carbon\Carbon::createFromFormat('Y-m', $currentMonthKey)->month === 1) {
+            return [];
+        }
+
         $monthlyProfit = DB::select("
         SELECT
             DATE_FORMAT(clu.date, '%Y-%m') as month,
-            MONTH(clu.date) as month_num,
             COALESCE(SUM(clu.campaigns_leads_users_bid), 0) - COALESCE(SUM(lc.ping_price), 0) as profit
         FROM campaigns_leads_users clu
         LEFT JOIN leads_customers lc ON lc.lead_id = clu.lead_id
@@ -173,15 +433,13 @@ class AdminHomeController extends Controller
         WHERE clu.campaigns_leads_users_type_bid IN ('Exclusive', 'Shared')
         AND clu.is_returned = 0
         AND clu.date BETWEEN ? AND ?
-        GROUP BY DATE_FORMAT(clu.date, '%Y-%m'), MONTH(clu.date)
+        GROUP BY DATE_FORMAT(clu.date, '%Y-%m')
         ORDER BY month
-    ", [$yearStart, $yearEnd]);
+    ", [$yearStart, $cutoffEnd]);
 
-        // Get lead counts for all months
         $monthlyLeads = DB::select("
         SELECT
             DATE_FORMAT(lc.created_at, '%Y-%m') as month,
-            MONTH(lc.created_at) as month_num,
             COUNT(DISTINCT CASE WHEN clu.lead_id IS NOT NULL AND clu.is_returned = 0 THEN lc.lead_id END) as sold_leads,
             COUNT(DISTINCT CASE WHEN clu.lead_id IS NULL THEN lc.lead_id END) as unsold_leads
         FROM leads_customers lc
@@ -191,11 +449,10 @@ class AdminHomeController extends Controller
         AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
         AND lc.is_test = 0
         AND lc.created_at BETWEEN ? AND ?
-        GROUP BY DATE_FORMAT(lc.created_at, '%Y-%m'), MONTH(lc.created_at)
+        GROUP BY DATE_FORMAT(lc.created_at, '%Y-%m')
         ORDER BY month
-    ", [$yearStart, $yearEnd]);
+    ", [$yearStart, $cutoffEnd]);
 
-        // Build cache structure
         $cachedData = [];
         foreach ($monthlyProfit as $row) {
             $cachedData[$row->month] = [
@@ -214,11 +471,16 @@ class AdminHomeController extends Controller
 
         return $cachedData;
     }
-    private function computeCurrentMonthData(): array
+
+    /**
+     * Compute data for one specific (finished) month — used to backfill cache
+     * once a month rolls over.
+     */
+    private function computeSpecificMonthData(\Carbon\Carbon $month): array
     {
-        $currentMonthStart = now()->startOfMonth()->format('Y-m-d H:i:s');
-        $currentMonthEnd = now()->endOfMonth()->format('Y-m-d H:i:s');
-        $currentMonthKey = now()->format('Y-m');
+        $start = $month->copy()->startOfMonth()->format('Y-m-d H:i:s');
+        $end = $month->copy()->endOfMonth()->format('Y-m-d H:i:s');
+        $key = $month->format('Y-m');
 
         $profitRow = DB::selectOne("
         SELECT
@@ -233,7 +495,7 @@ class AdminHomeController extends Controller
         WHERE clu.campaigns_leads_users_type_bid IN ('Exclusive', 'Shared')
         AND clu.is_returned = 0
         AND clu.date BETWEEN ? AND ?
-    ", [$currentMonthStart, $currentMonthEnd]);
+    ", [$start, $end]);
 
         $leadsRow = DB::selectOne("
         SELECT
@@ -246,15 +508,23 @@ class AdminHomeController extends Controller
         AND lc.lead_lname NOT IN ('test', 'testing', 'Test')
         AND lc.is_test = 0
         AND lc.created_at BETWEEN ? AND ?
-    ", [$currentMonthStart, $currentMonthEnd]);
+    ", [$start, $end]);
 
         return [
-            $currentMonthKey => [
+            $key => [
                 'profit' => (float) ($profitRow->profit ?? 0),
                 'sold_leads' => (int) ($leadsRow->sold_leads ?? 0),
                 'unsold_leads' => (int) ($leadsRow->unsold_leads ?? 0),
             ]
         ];
+    }
+
+    /**
+     * Compute data for current month only — always live, never cached.
+     */
+    private function computeCurrentMonthData(): array
+    {
+        return $this->computeSpecificMonthData(now());
     }
 
     public function AdminProfileShow(){
