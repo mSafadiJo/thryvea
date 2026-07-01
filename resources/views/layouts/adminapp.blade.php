@@ -306,14 +306,14 @@
                             </a>
                             <ul class="nav-second-level">
                                 @if(empty($permission_users) || in_array('8-12', $permission_users))
-                                    <li><a href="{{ route('list_of_leads_all') }}">List Of All Leads</a></li>
+                                    <li><a href="{{ route('list_of_leads_all') }}">Leads</a></li>
                                 @endif
-                                @if(empty($permission_users) || in_array('8-5', $permission_users))
-                                    <li><a href="{{ route('list_of_leads_received') }}">List Of Sold Leads</a></li>
-                                @endif
-                                @if(empty($permission_users) || in_array('8-6', $permission_users))
-                                    <li><a href="{{ route('list_of_leads_lost') }}">List Of UnSold Leads</a></li>
-                                @endif
+{{--                                @if(empty($permission_users) || in_array('8-5', $permission_users))--}}
+{{--                                    <li><a href="{{ route('list_of_leads_received') }}">List Of Sold Leads</a></li>--}}
+{{--                                @endif--}}
+{{--                                @if(empty($permission_users) || in_array('8-6', $permission_users))--}}
+{{--                                    <li><a href="{{ route('list_of_leads_lost') }}">List Of UnSold Leads</a></li>--}}
+{{--                                @endif--}}
                                 @if(empty($permission_users) || in_array('8-14', $permission_users))
                                     <li><a href="{{ route('Admin.list_of_leads_PINGs') }}">List Of PING Leads</a></li>
                                 @endif
