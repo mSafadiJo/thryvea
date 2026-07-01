@@ -7875,6 +7875,21 @@ class PostCRMAllied {
                                 return 0;
                             }
                             break;
+                        case 7:
+                            //Home Siding
+                            $body["taskName"] = "SIDING";
+                            $body['oid'] = "10672";
+
+                            $url .= http_build_query($body);
+
+                            $response = $crm_api_file->api_send_data($url, $httpheader, $leadsCustomerCampaign_id, "", "POST", 1, $crm_details['campaign_id']);
+
+                            if (str_contains(strtolower($response), 'success -')) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                            break;
                     }
                     break;
                 case 69:
